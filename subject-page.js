@@ -68,8 +68,13 @@
     document.getElementById('heroKicker').textContent = util.t('subject.kicker', code, sName);
     document.getElementById('heroTagline').textContent = util.tr(subject.tagline);
     document.getElementById('heroDesc').textContent = util.tr(subject.desc);
-    document.getElementById('heroImage').src = root + subject.heroImage;
-    document.getElementById('heroImage').alt = util.t('card.imageAlt', code + ' ' + sName);
+
+    // 图片路径与语言无关：仅在变化时赋值，避免语言切换触发图片重新加载/重绘
+    var heroImg = document.getElementById('heroImage');
+    var heroSrc = root + subject.heroImage;
+    if (heroImg.getAttribute('src') !== heroSrc) heroImg.src = heroSrc;
+    heroImg.alt = util.t('card.imageAlt', code + ' ' + sName);
+
     document.getElementById('heroCaption').textContent = util.tr(subject.heroCaption);
     document.getElementById('heroSection').setAttribute('aria-label', util.t('subject.heroLabel', code));
 
@@ -84,8 +89,7 @@
 
     if (list.classList.contains('is-placeholder')) return; // 文章索引暫時隱藏
 
-    var countBadge = document.getElementById('assignmentCount');
-    countBadge.textContent = util.t('subject.pieces', subject.assignments.length);
+    var countBadge = document.getElementById('assignmentCount');    countBadge.textContent = util.t('subject.pieces', subject.assignments.length);
     countBadge.setAttribute('aria-label', util.t('subject.piecesAria', subject.assignments.length));
 
     list.innerHTML = subject.assignments.length

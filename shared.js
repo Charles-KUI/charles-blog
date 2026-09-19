@@ -58,6 +58,8 @@
     'subject.noAssignments': ['No assignments yet — check back soon.', '還沒有作業——請稍後再來。'],
     'subject.term': ['2026 Aut', '2026 秋'],
     'subject.updating': ['CONTINUOUSLY UPDATING — MORE WORK COMING SOON', '持續更新中 — 更多作品即將上線'],
+    'nav.subjectsToggle': ['Browse subjects', '瀏覽科目'],
+    'nav.homeShort': ['Home', '首頁'],
 
     // 作业卡片
     'card.assignment': ['ASSIGNMENT %s', '作業 %s'],
@@ -149,18 +151,91 @@
       + '<span class="lang-text" data-i18n="lang.switch">EN</span></button>';
   }
 
-  /** 渲染导航 chips（当前科目高亮） */
+  /** 渲染导航 chips（当前科目高亮）
+   *  窄屏（<=600px）：只显示「当前科目」一格 + 展开按钮，
+   *  点击后弹出小导航列（含全部科目 + 首页），避免导航被裁切。
+   *  宽屏：维持 4 个科目 chips 横排，交互不变。
+   */
   function renderNavbarChips(currentCode) {
     var wrap = document.querySelector('.subject-chips');
     if (!wrap) return;
     var root = rootPrefix();
     var order = ['bcm212', 'bcm241', 'bcm206', 'bcm222'];
-    wrap.innerHTML = order.map(function (key) {
+
+    var currentKey = order.filter(function (k) {
+      return window.SUBJECTS[k] && window.SUBJECTS[k].code === currentCode;
+    })[0];
+
+    // 当前科目（用于窄屏折叠态显示）；无当前科目时退回第一个
+    var headKey = currentKey || order[0];
+    var head = window.SUBJECTS[headKey];
+
+    var listHtml = order.map(function (key) {
       var s = window.SUBJECTS[key];
       var active = s.code === currentCode ? ' active' : '';
       return '<a class="subject-chip' + active + '" href="' + root + 'subjects/' + key + '.html" '
         + 'aria-label="' + s.code + ' ' + tr(s.name) + '">' + s.code + '</a>';
     }).join('');
+
+    wrap.innerHTML =
+      // 窄屏折叠态：当前科目 + 展开按钮
+      '<button class="subject-chips-toggle" type="button" aria-expanded="false" '
+      + 'data-i18n-attr="aria-label:nav.subjectsToggle" aria-label="Browse subjects">'
+      + '<span class="toggle-code">' + head.code + '</span>'
+      + '<span class="toggle-caret" aria-hidden="true"></span>'
+      + '</button>'
+      // 下拉小导航：全部科目 + 首页
+      + '<div class="subject-chips-menu" hidden>'
+      + '<a class="subject-chip" href="' + root + 'index.html">'
+      + t('nav.homeShort') + '</a>'
+      + listHtml
+      + '</div>'
+      // 宽屏态：同一批评分 chips 横排
+      + '<div class="subject-chips-row">' + listHtml + '</div>';
+
+    bindChipsToggle(wrap);
+  }
+
+  /** 窄屏下拉小导航的展开/收起 */
+  function bindChipsToggle(wrap) {
+    var toggle = wrap.querySelector('.subject-chips-toggle');
+    var menu = wrap.querySelector('.subject-chips-menu');
+    if (!toggle || !menu) return;
+
+    // 切换按钮每次重绘都是新节点，直接绑定即可（旧节点随 innerHTML 一起回收）
+    toggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = menu.hidden;
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      wrap.classList.toggle('is-open', open);
+    });
+  }
+
+  /** 点击空白处 / 按 Esc 收起下拉 —— 文档级监听只注册一次，
+      避免语言切换反复调用 bindChipsToggle 时不断累积监听器 */
+  function bindChipsDismissOnce() {
+    document.addEventListener('click', function (e) {
+      var wrap = document.querySelector('.subject-chips');
+      if (!wrap || wrap.contains(e.target)) return;
+      var menu = wrap.querySelector('.subject-chips-menu');
+      var toggle = wrap.querySelector('.subject-chips-toggle');
+      if (!menu || menu.hidden) return;
+      menu.hidden = true;
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      wrap.classList.remove('is-open');
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var wrap = document.querySelector('.subject-chips');
+      if (!wrap) return;
+      var menu = wrap.querySelector('.subject-chips-menu');
+      var toggle = wrap.querySelector('.subject-chips-toggle');
+      if (!menu || menu.hidden) return;
+      menu.hidden = true;
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      wrap.classList.remove('is-open');
+    });
   }
 
   /** 渲染页脚科目链接（含首页 + 回到顶部） */
@@ -177,22 +252,30 @@
       + '<a class="to-top" href="#top">' + t('footer.sitemap') + '</a>';
   }
 
-  /** 滚动浮现观察器 */
+  /** 滚动浮现观察器（复用单个实例，避免语言切换时反复新建导致 observer 泄漏） */
+  var revealIO = null;
+
   function initReveal() {
     var els = document.querySelectorAll('.reveal:not(.visible)');
+    if (!els.length) return;
+
     if (!('IntersectionObserver' in window)) {
       els.forEach(function (el) { el.classList.add('visible'); });
       return;
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    els.forEach(function (el) { io.observe(el); });
+
+    // 首次创建；后续复用（旧目标已在触发时 unobserve）
+    if (!revealIO) {
+      revealIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealIO.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+    }
+    els.forEach(function (el) { revealIO.observe(el); });
   }
 
   /** 按键物理下压效果（通用委托） */
@@ -211,6 +294,7 @@
     renderFooterLinks();
     initReveal();
     initPressEffect();
+    bindChipsDismissOnce();
   });
 
   /* 语言切换后：重建导航/页脚（它们含双语内容），再广播给页面渲染器 */

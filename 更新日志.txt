@@ -811,3 +811,307 @@ CSS 动画优先级层级：
     无卡片渲染、小字可见且文案正确、HERO 完整、无横向溢出；
     另验证文章页 URL 直连仍可打开）
 - aboutest 76 项全过（无破坏）
+
+================================================================
+第九階段補丁 2：手機端三處顯示問題修復
+================================================================
+
+【問題一】手機端導航欄部分被遮擋
+原因：.navbar 為 position:fixed 且 height 寫死 var(--navbar-height)，
+      手機瀏覽器（含 iOS 瀏海屏 / 微信內建瀏覽器）頂部有系統狀態欄與
+      安全區，固定定位的導航會鑽到狀態欄底下被遮住一半。
+修法：全站導航引入 CSS 安全區變數 env(safe-area-inset-top)
+- styles.css（主頁 .navbar / .content-area）
+- shared.css（子頁 .navbar / .content-area / 600px 窄屏斷點）
+  · height: calc(var(--navbar-height) + env(safe-area-inset-top, 0px))
+  · padding-top: calc(原值 + env(safe-area-inset-top, 0px))
+  · .content-area padding-top 同步加上安全區，避免內容被新高度壓住
+
+【問題二】手機端 CHARLES 大字初始被裁切 + 四方格與虛線重疊
+原因（兩者同源）：hero 區用固定 height（桌面 70vh / 平板 60vh / 手機 50vh），
+      而字母掉落入場動畫 @keyframes chaotic-drop 的 0% 影格是
+      translateY(-80px) scale(1.4) —— 需要向上溢出 80px，
+      固定高度 + 預設 overflow 會把初始影格裁掉；
+      同時手機端 hero 高度不足以容納「標題 + 副標 + 四個方格」，
+      內容溢出壓到下方的剪刀虛線。
+修法：
+1. hero 高度由固定 height 改為 min-height（三處斷點全改）：
+   桌面 70vh / 平板 60vh / 手機 calc(50vh + 40px)
+   → 內容偏高時自動撐開，不再裁切、不再壓線
+2. 三處 hero 皆加 overflow: visible，允許動畫初始影格向上溢出不裁切
+3. 手機端 hero padding 改 24px 8vw（上下留白），
+   並加 .hero-section { margin-bottom: 24px } + .scissor-divider { margin-top: 8px }
+   → 明確保證方格與虛線之間有間距
+4. 手機端另加大 .subject-buttons margin-top 40 → 32px 收緊節奏
+
+※ 中途試過「手機 hero 改 height:auto」的方案，實測發現 600px 斷點的
+  min-height 反而把方格推出首屏，已回退改用 min-height 方案（最終版）。
+
+【問題三】子頁面剪刀圖標樣式與主頁不一致（主頁正常）
+原因：主頁的剪刀是內聯 SVG（線稿），
+      四個科目頁的剪刀是 emoji 字元 <span class="scissor-icon">✂</span>
+      → 在不同系統/瀏覽器下被渲染成彩色 emoji（紅把銀刃），與主頁不符。
+修法：
+1. 四個科目頁把 emoji 全部換成主頁同款內聯 SVG（24×24 viewBox 線稿剪刀）
+2. shared.css 的 .scissor-divider .scissor-icon 補上尺寸約束：
+   width:30px; height:30px; flex:0 0 auto;
+   → 這條同時修掉一個潛在事故：SVG 未限尺寸會被 flex 拉伸成 318px 高
+     （與第六階段主頁踩過的同一個坑）
+
+【驗證】
+- domtest 132 → 134 項全過，新增兩條防回潮護欄：
+  · .scissor-icon 必須有明確寬高（防被 flex 拉伸）
+  · 四個科目頁剪刀必須是 SVG 且不得出現 emoji ✂
+- 新增 verify-mobile.mjs（真機 390×844 手機視口）33 項全過：
+  · 主頁：導航貼合頂部、CHARLES 大字不被遮擋、四方格與虛線不重疊、
+    剪刀為 SVG、無橫向溢出
+  · 字母動畫初始幀實測未被左右裁切
+  · 四科目頁：剪刀為 SVG（非 emoji）、分割線高度 30px（非 318px 拉伸）、
+    導航貼合頂部、HERO 未被遮擋、無橫向溢出
+- verify-hidden 57 項、aboutest 76 項全過（無破壞）
+- 視覺核對：手機端主頁與 BCM212 截圖確認（.workbuddy/shots/m-home-390.png、
+  m-subj-390.png）
+
+================================================================
+第九階段補丁 3：手機端導航折疊（只顯示當前科目，點擊展開）
+================================================================
+
+【需求】
+手機端導航的科目 chips 顯示不完整（第 3、4 個被裁掉）。
+要求：手機端只顯示「當前所在的科目」（如 BCM206），
+      點擊後彈出一個小導航欄（含其他科目選項）；
+      電腦端維持原樣不變。
+
+【舊做法與問題】
+原本窄屏是把 4 個 chips 塞進一行（logo 獨占一行方案），
+即使壓縮字號，390px 寬度下仍裝不下 4 個 chips，末端被裁。
+
+【新做法】同一份 DOM，兩種形態，靠 CSS 斷點切換
+
+1. shared.js ── renderNavbarChips() 重寫，一次渲染兩套結構：
+   <div class="subject-chips">
+     ├─ <button class="subject-chips-toggle">   ← 折疊態（窄屏顯示）
+     │    └─ <span class="toggle-code">BCM206</span> + 下三角 .toggle-caret
+     ├─ <div class="subject-chips-menu" hidden> ← 下拉小導航（窄屏顯示）
+     │    └─ 首頁 + BCM212 / BCM241 / BCM206 / BCM222
+     └─ <div class="subject-chips-row">         ← 橫排態（寬屏顯示）
+          └─ BCM212 / BCM241 / BCM206 / BCM222
+   · 折疊按鈕文字 = 當前科目 code（由 CURRENT_SUBJECT 對應得出）
+   · 兩種形態的「當前科目」都帶 .active 高亮
+   · 新增 bindChipsToggle()：點擊展開/收起、
+     點外部區域或按 Esc 自動收起、aria-expanded 同步
+
+2. shared.css ── 寬窄分流：
+   預設（寬屏）：.subject-chips-row 為 flex 橫排；
+                 .subject-chips-toggle / .subject-chips-menu 一律 display:none
+   @media (max-width:600px)：
+     .subject-chips-row { display: none }        ← 隱藏 4 格橫排
+     .subject-chips-toggle { display: inline-flex }
+     .subject-chips-menu { display: flex }        ← 下拉（absolute 定位）
+     .subject-chips { position: relative; margin-left:auto } ← 下拉定位參照
+     導航不再換行（navbar-container flex-wrap: nowrap），
+     logo 加 ellipsis 兜底，保證單行不溢出
+
+3. shared.js ── 新增 2 組 i18n 文案：
+   'nav.subjectsToggle': ['Browse subjects', '瀏覽科目']   （aria-label）
+   'nav.homeShort':      ['Home', '首頁']                  （下拉首項）
+
+【交互】
+- 點「BCM206 ▼」→ 下拉展開，三角翻轉向上
+- 再點一次 → 收起
+- 點頁面其他區域 / 按 Esc → 自動收起
+- 下拉各項點擊即跳轉對應科目頁（一般連結，無 JS 攔截）
+
+【電腦端】
+完全不變：仍是 4 個 chips 橫排、當前科目高亮，
+折疊按鈕與下拉選單在寬屏被 CSS 隱藏（display:none）。
+
+【驗證】
+- domtest 134 → 142 項全過，改動/新增斷言：
+  · 「導航渲染 4 個科目 chips」→ 拆分為
+    「寬屏橫排 4 個」＋「窄屏下拉 5 項」＋「總數 9（兩形態並存）」
+  · 新增：兩種形態的當前科目均高亮、折疊按鈕存在
+  · 新增 4 條防回潮護欄：窄屏必須隱藏橫排、必須顯示折疊按鈕、
+    折疊與下拉由 shared.js 渲染、必須帶 aria-expanded
+- 新增 verify-nav.mjs 真機驗證 62 項全過（390×844 手機 + 1440 寬屏）：
+  · 四科目頁：折疊按鈕顯示當前科目 code、橫排已隱藏、下拉初始收起、
+    下拉含 5 項且當前項高亮、折疊按鈕不壓到語言按鈕、無橫向溢出
+  · 交互：點擊展開可見且在視口內、再點收起、點外部收起
+  · 寬屏：橫排 4 格全可見、當前高亮、折疊與下拉均 display:none
+- verify-mobile 33 項、verify-hidden 57 項、aboutest 76 項全過
+- 視覺核對：m-nav-collapsed.png（折疊態）/ m-nav-expanded.png（展開態）
+
+
+================================================================
+第九階段補丁 4 — 極限窄屏導航防重疊 + 全站程式碼體檢
+（2026-09-19）
+================================================================
+
+【一】首頁導航在極限窄屏下重疊 → 修復
+
+現象：視窗寬度很小（≤360px，或系統字體放大導致等效寬度更小）時，
+      左上 CHARLES 標誌與右上語言按鈕互相擠壓、發生重疊。
+
+根因：logo 與語言按鈕都按「自然寬度」排列，沒有任何收縮約束，
+      空間不足時只能互相覆蓋。
+
+改法（styles.css，僅動這 3 處 + 新增 1 個斷點）：
+
+1) .navbar-container
+   加 gap: 12px; flex-wrap: nowrap;
+   → 明確禁止換行，讓收縮邏輯接管，而不是折行擠壓。
+
+2) .logo
+   加 flex: 0 1 auto;          ← 允許收縮（0 不放大、1 可縮小、auto 基準寬）
+       min-width: 0;            ← 解除 flex 子項的 min-width:auto 限制（關鍵！否則縮不動）
+       overflow: hidden;
+       text-overflow: ellipsis; ← 縮到極限時顯示「CHAR…」而非溢出
+       white-space: nowrap;
+
+3) .nav-actions
+   加 flex: 0 0 auto;          ← 不參與收縮，語言按鈕永遠完整可見
+
+4) 新增 @media (max-width: 360px)
+   .navbar           padding 收為 (14px + 安全區) 12px 14px
+   .navbar-container gap 收為 8px
+   .logo             font-size 收為 1rem
+   .nav-actions      gap 收為 8px
+   .lang-switch-btn  padding 5px 10px，font-size 0.74rem
+   .zine-container   padding 0 12px
+   .subject-btn      font-size 0.8rem，padding 9px 16px
+   .subtitle         font-size 0.95rem，letter-spacing 1px
+
+shared.css（子頁）同步：
+   600px 斷點內 .logo 加 flex:0 1 auto + min-width:0 + ellipsis + nowrap
+   新增 @media (max-width: 360px)：
+     .navbar padding 收為 10px 10px；
+     .navbar-container gap 6px；.logo font-size 0.94rem；
+     .subject-chips-toggle font-size 0.72rem, padding 6px 9px；
+     .lang-switch-btn padding 5px 9px, font-size 0.7rem；
+     .zine-container padding 0 12px
+
+【二】全站程式碼體檢
+
+■ 性能修復 4 處
+
+1) shared.js ── 修掉真正的監聽器洩漏（本次體檢最大收穫）
+   問題：bindChipsToggle() 每次呼叫都會往 document 上註冊
+         click + keydown 兩個監聽器；而語言切換時
+         renderNavbarChips() 會重新執行 → 每切一次語言
+         就多累積 2 個 document 監聽器，且永不釋放。
+   改法：把文檔級監聽抽成獨立的 bindChipsDismissOnce()，
+         只在 DOMContentLoaded 註冊一次；
+         監聽器內部改為「即時查詢 .subject-chips」再判斷，
+         因此面板重繪後依然有效。
+         bindChipsToggle() 內只保留綁在切換按鈕自身上的 click
+         （按鈕隨 innerHTML 一起重建，舊節點自動回收，不會累積）。
+
+2) shared.js ── IntersectionObserver 實例復用
+   問題：initReveal() 每次都 new IntersectionObserver。
+   改法：模組級單例 revealIO，僅在未創建時 new 一次；
+         觸發後 unobserve，舊目標不留引用。
+         （語言切換不再產生新的 observer）
+
+3) subject-page.js ── 圖片只在 src 真正變化時賦值
+   問題：語言切換會重新執行渲染，heroImg.src 被重複賦同一個值，
+         Safari / 部分行動瀏覽器會因此重新發請求、圖片閃一下。
+   改法：if (heroImg.getAttribute('src') !== heroSrc) heroImg.src = heroSrc;
+
+4) article-page.js ── 語言切換不再整篇重建
+   問題：原本 zine:langchange 直接呼叫 render()，
+         整篇 innerHTML 重寫 → <img> 重新請求（閃爍）、
+         <video> 播放進度歸零、捲動錨點丟失。
+   改法：改為「只刷新文字節點」——按 render 時相同的順序
+         取出正文各段的雙語文本，逐一寫回既有 DOM 節點
+         （querySelectorAll('p, h2, blockquote, figcaption')），
+         圖片與影片節點完全不動。
+         找不到文章時才退回完整 render() 兜底。
+
+■ CSS 重複選擇器審計（新增 .workbuddy/cssdup.mjs）
+   方法：解析 4 個 CSS 檔，按「選擇器 + 所處 @media」分組，
+         區分「同一作用域內重複定義（真冗餘）」與
+         「不同斷點下的分級覆蓋（合法）」。
+   結果：styles.css 129→127 條規則，4 個檔案真冗餘 2 → 0 組。
+
+   合併的 2 處（styles.css，兩者都在 base 作用域重複定義）：
+   a) .subject-btn 出現兩次（387 行 & 436 行）
+      第二處只是補 display/text-decoration/line-height，
+      屬 <a> 改造遺留的補丁。→ 合併進第一處定義。
+   b) @media (max-width:480px) 內 .hero-section 出現兩次
+      （509 行 min-height/padding/overflow、575 行 margin-bottom）
+      → 合併 margin-bottom 進 509 行那條規則。
+
+   ※ 不同斷點間的同一選擇器（如 .logo 在 base/768/480/360 各有一份）
+     屬正常的響應式分級覆蓋，全部保留、不動。
+
+■ 未使用 CSS 類名掃描（新增 .workbuddy/checkunused.mjs）
+   交叉比對 4 個 CSS 檔的全部類名 vs 6 個 HTML + 6 個 JS 中的引用：
+   結果：styles.css 54 / shared.css 28 / subjects.css 29 / article.css 19
+         共 130 個類名，疑似未引用 0 個。
+   → 沒有死代碼可清。
+
+■ 語法與資源校驗
+   · 6 個 JS 檔 node --check 全過
+   · 4 個 CSS 檔括號配平（146/146、94/94、46/46、42/42）
+   · 三類頁面均含 fonts preconnect（無需補）
+   · 資源引入無重複、無多餘（每頁 CSS 1–2 個、JS 4 個）
+
+【三】嚴禁刪除的預留隱藏內容 —— 全部確認保留
+
+以下結構一律未動，僅在本補丁外層做性能/樣式優化：
+  · subjects/*.html 的 <section class="assignments-section" hidden data-articles-hidden>
+    ＋ id="assignmentList" class="is-placeholder"（文章索引，HTML/JS 雙保險）
+  · shared.js 的 langSwitchHtml() 函數（保留未調用）
+  · shared.css / shared.js 的 .subject-chips-menu 折疊下拉結構
+  · content.js 全部文章資料（一字未改，文章頁 URL 直連仍可訪問）
+
+【四】驗證
+
+新增 3 個測試腳本（本機 headless Chrome 被沙箱攔截，改用
+jsdom 運行時驅動 + CSS 靜態斷言覆蓋）：
+
+· verify-nav-runtime.mjs（jsdom 真跑 shared.js）25 項全過
+  - 折疊三件套渲染、默認標籤為當前科目、下拉含 5 項
+  - 點擊展開／收起、aria-expanded 同步、is-open 類切換
+  - 點外部關閉、Esc 關閉、點菜單內部不誤關
+  - ★ 連續切換語言 3 次後，document 級 click 監聽 2→2、
+    keydown 監聽 1→1（證明洩漏已修復）
+  - 重繪後折疊按鈕仍可展開/收起/點外部關閉
+
+· verify-nav-static.mjs 48 項全過
+  - 折疊導航 CSS 結構、600px 斷點、360px 斷點齊備
+  - 極限窄屏收縮/省略號規則齊備
+  - bindChipsToggle 內無 document 級監聽、dismiss 只註冊一次
+  - revealIO 單例存在
+  - 4 科目頁的隱藏索引 / is-placeholder / SVG 剪刀 全部在
+
+· verify-narrow-geom.mjs 15 項全過（幾何不重疊證明）
+  按斷點字號計算各元素固有寬度，並與可用內容寬比較：
+
+    首頁 @320：可用 296px｜logo 84 + 語言按鈕 40 = 132px｜餘量 164px
+    首頁 @360：可用 336px｜合計 132px｜餘量 204px
+    科目頁 @320：可用 296px｜logo 79 + 語言 37 + 折疊 90 = 218px｜餘量 78px
+    科目頁 @360：可用 336px｜合計 218px｜餘量 118px
+
+  即：即便在 320px 的極限寬度下，logo 完全不收縮也放得下，
+      重疊問題在數學上已不可能發生（收縮/省略號僅是雙保險）。
+
+全量回歸（本次改動後）：
+  domtest 142 / aboutest 76 / verify-hidden 57 / verify-article 11 /
+  verify-langswitch 12 / verify-nav-static 48 / verify-nav-runtime 25 /
+  verify-narrow-geom 15 → 全部 0 失敗，合計 386 項。
+
+※ 另修一處測試自身的過時斷言：
+  verify-article.mjs 原本硬斷言標題含「測試文章」（簡體），
+  但全新的 Chrome profile 無 cp:lang，頁面默認英文 →
+  改為「中/英任一」皆視為通過。
+
+【五】還原方式
+
+本補丁未刪除任何資料。若要回退導航防重疊優化：
+  · 刪掉兩支 @media (max-width: 360px) 段落
+  · 去掉 .logo / .nav-actions / .navbar-container 中新增的
+    flex / min-width / overflow / text-overflow 屬性
+回退性能優化：shared.js 把 bindChipsDismissOnce 的兩段
+  document.addEventListener 搬回 bindChipsToggle 內即可
+  （功能等價，但會恢復監聽器累積的舊問題，不建議）。

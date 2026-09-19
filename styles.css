@@ -79,13 +79,14 @@ body {
     left: 0;
     right: 0;
     width: 100%;
-    height: var(--navbar-height);
+    height: calc(var(--navbar-height) + env(safe-area-inset-top, 0px));
     background-color: var(--cream-white);
     border-bottom: var(--border-thick);
     z-index: 1000;
     display: flex;
     align-items: center;
-    padding: 20px 40px;
+    /* 刘海屏/手机浏览器地址栏收缩时，顶部留出安全区，避免被状态栏遮住 */
+    padding: calc(20px + env(safe-area-inset-top, 0px)) 40px 20px;
     box-sizing: border-box;
 }
 
@@ -94,6 +95,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
 }
 
 /* Logo 样式 */
@@ -105,6 +108,12 @@ body {
     text-decoration: none;
     letter-spacing: -0.02em;
     transition: opacity 0.2s ease;
+    /* 极限窄屏：允许收缩并省略，避免与语言按钮重叠 */
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .logo:hover {
@@ -116,6 +125,8 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
+    /* 语言按钮优先保证完整可见，不参与收缩 */
+    flex: 0 0 auto;
 }
 
 /* 语言切换按钮 - 复古立体按键样式 */
@@ -162,17 +173,20 @@ body {
 
 /* ===== 主内容区域 ===== */
 .content-area {
-    padding-top: var(--navbar-height);
+    padding-top: calc(var(--navbar-height) + env(safe-area-inset-top, 0px));
     min-height: calc(100vh - var(--navbar-height));
 }
 
 /* ===== 英雄区：手工剪报拼贴风格 ===== */
 .hero-section {
-    height: 70vh;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 5vw;
+    /* 字母掉落动画起手从上方进入，需留出溢出空间，
+       否则手机端初始帧会被导航栏/容器边缘裁掉 */
+    overflow: visible;
 }
 
 .hero-content {
@@ -382,6 +396,10 @@ body {
     position: relative;
     transition: transform 0.15s ease, background-color 0.2s ease;
     box-shadow: 5px 5px 0px var(--dark-frame);
+    /* 科目入口现为 <a> 链接（第二阶段改造），保持按键外观 */
+    display: inline-block;
+    text-decoration: none;
+    line-height: 1.4;
     /* 上浮淡入动画 - 仅首屏加载播放一次 */
     /* 说明：动画只挂在 .is-entering（JS 首屏加、播完即移除），
        语言切换重绘按钮时不会再挂上，因此不会重复播放入场动画。 */
@@ -418,12 +436,6 @@ body {
 }
 
 /* ===== 响应式设计 ===== */
-/* 科目入口现为 <a> 链接（第二阶段改造），保持按键外观 */
-.subject-btn {
-    display: inline-block;
-    text-decoration: none;
-    line-height: 1.4;
-}
 
 @media (max-width: 768px) {
     .navbar-container {
@@ -441,7 +453,7 @@ body {
     
     /* 英雄区响应式调整 */
     .hero-section {
-        height: 60vh;
+        min-height: 60vh;
     }
     
     /* 移动端字母调整 */
@@ -489,12 +501,33 @@ body {
         padding: 6px 12px;
         font-size: 0.8rem;
     }
-    
-    /* 英雄区移动端优化 */
+
+    /* 英雄区移动端优化：min-height 兜底 + 垂直居中，
+       内容偏高时自动撑开而非裁切，方格始终落在首屏内 */
     .hero-section {
-        height: 50vh;
-        padding: 0 10vw;
+        min-height: calc(50vh + 40px);
+        padding: 24px 8vw;
+        overflow: visible;
     }
+
+    /* 移动端掉落初始偏移/缩放收小，避免顶部与两侧被裁 */
+    @keyframes chaotic-drop {
+        0% {
+            opacity: 0;
+            transform: translateY(-36px) scale(1.1);
+        }
+        70% {
+            opacity: 1;
+            transform: translateY(4px) scale(0.96);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* 画布与内容区允许字母溢出显示（initial 帧不被裁剪） */
+    .content-area { overflow-x: hidden; overflow-y: visible; }
     
     .collage-title {
         margin: 0 -2px;
@@ -523,7 +556,7 @@ body {
     /* 科目按钮移动端优化 */
     .subject-buttons {
         gap: 12px;
-        margin-top: 40px; /* 移动端保持适当间距 */
+        margin-top: 32px; /* 移动端保持适当间距 */
         flex-direction: column;
         align-items: center;
     }
@@ -533,7 +566,24 @@ body {
         font-size: 0.85rem;
         width: 100%;
         max-width: 280px;
+        /* 移动端：hero(50vh 居中) 与剪刀分割线之间补足间距，
+           避免方格按钮压到虚线上 */
+        margin-bottom: 24px;
     }
+    .scissor-divider { margin-top: 8px; }
+}
+
+/* 极限窄屏（<=360px，或系统字体放大导致等效宽度更小）：
+   导航在最小宽度下仍要单行且不重叠 —— 收字号 + 收紧间距 + 缩短内边距 */
+@media (max-width: 360px) {
+    .navbar { padding: calc(14px + env(safe-area-inset-top, 0px)) 12px 14px; }
+    .navbar-container { gap: 8px; }
+    .logo { font-size: 1rem; }
+    .nav-actions { gap: 8px; }
+    .lang-switch-btn { padding: 5px 10px; font-size: 0.74rem; }
+    .zine-container { padding: 0 12px; }
+    .subject-btn { font-size: 0.8rem; padding: 9px 16px; }
+    .subtitle { font-size: 0.95rem; letter-spacing: 1px; }
 }
 
 /* ====================================

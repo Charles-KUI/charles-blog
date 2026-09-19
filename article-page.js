@@ -122,11 +122,44 @@
 
   document.addEventListener('DOMContentLoaded', render);
 
-  // 语言切换 → 重绘正文与元信息
+  /**
+   * 语言切换 → 只重绘「文本」部分。
+   *
+   * 早期版本在此处调用 render() 整篇重建，实测有两个性能/体验问题：
+   *   1. 正文里的 <img> 每次都被销毁重建 → 图片重新请求、视觉闪烁；
+   *   2. <video> 元素被重建 → 播放进度、音量等状态全部丢失。
+   * 图片路径与视频源与语言无关，因此只刷新文字节点即可。
+   * 注意：正文里「图注 caption / 视频说明」也是双语，需要一并刷新。
+   */
   document.addEventListener('zine:langchange', function () {
-    if (document.getElementById('articleRoot')) {
-      render();
-      window.ZineReinitReveal && window.ZineReinitReveal();
+    if (!document.getElementById('articleRoot')) return;
+
+    const util = window.ZineUtil;
+    const found = findArticle(new URLSearchParams(location.search).get('id'));
+    if (!found) { render(); return; } // 404 分支无图片/视频，整体重绘无副作用
+
+    // 仅更新正文内的文字节点（图注 / 视频说明 / 段落 / 小标题 / 引用）
+    const body = document.getElementById('articleBody');
+    if (body) {
+      const a = found.assignment;
+      const texts = [];
+      a.body.forEach(function (b) {
+        if (b.type === 'figure' || b.type === 'video') texts.push(b.caption);
+        else texts.push(b.text);
+      });
+      if (a.video) texts.push(a.video.caption);
+
+      const nodes = body.querySelectorAll('p, h2, blockquote, figcaption');
+      let i = 0;
+      nodes.forEach(function (node) {
+        // 只替换纯文本、且顺序与数据一致；含子元素的节点保持不动
+        if (i < texts.length && node.children.length === 0) {
+          node.textContent = util.tr(texts[i]);
+          i++;
+        }
+      });
     }
+
+    paintArticleText();
   });
 })();
