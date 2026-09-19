@@ -1,0 +1,277 @@
+/* ====================================
+   文章页模版样式
+   结构：文章头部 → 元信息 → 配图/视频 → 正文 → 互动区 → 页脚
+   ==================================== */
+
+/* ===== 文章头部 ===== */
+.article-hero {
+    padding: 56px 0 20px;
+}
+
+.article-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.subject-backlink {
+    font-family: var(--font-round);
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    color: var(--cream-white);
+    background: var(--dark-frame);
+    padding: 6px 14px;
+    text-decoration: none;
+    box-shadow: var(--shadow-hard);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.subject-backlink:hover { background: #3a3630; }
+
+.subject-backlink:active {
+    transform: translate(4px, 4px);
+    box-shadow: var(--shadow-pressed);
+}
+
+.assignment-kicker {
+    font-family: var(--font-round);
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    border: var(--border-medium);
+    background: var(--cream-white);
+    padding: 6px 14px;
+}
+
+.article-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.15;
+    max-width: 20ch;
+}
+
+/* ===== 元信息条 ===== */
+.article-meta-bar {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.article-meta-bar .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.article-meta-bar .meta-item .icon { font-size: 1rem; }
+
+.article-meta-bar .divider-v {
+    width: 2px;
+    height: 16px;
+    background: var(--dark-frame);
+    opacity: 0.4;
+}
+
+/* ===== 分割线 ===== */
+.article-divider {
+    border: none;
+    border-top: 3px dashed var(--dark-frame);
+    opacity: 0.75;
+    margin: 34px 0;
+}
+
+/* ===== 主图（拍立得居中） ===== */
+.article-figure {
+    position: relative;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 14px 14px 18px;
+    transform: rotate(1.4deg);
+    margin: 40px auto 48px;
+    max-width: 720px;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.article-figure:hover { transform: rotate(0deg); }
+
+.article-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border-medium);
+}
+
+.article-figure figcaption {
+    font-family: var(--font-round);
+    font-size: 0.82rem;
+    letter-spacing: 1.5px;
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* ===== 正文 ===== */
+.article-body {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 1.02rem;
+    line-height: 1.85;
+}
+
+.article-body p { margin-bottom: 1.4em; }
+
+.article-body h2 {
+    font-family: var(--font-display);
+    font-size: 1.55rem;
+    font-weight: 800;
+    margin: 2em 0 0.7em;
+    padding-left: 14px;
+    border-left: 6px solid var(--dark-frame);
+}
+
+.article-body blockquote {
+    margin: 2em 0;
+    padding: 22px 26px;
+    background: var(--cream-white);
+    border: var(--border-medium);
+    box-shadow: var(--shadow-hard);
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-style: italic;
+    line-height: 1.5;
+    position: relative;
+}
+
+.article-body blockquote::before {
+    content: '"';
+    position: absolute;
+    top: -22px;
+    left: 14px;
+    font-size: 3.4rem;
+    font-family: var(--font-display);
+    background: var(--bg-teal);
+    padding: 0 8px;
+    line-height: 1;
+}
+
+/* 正文内嵌图片 */
+.inline-figure {
+    margin: 2em 0;
+    background: var(--cream-white);
+    border: var(--border-medium);
+    box-shadow: var(--shadow-hard);
+    padding: 10px 10px 12px;
+    transform: rotate(-0.8deg);
+}
+
+.inline-figure:nth-of-type(even) { transform: rotate(0.8deg); }
+
+.inline-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 2px solid var(--dark-frame);
+}
+
+.inline-figure figcaption {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+/* ===== 视频块：复古电视机框 ===== */
+.video-block {
+    margin: 2.4em 0;
+    background: var(--dark-frame);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 18px;
+    max-width: 720px;
+}
+
+.video-block .video-frame {
+    border: var(--border-medium);
+    background: #111;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.video-block video,
+.video-block iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* 视频占位测试卡 */
+.video-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background:
+        linear-gradient(45deg, #3a3630 25%, transparent 25%, transparent 75%, #3a3630 75%),
+        linear-gradient(45deg, #3a3630 25%, transparent 25%, transparent 75%, #3a3630 75%);
+    background-size: 28px 28px;
+    background-position: 0 0, 14px 14px;
+    background-color: #262320;
+    color: var(--cream-white);
+}
+
+.video-placeholder .test-bars {
+    display: flex;
+    gap: 4px;
+    height: 34px;
+}
+
+.video-placeholder .test-bars span {
+    width: 18px;
+    display: block;
+    border: 2px solid var(--cream-white);
+}
+
+.video-placeholder .test-bars span:nth-child(1) { background: #5EB3AE; }
+.video-placeholder .test-bars span:nth-child(2) { background: #E6E3D3; }
+.video-placeholder .test-bars span:nth-child(3) { background: #8a8578; }
+.video-placeholder .test-bars span:nth-child(4) { background: #E6E3D3; }
+.video-placeholder .test-bars span:nth-child(5) { background: #5EB3AE; }
+
+.video-placeholder .ph-text {
+    font-family: var(--font-round);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-align: center;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.video-block .video-caption {
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* 视频占位文案 */
+.video-placeholder .ph-text strong {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+    .article-hero { padding: 40px 0 12px; }
+    .article-figure { margin: 30px auto 36px; }
+}

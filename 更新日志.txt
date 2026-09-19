@@ -1,0 +1,813 @@
+========================================
+Charles Portfolio 更新日志
+========================================
+
+更新日期：2026年9月8日
+更新阶段：第一、二阶段视觉修复
+
+----------------------------------------
+【问题一修复】导航栏宽屏下两侧留白过大
+----------------------------------------
+
+问题描述：
+导航栏的 "Charles Portfolio" 和 "繁/EN" 按钮在宽屏显示器下向中间挤压，
+离屏幕左右边缘距离过远，导致版心过于聚拢，缺乏呼吸感。
+
+修复逻辑：
+
+1. 移除了 navbar-container 上的 max-width: 1400px 限制
+   - 之前容器有最大宽度限制，导致内容在大屏幕上无法贴合边缘
+   - 移除后，导航栏内容可以在任何屏幕宽度下均匀分布
+
+2. 移除了 margin: 0 auto 居中属性
+   - 之前容器居中显示，导致两侧自动留白
+   - 移除后，容器完全贴合导航栏宽度
+
+3. 调整了 padding 设置方式
+   - 之前：padding: 0 40px（仅给容器添加）
+   - 现在：直接在 .navbar 上设置 padding: 20px 40px
+   - 配合 box-sizing: border-box，确保内边距不影响宽度计算
+
+4. 简化了 flexbox 布局结构
+   - 保持 display: flex 和 justify-content: space-between
+   - 导航栏宽度设为 width: 100%，确保占满整个视口
+   - Logo 和按钮现在自然贴合左右两侧，不再过度聚拢
+
+----------------------------------------
+【问题二修复】Hero区域大标题 "CHARLES" 拼贴效果死板
+----------------------------------------
+
+问题描述：
+标题字母字体完全一样，缺乏混搭感；黑底白字显示异常；字母排列过于整齐，
+像网格卡片；带有不必要的统一细边框，整体缺乏"报纸剪纸"的手工破坏感。
+
+修复逻辑：
+
+1. 彻底混搭字体系统
+   - 奇数字母（C、A、L、S）：强制使用 Impact / Arial Black 粗犷无衬线黑体
+   - 偶数字母（H、R、E）：强制使用 Playfair Display 优雅衬线体，font-weight: 900
+   - 之前字体分配不够极端，现在形成鲜明的视觉对比
+
+2. 修正色彩对比方案
+   - 样式A（奇数字母 C、A、L、S）：
+     background: #E6E3D3（奶油白）
+     color: #262320（暖黑）
+   
+   - 样式B（偶数字母 H、R、E）：
+     background: #262320（暖黑）
+     color: #E6E3D3（奶油白）
+   
+   - 移除了纯白背景（#FFFFFF），统一使用网站色彩系统
+   - 黑底上的奶油白文字显示清晰，对比度适中
+
+3. 移除统一边框
+   - 之前：.letter 上有 border: var(--border-thick)
+   - 现在：完全移除统一边框样式
+   - 每个字母现在只依靠背景色和字体混搭来区分，更像真实的剪纸
+
+4. 强化手工破坏感与不规则重叠
+   
+   a) 不均匀的内边距：
+      - 每个字母的 padding 完全不规则
+      - 例如：letter-1 为 5px 18px 12px 10px（上右下左各不相同）
+      - 模拟手工剪裁时无法精确控制的边缘
+   
+   b) 夸张的负外边距：
+      - 之前：margin: 0 -5px（轻微重叠）
+      - 现在：margin-left: -12px 到 -16px（强重叠）
+      - 字母之间产生明显的视觉遮挡，像堆叠的报纸碎片
+   
+   c) 加大的旋转角度：
+      - 之前：-4deg 到 4deg 范围
+      - 现在：-6deg 到 6deg 范围
+      - 每个字母旋转角度随机分配，不再对称
+      - 例如：C(-5deg), H(3deg), A(-2deg), R(6deg), L(-6deg), E(2deg), S(-3deg)
+   
+   d) Z-index 层级管理：
+      - 为每个字母设置不同的 z-index（7到1递减）
+      - 确保重叠时有明确的前后关系
+      - 视觉上形成深度感和立体感
+
+5. 响应式优化
+   - 平板端：保持重叠效果，缩小 padding 和 margin
+   - 移动端：进一步缩小字母间距，但保持混搭和不规则感
+   - 确保在任何屏幕尺寸下都有"手工拼贴"的视觉冲击力
+
+----------------------------------------
+【整体视觉效果提升】
+----------------------------------------
+
+修复前：
+- 导航栏在大屏幕上过度聚拢，缺乏张力
+- 标题字母整齐划一，像标准化排版
+- 有统一边框，显得过于设计化
+
+修复后：
+- 导航栏完美贴合屏幕边缘，呼吸感充足
+- 标题字母字体混搭，色彩对比鲜明
+- 无边框 + 不规则内边距 + 夸张重叠 + 随机旋转
+- 整体呈现真实的"报纸剪纸拼贴"质感
+- 符合复古独立杂志（Digital Zine）的审美定位
+
+========================================
+
+----------------------------------------
+【问题三修复】主标题字母 Hover 状态层级跳跃与动画失效
+----------------------------------------
+
+问题描述：
+主标题 "CHARLES" 的字母在鼠标悬停时存在两个严重问题：
+1. 层级跳跃：悬停时字母会突然跳到最前面，破坏原有的前后关系
+2. 动画失效：鼠标悬停时没有任何动画效果，transition 完全不工作
+
+根本原因：
+CSS 动画使用了 animation-fill-mode: both，这会强制锁定动画的最终状态。
+在这种状态下，transform 属性被动画完全控制，导致：
+- transition 无法介入和覆盖 transform 值
+- :hover 状态的 transform 被忽略
+- 交互效果完全失效
+
+修复逻辑：
+
+1. 移除 z-index 跳跃
+   - 之前：.letter:hover { z-index: 10; }
+   - 现在：完全移除悬停时的 z-index 修改
+   - 效果：每个字母在 Hover 时保持原有的层级关系（C > H > A > R > L > E > S）
+
+2. 修改 animation-fill-mode 属性
+   - 之前：animation: chaotic-drop 0.9s cubic-bezier(...) both;
+   - 现在：animation: chaotic-drop 0.9s cubic-bezier(...) forwards;
+   - 技术原理：
+     * both = forwards + backwards（强制锁定初始和最终状态）
+     * forwards = 仅保持最终状态（允许后续样式覆盖）
+     * 使用 forwards 后，transform 值可以被 transition 和 :hover 覆盖
+
+3. 添加丝滑过渡效果
+   - 为 .letter 基础样式添加双属性过渡：
+     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+                 box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+   - 技术要点：
+     * 同时为 transform 和 box-shadow 添加过渡
+     * 使用自定义缓动曲线 cubic-bezier(0.25, 1, 0.5, 1)
+     * 缓动特性：慢启动 → 快速中段 → 柔和结束
+     * 悬停进入和离开都极度丝滑
+
+4. 优化 Hover 浮动效果
+   - 之前：transform: translateY(-8px);（生硬上浮）
+   - 现在：transform: translateY(-6px) scale(1.05) rotate(var(--rot));
+   - 技术细节：
+     * translateY(-6px)：轻微上浮，更自然
+     * scale(1.05)：轻微放大，增强反馈感
+     * rotate(var(--rot))：必须保留原有的倾斜角度，避免视觉错乱
+     * box-shadow: 10px 10px 0px var(--dark-frame)：阴影拉长，模拟真实物理光线
+
+技术总结：
+
+CSS 动画优先级层级：
+1. animation-fill-mode: both > 所有其他样式
+2. animation-fill-mode: forwards > 允许后续样式覆盖
+3. transition > 可以介入动画完成后的状态
+4. :hover > 可以修改 transition 正在监听的属性
+
+最佳实践：
+- 需要后续交互的动画使用 forwards
+- 纯展示型动画且不需要交互时可使用 both
+- 始终测试动画完成后的交互是否正常
+- transition 必须监听所有需要变化的属性（transform, box-shadow 等）
+
+视觉效果对比：
+
+修复前（动画失效）：
+静态 → Hover → 静态
+  ↓      ↓      ↓
+层级1 → 层级10 → 层级1  (跳跃)
+无动画 → 无动画          (失效)
+
+修复后（丝滑流畅）：
+静态 → Hover → 静态
+  ↓      ↓      ↓
+层级1 → 层级1 → 层级1   (稳定)
+丝滑过渡进 → 丝滑过渡退  (流畅)
+角度保持 → 角度保持     (完美)
+
+----------------------------------------
+【整体视觉效果最终状态】
+----------------------------------------
+
+当前状态：
+- 导航栏完美贴合屏幕边缘，呼吸感充足
+- 标题字母字体混搭，色彩对比鲜明
+- 无边框 + 不规则内边距 + 夸张重叠 + 随机旋转
+- 整体呈现真实的"报纸剪纸拼贴"质感
+- 主标题乱序物理掉落动画，带有真实的阻尼回弹实感
+- 悬停交互丝滑流畅，层级关系稳定不变
+- 符合复古独立杂志（Digital Zine）的审美定位
+
+========================================
+
+========================================
+
+更新日期：2026年9月19日
+更新阶段：第三阶段 · 四科目分区 + 发布模版
+
+----------------------------------------
+【新增】四个科目分区页（同一套模版）
+----------------------------------------
+
+- subjects/bcm212.html（Research Practice）
+- subjects/bcm241.html（Media Ethnography）
+- subjects/bcm206.html（Future Networks）
+- subjects/bcm222.html（Media Justice）
+
+页面结构（同一模版，数据驱动）：
+1. HERO：科目代码拼贴大标题（与大标题 CHARLES 同源的字体混搭）+
+   科目大图（胶带拍立得相框）
+2. 剪刀虚线分割
+3. 作业索引：每条作业含 No. 编号 / 小标题 / 简介 / 日期 / 标签 /
+   浏览量 / 进入按钮 / 取自文章内容的配图，左右图文隔行镜像
+
+----------------------------------------
+【新增】文章页模版（单一文件 article.html）
+----------------------------------------
+
+- articles/article.html?id=<作业id> 动态渲染全部 9 篇作业
+- 结构：科目返回链 + ASSIGNMENT No. → 大标题 → 分割线 →
+  日期/署名/浏览量/标签元信息条 → 主图（拍立得）→ 正文
+  （段落/小标题/引用块）→ 视频块（复古电视机框）→ 互动区
+- 视频支持：assets/videos/ 放入视频后在 content.js 填入路径；
+  未填时显示复古测试卡占位
+
+----------------------------------------
+【新增】互动功能：评论 / 点赞 / 浏览量
+----------------------------------------
+
+- 点赞：每浏览器一次（可取消），实体按键下压交互 + 爱心弹跳
+- 评论：昵称 + 留言便签卡（胶带贴纸风），Ctrl+Enter 快速发布，
+  内容已做 HTML 转义防注入
+- 浏览量：每次浏览器会话只 +1，刷新不重复计数；
+  科目页卡片同步显示
+- 数据层独立于 blog-data.js（当前 localStorage 实现，
+  未来换后端只改这一个文件）
+
+----------------------------------------
+【改造】主页科目按钮 → 真实链接
+----------------------------------------
+
+- index.html 四个科目按钮由 <button> 改为 <a>，
+  视觉样式不变，可直接点入分区页
+
+----------------------------------------
+【架构】内容与样式分离
+----------------------------------------
+
+- shared.css / subjects.css / article.css：设计令牌与主页完全一致
+- content.js：作业内容注册表（新增作业只改这一个文件）
+- blog-data.js：评论/点赞/浏览量数据层
+- shared.js / subject-page.js / article-page.js：共享逻辑与渲染器
+- assets/subjects/ + assets/posts/：13 张复古拼贴风格占位配图
+  （risograph 三色限定：松石青 / 奶油白 / 暖黑），可随时替换
+
+质量验证：jsdom 行为链路 62 项 + headless Chrome 视觉断言 18 项，
+全部通过（含移动端 390px 无溢出、拼贴字形完整）。
+
+========================================
+
+更新日期：2026年9月19日
+更新阶段：第三阶段补丁 · 测试文章 + 本地预览服务
+
+----------------------------------------
+【新增】100 字测试文章（bcm212-t1）
+----------------------------------------
+
+- 标题：《测试文章：一百字就好》（No.03，TEST 标签）
+- 位于 BCM212 分区第 3 条，专门用来验证文章模版全链路：
+  正文段落 / 引用块 / 首图 / 日期署名 / View 计数 / 点赞 / 评论
+- 确认无误后可在 content.js 中直接删除该条记录
+
+----------------------------------------
+【新增】本地预览服务（.workbuddy/serve.mjs）
+----------------------------------------
+
+背景：在预览面板中单独打开某个 html 文件时，文件被复制到
+隔离目录，相对路径的 CSS/JS/图片全部 404，页面呈现裸 HTML。
+
+解决：node .workbuddy/serve.mjs 起本地静态服务（127.0.0.1:8788），
+以 http://127.0.0.1:8788/ 访问整站，所有资源按真实路径加载。
+
+访问入口：
+- 主页      http://127.0.0.1:8788/index.html
+- 分区页    http://127.0.0.1:8788/subjects/bcm212.html
+- 测试文章  http://127.0.0.1:8788/articles/article.html?id=bcm212-t1
+
+----------------------------------------
+【修复】测试断言同步 + 代理干扰排查
+----------------------------------------
+
+- bcm212 新增测试文章后，domtest.mjs / uishot.mjs 中
+  「2 条作业卡片」断言同步更新为 3 条
+- jsdom 回归 79 项全过（新增第 6 节：测试文章端到端 17 项）
+- 排查发现：本机代理环境变量（http_proxy=127.0.0.1:1436）会
+  拦截 curl 对 localhost 的请求导致 502 误判；验证脚本统一
+  加 --noproxy / NO_PROXY 绕过后全部通过
+- 新增 verify-article.mjs（12 项真实浏览器渲染断言）与
+  shot-actionbar.mjs（互动区视口截图），实测点赞/浏览/评论
+  在真实 Chrome 中正常工作
+
+========================================
+
+更新日期：2026年9月19日
+更新阶段：第四阶段 · 全站繁中 / 英文自由切换
+
+----------------------------------------
+【重构】语言机制：从「并排展示」改为「自由切换」
+----------------------------------------
+
+旧机制的问题：
+- 只有主页有切换按钮，四个分区页与文章页完全没有入口
+- data-zh / data-en 并排写死在同一元素上，动态渲染的内容
+  （科目文案 / 作业卡片 / 文章正文 / 互动区）完全不受切换控制
+- 按钮上「EN / 繁」把两种语言并排放在一处，并非真正的切换
+
+新机制（i18n.js 语言引擎）：
+- 单一语言状态源：localStorage（键 cp:lang），跨页面记住选择
+- 文案集中注册：静态 HTML 用 data-i18n="key" 声明；
+  界面文案在 shared.js 用 addAll() 注册；
+  内容双语在 content.js 每条记录写 { en: '...', zh: '...' }
+- 切换即时生效，无需刷新页面：
+  <html lang> / 页面标题 / 导航 / 页脚 / 正文 / 表单占位符 /
+  日期格式（SEP 04, 2026 ↔ 2026 年 09 月 04 日）全部同步
+- 内容注册表技术字段（id / no / date / 图片路径）保持单字符串，
+  只有面向读者的文字才需要双语，写起来不啰嗦
+
+----------------------------------------
+【新增】全站每个页面的语言切换按钮
+----------------------------------------
+
+- 主页：导航右侧（原有位置，样式不变）
+- 四个科目分区页 + 文章页：导航右侧新增同款复古立体按键
+- 按钮显示「将要切到的语言」：英文态显示「繁中」，
+  中文态反色显示「EN」，一眼可知点击后去哪里
+- 移动端 390px：按钮压缩至 36px 高，与科目 chips 同行单行排列，
+  无横向溢出（实测验证）
+
+----------------------------------------
+【改造】涉及文件
+----------------------------------------
+
+- 新增 i18n.js：语言引擎（状态 / 注册表 / DOM 应用 / 按钮绑定）
+- content.js：全部 4 科目 10 篇作业重写为双语记录
+  （标题 / 简介 / 标签 / 正文区块 / 图注 / 邮戳，繁中对齐台湾用语习惯）
+- shared.js：界面文案表（约 45 组 key）+ tr()/trList()/t() 工具 +
+  日期格式双语化；导航 chips 与页脚随语言重绘
+- subject-page.js / article-page.js：渲染全部经 tr() 取当前语言；
+  监听 zine:langchange 事件整体重绘（文章页互动数据不重置）
+- script.js（主页）：科目按钮改由 content.js 驱动（双语、单一事实源）
+- index.html / subjects/*.html / articles/article.html：
+  移除全部 data-zh / data-en 并排写法，静态文案改 data-i18n 声明，
+  统一引入 i18n.js（必须最先加载）
+- styles.css / shared.css：语言按钮「当前繁中态」反色样式；
+  窄屏导航新增语言按钮的紧凑排布
+
+----------------------------------------
+【质量验证】
+----------------------------------------
+
+- jsdom 回归 127 项全过，其中双语专项 32 项：
+  默认英文 / 切繁体（跨页面记住）/ 文章页正文与互动区 /
+  运行时点击切换不刷新 / 主页按钮双语 / 四科目页逐一验证 /
+  全站无 data-zh 残留 / 所有页面引入 i18n.js
+- 真实 Chrome 视觉验证 38 项（38 通过，1 项为测试断言写错已修正）：
+  三种页面 × 两种语言逐页截图，确认无中英并排混排；
+  移动端 390px 导航单行不溢出、语言按钮完整可见
+
+========================================
+
+========================================
+更新日期：2026年9月19日
+更新阶段：第六阶段 —— About Me + 联系信息页脚（CV 驱动）
+========================================
+
+----------------------------------------
+【需求背景】
+----------------------------------------
+
+用户提供 CV.pdf，要求：
+1. 主页下方添加 About me 区块（不是新页面，直接放主页）
+2. About me 必须包含一张图片 + 一小段介绍（直接 copy CV 原文）
+3. 基础信息（联系方式之类）也添加进主页，放在页尾
+
+----------------------------------------
+【素材准备】
+----------------------------------------
+
+- 用 pypdf 提取 CV.pdf 全文（姓名 Charles 王永成 / 电话 / 邮箱 /
+  地址 / 学历 / 语言 / 技能 / About Me 原文）
+- CV 内嵌证件照为 JPEG2000 格式，用 Pillow 转 PNG：
+  assets/charles-portrait.png（219×310）
+
+----------------------------------------
+【index.html 新增内容】
+----------------------------------------
+
+1. 导航栏新增 ABOUT 锚点按钮（data-nav-anchor="about"，
+   点击平滑滚动到 About 区块，窄屏自动隐藏）
+2. hero 之后新增剪刀虚线分割线（复用子页视觉母题）
+3. 新增 <section id="about"> About Me 区块：
+   - 左：拍立得相框人像（胶带贴角 + 微旋转 + hover 回正上浮）
+     + 图注 CHARLES — 2026
+   - 右：kicker 小标「ABOUT ME / WHO I AM」+ Impact 大标题 +
+     职衔行 + CV 原文两段（首字放大）+ 三枚语言图章
+     （English FLUENT / Cantonese PROFICIENT / Mandarin NATIVE）
+4. 新增 <footer class="site-footer"> 深色页脚，三栏：
+   - 身份栏：Charles / 王永成 / Don't leave any regrets / 版本行
+   - 联络栏：GET IN TOUCH —— 电话（tel: 链接）/
+     邮箱（mailto: 链接）/ 所在地，邮票图章样式
+   - 学历+选单栏：UOW / 学位 / Year 3 / 预计 2027 毕业 +
+     科目链接 + 回到顶部
+   - 底行：版权 + END OF PAGE
+
+----------------------------------------
+【双语支持（繁中/英文自由切换）】
+----------------------------------------
+
+- shared.js 新增约 30 组 i18n key：
+  about.*（About 区块）/ contact.*（联系方式）/
+  lang.*（语言图章）/ footer.menuHeading / footer.sitemap 等
+- About 简介两段：英文为 CV 原文逐字引用，繁中为对应翻译
+- 所在地繁中译名：中國香港 港島東區（遵循一国原则表述）
+- renderAboutLangs()：语言图章按当前语言重绘
+- renderFooterLinks() 扩展：追加「回到顶部」链接（全站页脚生效）
+
+----------------------------------------
+【styles.css 新增（第五阶段样式段）】
+----------------------------------------
+
+- .nav-anchor：复古立体按键（硬阴影 + 按压位移）
+- .scissor-divider：居中虚线 + 剪刀 SVG（30×30，修复了
+  SVG 未限尺寸被 flex 拉伸到 1028px 高的布局事故）
+- .tape / .tape.tl / .tape.tr：胶带贴角
+- .about-grid：max-width 1100 居中 + 340px/1fr 两栏
+  （修复了无容器约束导致照片贴视口左边缘的问题）
+- .about-figure：拍立得白框 + 微旋转 + hover 交互
+- .about-title：Impact 黑体字块 + 硬阴影 + 微旋转
+- .about-para：1.85 行高 + ::first-letter 首字放大
+- .lang-stamp：语言图章（各自微旋转，hover 回正）
+- .site-footer / .footer-inner：深色底 + 三栏 grid
+- .contact-item：邮票图章条目（hover 右移）
+- 响应式：960px 单列 / 600px 隐藏锚点、联系条目撑满
+
+----------------------------------------
+【质量验证】
+----------------------------------------
+
+- jsdom 全站回归：127 项全过（无破坏）
+- 新增 aboutest.mjs：48 项全过，覆盖：
+  结构存在性 / About 区块位于主页 hero 之后 / CV 原文逐字比对 /
+  联系信息完整性（电话/邮箱/地址/学历/毕业年份）/
+  tel: 与 mailto: 链接 / 语言图章三枚 / 锚点滚动触发 /
+  繁中态翻译完整性 / 运行时无错误 / 人像资源存在
+- 真实 Chrome 视觉验证（aboutshot.mjs，clip 定点截图方案）：
+  英/中两语言 × About/页脚 截图 + 整页截图；
+  判定项全过：图片加载 / 无水平溢出 / 联系条目 3 / 图章 3 /
+  照片不贴边 / 中英内容真实切换 / 分割线高度正常
+- 期间修复两个截图方案问题：全站 scroll-behavior:smooth
+  导致滚动截图错位 → 改用 CDP clip 定点截图；
+  reveal 动画未触发导致内容透明 → 截图前手动置为终态
+
+========================================
+
+========================================
+更新日期：2026年9月19日（晚）
+更新阶段：第六阶段微调 —— About 区四处修订
+========================================
+
+1.【About 大字移除】
+   - 删除 index.html 中 <h2 class="about-title">（ABOUT / 關於我 大字块）
+   - 删除 styles.css 中 .about-title 样式段
+   - 职衔行 .about-title-zh 更名为 .about-role，上提紧跟 kicker
+   - 现在区块结构：kicker → 职衔行 → CV 原文两段 → PORTFOLIO
+
+2.【GET IN TOUCH 联系条目改黑底米白字】
+   - .contact-item：米白底黑字 → 深黑底 #1B1915 + 米白虚线描边
+   - 文字与联系值全部米白（--cream-white）
+   - 链接（tel:/mailto:）显式 text-decoration:none，
+     不再继承浏览器默认蓝色；hover 用松石青下划线点睛
+   - 分隔竖线与 hover 阴影改米白系半透明
+
+3.【LANGUAGES → PORTFOLIO】
+   - 移除语言图章区块（.about-langs / .lang-stamp 样式与
+     renderAboutLangs 渲染器、lang.* 六组 i18n key 全部清除）
+   - 新增 PORTFOLIO 方格按钮（.portfolio-btn，白底硬阴影微旋转，
+     与全站按键同语言），接入用户 Google Drive 作品集链接，
+     target=_blank + rel=noopener
+   - 双语文案：VIEW PORTFOLIO ↗ / 查看作品集 ↗，副标 GOOGLE DRIVE
+
+4.【导航 logo 改名】
+   - index.html 导航栏 "Charles Portfolio" → "Charles Blog"
+     （含 aria-label；页脚版权行维持原文待用户确认）
+
+质量验证：
+   - domtest 127 项全过；aboutest 更新后 56 项全过
+     （新增：大标题已移除/按钮链接精确匹配/新窗口/logo 改名/
+       样式护栏——lang-stamp 与 about-title 样式已清除、
+       contact 深底断言、a.c-value 显式米白无下划线）
+   - aboutshot 视觉判定全过：getComputedStyle 实测联系条目
+     背景为深色、文字为米白、链接无蓝色无下划线；
+     Drive 链接精确匹配；中英 kicker/简介/按钮文案真实切换
+
+========================================
+更新日期：2026年9月19日（晚·第二次微调）
+更新阶段：第六阶段微调 —— About/页脚三处精简
+========================================
+
+1.【Portfolio 按钮精简】
+   - 按钮文案由「VIEW PORTFOLIO ↗」缩为「VIEW」（繁中「查看」）
+   - 移除按钮内 GOOGLE DRIVE 副标注行，改为单行水平居中
+   - 尺寸收紧：padding 14px 24px → 9px 26px，字号 0.98rem → 0.82rem
+   - 实测尺寸 176×68 → 98×45（繁中 86×45），硬阴影 4px → 3px
+   - Drive 链接与 target=_blank / rel=noopener 保持不变
+
+2.【EDUCATION 栏目移除】
+   - 删除页脚第三栏整个学历块（UOW / 学位 / Year 3 / 2027 毕业）
+   - 清理 CSS：.edu-line 全系列规则、.footer-heading--menu 的
+     32px 上边距（栏目上移后不再需要）
+   - 页脚三栏变为：身份 / 联系方式 / MENU 选单（MENU 上移至栏首）
+
+3.【kicker 文案精简】
+   - 「ABOUT ME / WHO I AM」→「ABOUT ME」（繁中「關於我」）
+   - 一并清理 i18n 中随之失效的 about.title / titleZh / lead /
+     tape / stamp / langsTitle 等历史遗留 key
+
+质量验证：
+   - domtest 127 项全过；aboutest 更新后 57 项全过
+     （新增断言：kicker 精确等于 ABOUT ME / 按钮文案为 VIEW /
+       副标注已移除 / EDUCATION 行数为 0 / 页脚无 UOW 字样 /
+       样式护栏 .edu-line 与 .pb-sub 已清除）
+   - aboutshot 视觉判定全过：实测按钮 98×45（高度断言 < 52px）、
+     副标注不存在、EDUCATION 行数 0、页脚无 UOW、
+     中英按钮文案分别正确切换
+
+========================================
+更新日期：2026年9月19日（晚·第三次微调）
+更新阶段：第六阶段微调 —— 按钮/联系信息/子页 logo
+========================================
+
+1.【Portfolio 按钮文案调整】
+   - 按钮文字：VIEW → VIEW PORTFOLIO（繁中「查看作品集」）
+   - 移除上方 PORTFOLIO 小标题（.about-lead 节点与样式一并删除，
+     i18n key about.portfolioTitle 清除）
+   - 补回按钮上边距 margin-top: 36px（原间距由被删的小标题提供，
+     删除后按钮贴上了正文，需显式补足）
+
+2.【GET IN TOUCH 联系信息纯文字化】
+   - 删除地址条目（BASED IN / Hong Kong Island, Eastern），
+     繁中态同步不再出现「中國香港 港島東區」
+   - 电话与邮箱取消超链接（原 tel: / mailto:），改为纯文本 span
+   - 去掉方框：移除底色 #1B1915、虚线描边、硬阴影、图标
+   - 版式改为「小标签在上 / 值在下」的左对齐纯文字列表
+   - 联系条目由 3 条减为 2 条
+
+3.【子页面左上角 logo 统一】
+   - subjects/bcm212.html、bcm241.html、bcm206.html、bcm222.html
+     与 articles/article.html 的导航 logo：
+     Charles Portfolio → Charles Blog（与主页一致）
+   - 页脚 footer-logo 与 <title>/meta 暂维持原样
+
+质量验证：
+   - domtest 127 项全过；aboutest 更新后 68 项全过
+     （新增：按钮文案 VIEW PORTFOLIO / 小标题已移除 /
+       地址已移除且无地址标签 / 联系条目 2 条 /
+       三个「无」断言——无 tel: 链接、无 mailto: 链接、
+       联系条目内无任何 a 标签、无图标 /
+       5 个子页面 logo 源码逐一校验）
+   - aboutshot 视觉判定全过，getComputedStyle 实测联系条目：
+     背景 rgba(0,0,0,0) 全透明、border 0px、box-shadow none、
+     链接数 0、图标无；子页面实测导航 logo 均为 Charles Blog
+
+========================================
+更新日期：2026年9月19日（晚·第四次微调）
+更新阶段：第七阶段 —— logo 统一 / ABOUT 移除 / 姓名移除 / 代码体检
+========================================
+
+1.【子页面页脚 logo 统一】
+   - 4 个科目页 + 文章页的 .footer-logo：
+     Charles Portfolio → Charles Blog（与导航 logo 一致）
+
+2.【首页导航 ABOUT 按钮移除】
+   - 删除 index.html 中的 .nav-anchor 按钮
+   - 连带清理：initAnchorNav() 函数及两处调用、
+     .nav-anchor 全部样式（含 600px 断点隐藏规则）、
+     i18n 键 about.nav 与 footer.about
+
+3.【页脚中文姓名移除】
+   - 删除 .footer-name-zh（王永成）节点与样式
+   - 中英两种语言界面下均不再出现该姓名
+
+4.【全局代码体检与清理】
+   - 死代码清除：
+     · CSS  .footer-heading--menu（菜单上移后已无引用）
+     · i18n 死键 10 个：nav.ariaLabel、nav.chipsLabel、
+       home.logoAria、footer.about、about.title、about.titleZh、
+       about.lead、about.tape、about.stamp、about.langsTitle
+       以及前几轮遗留的 contact.address/addressValue/
+       education/eduSchool/eduDegree/eduYear/eduGrad/
+       tagline/itemAria
+     · JS   initAnchorNav、renderAboutLangs（均已无调用）
+   - 确认为误报、保留不动：.bl（shared.css 的 .tape.bl 在用）、
+     .css/.org/.w3（来自注释与 data-URI 字符串）
+   - 死键清理后 shared.js 界面文案注册区更精简；
+     lang.switch、footer.linksLabel 等仍在使用的键全部保留
+
+质量验证（清理前后逐项比对，确保网站行为零变化）：
+   - 7 个 JS 文件 node --check 语法全过
+   - domtest 127 项全过（含 4 科目页 + 文章页 + 双语专项）
+   - aboutest 更新后 76 项全过
+     （新增：ABOUT 按钮已移除 / nav-anchor 元素不存在 /
+       语言按钮保留 / 页脚无「王永成」中英双态 /
+       多项死代码护栏——.nav-anchor、.footer-name-zh、
+       .about-lead 样式已清除、initAnchorNav 与死键已清除）
+   - aboutshot 视觉判定全过：主页截图确认导航仅剩语言按钮、
+     页脚无中文姓名；子页面页脚 logo 实测 Charles Blog
+
+5.【新增交付物】上线计划.md
+   - 面向用户的纯文字部署方案（未执行任何操作）：
+     · 平台选型对比（GitHub Pages / Netlify / Cloudflare /
+       腾讯云 EdgeOne Pages / 国内备案服务器）
+     · 重点说明 GitHub Pages 在国内访问不稳定的问题
+     · 上传步骤：Git 初始化、仓库创建、PAT 令牌、
+       .gitignore 配置、上传前自检清单
+     · 四种部署方案的具体操作步骤
+     · 自定义域名购买与 DNS 绑定
+     · 后续更新流程（改文章/加文章/换视频/改样式）
+     · 改坏后的 Git 回退方法
+     · 进阶：点赞评论浏览量接真实后端的三种方案
+     · 踩坑清单（路径大小写、目录排除、备案等）
+
+========================================
+
+
+================================================================
+第八阶段：转为纯静态站点 + 品牌统一 + 上线计划重写
+================================================================
+
+【一】品牌统一
+- 页脚版权行「© 2026 Charles Blog · Student Designer」全站统一
+  （index.html + 4 科目页 + article.html，中英双态）
+- 5 个子页面的 <title> 与 <meta description> 确认均为 Charles Blog
+- 全站已无任何 "Charles Portfolio" 残留
+
+【二】移除全部互动功能（转为纯静态）
+移除内容：
+- 点赞按钮（likeBtn）、点赞计数、heart-pop 动画、liked 状态
+- 浏览量显示（文章页元信息栏 viewsMeta、行动条 viewCounter、科目页卡片浏览量）
+- 留言板（表单、留言列表、留言计数、相对时间显示）
+- 行动条 action-bar 与互动提示 action-hint
+- 整个 interactionZone 区块
+
+代码清理：
+- articles/article.html：删除整个互动区 DOM，移除 blog-data.js 引用
+- article-page.js：重写，删除 initInteractions / renderComments / paintArticleText 中的
+  浏览量渲染；只保留标题、元信息、正文、影片
+- subject-page.js：renderCard 删除浏览量 meta 项
+- 4 个科目页：移除 blog-data.js 引用
+- 删除 blog-data.js 文件（数据层整体作废）
+- article.css：删除 .interaction-zone / .action-bar / .like-btn / .view-counter /
+  .action-hint / .comments-* / .comment-* / .form-error / .views-unit /
+  @keyframes heart-pop 等约 200 行
+- shared.js：删除 action.* 与 notes.* 两组 i18n 键（约 25 个）、
+  删除 relativeTime() 与 formatCount() 函数、
+  initPressEffect 不再匹配 .like-btn
+- content.js：测试文章 bcm212-t1 的简介与引言不再提及留言和按赞
+
+【三】测试体系同步
+- domtest.mjs：改为 123 项。新增「纯静态护栏」——断言所有互动元素均不存在、
+  站内无 cp:views/cp:likes/cp:comments 存储键、无 BlogData 引用、blog-data.js 已删
+- verify-article.mjs：浏览量断言改为「互动功能已移除」断言
+- langshot.mjs：删除留言板/点赞/浏览量的双语断言，改为标签双语断言
+- 删除 shot-actionbar.mjs（该脚本只为旧互动区截图，已失效）
+
+【四】验证结果
+- 6 个 JS 文件 node --check 语法全过
+- domtest 123 项全过
+- aboutest 76 项全过
+- aboutshot 视觉判定全过
+- 真机验证：文章页无互动元素、元信息栏仅「日期+署名+标签」、无横向溢出；
+  科目页卡片元信息仅「标签 · 日期」
+
+【五】上线计划.md 重写（海外版 · 精简）
+- 从 11 节 400 行压缩到 9 节，聚焦「主要给海外的人看」
+- 核心结论：代码放 GitHub，网站用 Netlify 部署
+- 明确说明本站已是纯静态（无后端、无存储、无登录），
+  因此部署只有两步，且除域名外全部免费
+- 附踩坑清单（token 推送、.gitignore、Publish directory、路径大小写等）
+
+================================================================
+第九阶段：四科简介改版 + 移除学期徽章
+================================================================
+- content.js：四个科目的 tagline（小标题）与 desc（简介）全部换成
+  用户提供的双语正式文案；删除全部 stamps 字段
+- subject-page.js：删除 heroStamps 渲染逻辑
+- 4 个科目页：删除 <div class="hero-meta" id="heroStamps">
+- subjects.css：删除 .hero-meta / .meta-stamp 死规则
+- domtest.mjs：邮戳断言反转为「必须不存在」
+- 回归：content.js / subject-page.js 语法过；domtest 123 项全过；
+  真机截图 BCM212 英文态、BCM206 中文态确认新文案渲染正常、徽章消失
+
+================================================================
+第九階段補丁：HEO 图说精简 + 文章索引暂时隐藏
+================================================================
+
+【一】四科 HERO 拍立得图说改版（content.js → heroCaption）
+四个科目页右图下方图说换成正式文案：
+- BCM212   洞察与分析 / Insights & Analysis
+- BCM241   受众轮廓 / Audience Personas
+- BCM206   数字连结 / Digital Connections
+- BCM222   权力与发声 / Power & Voices
+（中途曾加入中文括号图像说明，后按用户要求全部去掉，只留主标）
+
+【二】文章索引暂时隐藏（仅隐藏，未删除！）
+
+▶ 需求
+每个科目页「剪刀虚线以下」的 ASSIGNMENTS 文章列表整体隐藏，
+仅保留顶部的科目简介（HERO）。用户以后要替换为真实文章。
+隐藏后在该位置显示一行小字「持續更新中」。
+要求：**隐藏而非删除**，所有文章数据与标记必须完整保留，方便日后还原。
+
+▶ 隐藏的实现方式（共 5 处改动，四页同步）
+
+1. subjects/bcm212.html、bcm241.html、bcm206.html、bcm222.html
+   - <section class="assignments-section"> 上添加两个属性：
+       hidden                 ← 浏览器原生隐藏，不占任何高度
+       data-articles-hidden   ← 自定义还原标记（方便日后全局搜索定位）
+   - #assignmentList 上添加 class="is-placeholder"
+       ← 渲染器据此判断「索引处于隐藏状态」
+   - 在 <section> 之前新增一段小字区块：
+       <section class="assignments-note-section">
+         <div class="zine-container">
+           <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
+         </div>
+       </section>
+   ※ 小字用 data-i18n 绑定，随全站语言切换自动双语（无需额外 JS）
+
+2. subject-page.js（渲染器加一个提前返回）
+   在 renderSubject() 里拿到 list 后插入：
+       if (list.classList.contains('is-placeholder')) return; // 文章索引暂时隐藏
+   作用：即使 hidden 失效（如被 CSS/JS 覆盖），也不会渲染出卡片。
+   与 HTML 的 hidden 形成「双保险」。
+   ※ 渲染逻辑与样式全部保留，只是不执行；countBadge 等节点仍在 DOM 中。
+
+3. shared.js（新增 1 组界面文案）
+       'subject.updating': ['CONTINUOUSLY UPDATING — MORE WORK COMING SOON',
+                            '持續更新中 — 更多作品即將上線'],
+
+4. subjects.css（新增小字样式段，位置在「空状态」规则之前）
+       .assignments-note-section { padding: 44px 0 64px; }
+       .assignments-note {
+         text-align: center;
+         font-family: var(--font-round);   /* Varela Round 圆体 */
+         font-size: 0.82rem;               /* 刻意收小、低存在感 */
+         letter-spacing: 2px;
+         opacity: 0.65;
+         color: var(--dark-frame);         /* 曜石黑 */
+       }
+
+▶ 完全未改动的内容（确认为「原样保留」）
+- content.js：四科全部 articles / assignments 数据一字未动
+  （标题、简介、日期、标签、配图、正文、视频路径全部保留）
+- subject-page.js 的 renderCard()、letterBlocks()、HERO 渲染全部保留
+- subjects.css 的 .assignments-section / .section-head / .section-title /
+  .section-count / .section-note / .assignment-card / .assignments-empty
+  等全部规则保留
+- articles/article.html 与 article-page.js：文章页完全不受影响，
+  URL 直连（articles/article.html?id=xxx）仍可正常打开阅读
+
+▶ 日后还原/替换方法（两种）
+
+方法 A：暂时恢复显示（保留现有文章）
+  把四个科目页 HTML 中
+      <section class="assignments-section" hidden data-articles-hidden>
+  改成
+      <section class="assignments-section" data-articles-hidden>
+  （即删掉 hidden 三个字），同时删掉 #assignmentList 上的 class="is-placeholder"。
+  如需一并去掉小字，再删除 <section class="assignments-note-section"> 整段。
+
+方法 B：替换成真实文章后显示（推荐）
+  1. content.js：把每科 assignments 数组换成你的真实文章记录
+     （字段格式见文件顶部注释：id / no / title / excerpt / date /
+       tags / image / figLabel / body 区块）
+  2. 按方法 A 恢复 hidden 与 is-placeholder
+  3. 小字段落可保留或删除（若保留可改文案）
+
+▶ 质量验证
+- shared.js / subject-page.js node --check 语法全过
+- domtest 由 123 → 132 项全过，改动断言：
+  · 「作业索引渲染 3 条」→「索引已隐藏：不渲染卡片」
+  · 「作业标题/日期」相关 3 条 →「显示持续更新中小字 + 卡片仍隐藏」
+  · 第 6 节测试文章：改为断言「卡片不渲染 + 数据仍在 content.js」
+  · 第 12 节四科目循环：「卡片渲染正常」→「索引已隐藏 + 小字存在」
+  · 新增：容器 hidden 生效且带还原标记、小字绑定 i18n 键
+- 新增 verify-hidden.mjs 真机验证：57 项全过
+  （4 科目 × 2 语言：容器 hidden 生效、隐藏区高度 0px、
+    无卡片渲染、小字可见且文案正确、HERO 完整、无横向溢出；
+    另验证文章页 URL 直连仍可打开）
+- aboutest 76 项全过（无破坏）

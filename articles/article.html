@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Charles Blog — assignment post.">
+    <title>Article - Charles Blog</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Varela+Round&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="../article.css">
+</head>
+<body>
+
+    <div class="texture-overlay" aria-hidden="true"></div>
+
+    <nav class="navbar" role="navigation">
+        <div class="navbar-container">
+            <a href="../index.html" class="logo">Charles Blog</a>
+            <div class="subject-chips"></div>
+            <button class="lang-switch-btn" data-lang-switch type="button" aria-label="Switch language">
+                <span class="lang-text">EN</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="content-area" role="main">
+        <div id="articleRoot">
+
+            <!-- 文章头部：大标题 + 元信息 -->
+            <section class="article-hero">
+                <div class="zine-container">
+                    <div class="article-kicker">
+                        <a class="subject-backlink" id="subjectLink" href="#">←</a>
+                        <span class="assignment-kicker" id="articleNo"></span>
+                    </div>
+                    <h1 class="article-title" id="articleTitle"></h1>
+
+                    <div class="article-meta-bar">
+                        <span class="meta-item"><span class="icon" aria-hidden="true">📅</span><span id="postDate"></span></span>
+                        <span class="divider-v" aria-hidden="true"></span>
+                        <span class="meta-item"><span class="icon" aria-hidden="true">✍</span><span id="postAuthor"></span></span>
+                        <span class="divider-v" aria-hidden="true"></span>
+                        <span id="postTags" style="display:inline-flex; gap:8px; flex-wrap:wrap;"></span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="zine-container"><hr class="article-divider"></div>
+
+            <!-- 主图 -->
+            <figure class="article-figure" id="heroFigure">
+                <span class="tape tl" aria-hidden="true"></span>
+                <span class="tape tr" aria-hidden="true"></span>
+                <img id="heroImg" src="" alt="">
+                <figcaption id="heroCap"></figcaption>
+            </figure>
+
+            <!-- 正文 -->
+            <div class="article-body" id="articleBody"></div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div>
+                <a class="footer-logo" href="../index.html">Charles Blog</a>
+                <p class="footer-tagline" data-i18n="footer.tagline">DON'T LEAVE ANY REGRETS.</p>
+            </div>
+            <nav class="footer-links"></nav>
+        </div>
+        <div class="footer-meta">
+            <span data-i18n="footer.credit">© 2026 Charles Blog · Student Designer</span>
+            <span data-i18n="footer.edition">RETRO ZINE EDITION · EST. 2026</span>
+        </div>
+    </footer>
+
+    <script src="../i18n.js"></script>
+    <script src="../content.js"></script>
+    <script src="../shared.js"></script>
+    <script src="../article-page.js"></script>
+</body>
+</html>

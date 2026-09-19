@@ -1,0 +1,291 @@
+/* ====================================
+   科目分区页模版样式
+   结构：HERO（大标题 + 大图）→ 作业索引 → 页脚
+   ==================================== */
+
+/* ===== HERO 区 ===== */
+.subject-hero {
+    padding: 64px 0 72px;
+}
+
+.subject-hero .zine-container {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+    align-items: center;
+}
+
+.hero-text { position: relative; z-index: 2; }
+
+.hero-kicker {
+    font-family: var(--font-round);
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: var(--cream-white);
+    margin-bottom: 18px;
+    display: inline-block;
+    background: var(--dark-frame);
+    padding: 6px 14px;
+    box-shadow: var(--shadow-hard);
+}
+
+.hero-title {
+    margin: 10px 0 0;
+}
+
+.hero-tagline {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+    font-weight: 700;
+    margin-top: 30px;
+    line-height: 1.35;
+}
+
+.hero-desc {
+    margin-top: 16px;
+    font-size: 1rem;
+    max-width: 46ch;
+    color: var(--dark-frame);
+}
+
+/* HERO 静态学期邮戳：黑边、透明底、无交互（类似旧 stamp，但不带点击/悬停） */
+.hero-term {
+    margin-top: 24px;
+}
+
+.term-stamp {
+    display: inline-block;
+    border: var(--border-thick);
+    background: transparent;
+    color: var(--dark-frame);
+    font-family: var(--font-round);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    transform: rotate(-2.5deg);
+    box-shadow: var(--shadow-hard);
+}
+
+/* HERO 大图：胶带拍立得 */
+.hero-figure {
+    position: relative;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 16px 16px 20px;
+    transform: rotate(2.5deg);
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-figure:hover {
+    transform: rotate(0.5deg) translateY(-6px);
+    box-shadow: 12px 12px 0px var(--dark-frame);
+}
+
+.hero-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border-medium);
+}
+
+.hero-figure figcaption {
+    font-family: var(--font-round);
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    margin-top: 12px;
+    text-align: center;
+    color: var(--dark-frame);
+}
+
+/* ===== 作业索引区 ===== */
+.assignments-section {
+    padding: 40px 0 20px;
+}
+
+.section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+}
+
+.section-count {
+    font-family: var(--font-round);
+    font-size: 0.9rem;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    padding: 4px 12px;
+    letter-spacing: 1px;
+}
+
+.section-note {
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+/* ===== 作业条目（左文右图，隔行镜像） ===== */
+.assignment-card {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 44px;
+    align-items: center;
+    padding: 44px 0;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 3px dashed rgba(38, 35, 32, 0.55);
+    position: relative;
+}
+
+.assignment-card:last-child { border-bottom: none; }
+
+/* 隔行镜像：偶数行图片在左 */
+.assignment-card:nth-child(even) { direction: rtl; }
+.assignment-card:nth-child(even) > * { direction: ltr; }
+
+.assignment-info { position: relative; z-index: 2; }
+
+.assignment-no {
+    font-family: var(--font-round);
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    color: var(--cream-white);
+    background: var(--dark-frame);
+    display: inline-block;
+    padding: 4px 12px;
+    margin-bottom: 14px;
+}
+
+.assignment-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.8vw, 2rem);
+    font-weight: 800;
+    line-height: 1.25;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.assignment-card:hover .assignment-title {
+    transform: translateX(6px);
+}
+
+.assignment-excerpt {
+    margin-top: 12px;
+    font-size: 0.98rem;
+    max-width: 52ch;
+}
+
+.assignment-meta {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.assignment-meta .dot { opacity: 0.5; }
+
+.tag {
+    border: 2px solid var(--dark-frame);
+    background: var(--cream-white);
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.enter-btn { margin-top: 22px; }
+
+/* 作业配图：拍立得 + 微倾斜 */
+.assignment-figure {
+    position: relative;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard);
+    padding: 12px 12px 16px;
+    transform: rotate(-2deg);
+    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.35s ease;
+}
+
+.assignment-card:nth-child(even) .assignment-figure { transform: rotate(2deg); }
+
+.assignment-card:hover .assignment-figure {
+    transform: rotate(0deg) translateY(-6px);
+    box-shadow: var(--shadow-hard-lg);
+}
+
+.assignment-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border-medium);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.assignment-figure .fig-label {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+    .subject-hero .zine-container {
+        grid-template-columns: 1fr;
+        gap: 44px;
+    }
+    .assignment-card {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    /* 移动端统一：文字在上，图片在下 */
+    .assignment-card:nth-child(even) { direction: ltr; }
+}
+
+@media (max-width: 480px) {
+    .subject-hero { padding: 44px 0 52px; }
+    .assignment-card { padding: 32px 0; }
+}
+
+/* ===== 「持續更新中」小字 =====
+   文章索引暫時隱藏時，於該位置顯示的一行提示。
+   與 ASSIGNMENTS 標題同字體系統，但刻意收小、壓低存在感。 */
+.assignments-note-section {
+    padding: 44px 0 64px;
+}
+
+.assignments-note {
+    text-align: center;
+    font-family: var(--font-round);
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    opacity: 0.65;
+    color: var(--dark-frame);
+}
+
+/* ===== 空状态（该科目暂无作业） ===== */
+.assignments-empty {
+    text-align: center;
+    font-family: var(--font-round);
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    opacity: 0.7;
+    padding: 50px 0;
+    border: 3px dashed rgba(38, 35, 32, 0.4);
+}
