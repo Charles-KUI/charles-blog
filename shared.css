@@ -40,6 +40,9 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    /* 顶部导航是固定的：锚点跳转 / 页内滚动要把内容让出导航高度，
+       否则目标区块的标题会被压在导航条下面。 */
+    scroll-padding-top: calc(var(--navbar-height) + 16px);
 }
 
 body {
@@ -382,6 +385,16 @@ textarea:focus-visible {
 .tape.tr { top: -12px; right: -26px; transform: rotate(38deg); }
 .tape.bl { bottom: -12px; left: -26px; transform: rotate(38deg); }
 .tape.br { bottom: -12px; right: -26px; transform: rotate(-38deg); }
+
+/* 窄屏：相框几乎占满视窗，胶带再按 -26px 外挂就会戳出屏幕
+   （虽然 body 有 overflow-x:hidden 兜底，但会在部分移动浏览器上
+   造成横向可拖动 / 布局宽度计算错误）。这里把胶带收回框内。 */
+@media (max-width: 900px) {
+    .tape.tl { left: -8px; }
+    .tape.tr { right: -8px; }
+    .tape.bl { left: -8px; }
+    .tape.br { right: -8px; }
+}
 
 /* ===== 滚动浮现动画 ===== */
 .reveal {

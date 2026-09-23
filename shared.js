@@ -84,6 +84,18 @@
       'Drop a file into assets/videos/ then set its path in content.js',
       '把影片放進 assets/videos/，然後在 content.js 填入路徑',
     ],
+
+    // 文章页元信息栏（用纯文字标签取代 emoji，贴合复古印刷风）
+    'meta.date': ['DATE', '日期'],
+    'meta.by': ['BY', '作者'],
+
+    // 幻灯片画廊（简报逐页高清图 + 全屏浏览）
+    'gallery.badge': ['DECK', '簡報'],
+    'gallery.download': ['OPEN FULL PDF', '開啟完整 PDF'],
+    'gallery.prev': ['Previous slide', '上一頁'],
+    'gallery.next': ['Next slide', '下一頁'],
+    'gallery.close': ['Close full screen', '關閉全螢幕'],
+    'gallery.expand': ['click to view full screen', '點擊全螢幕閱讀'],
   });
 
   /* ============ 双语取值工具 ============ */

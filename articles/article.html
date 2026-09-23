@@ -32,7 +32,7 @@
 
             <!-- 文章头部：大标题 + 元信息 -->
             <section class="article-hero">
-                <div class="zine-container">
+                <div class="article-shell">
                     <div class="article-kicker">
                         <a class="subject-backlink" id="subjectLink" href="#">←</a>
                         <span class="assignment-kicker" id="articleNo"></span>
@@ -40,24 +40,26 @@
                     <h1 class="article-title" id="articleTitle"></h1>
 
                     <div class="article-meta-bar">
-                        <span class="meta-item"><span class="icon" aria-hidden="true">📅</span><span id="postDate"></span></span>
+                        <span class="meta-item"><span class="meta-key" data-i18n="meta.date">DATE</span><span id="postDate"></span></span>
                         <span class="divider-v" aria-hidden="true"></span>
-                        <span class="meta-item"><span class="icon" aria-hidden="true">✍</span><span id="postAuthor"></span></span>
+                        <span class="meta-item"><span class="meta-key" data-i18n="meta.by">BY</span><span id="postAuthor"></span></span>
                         <span class="divider-v" aria-hidden="true"></span>
                         <span id="postTags" style="display:inline-flex; gap:8px; flex-wrap:wrap;"></span>
                     </div>
                 </div>
             </section>
 
-            <div class="zine-container"><hr class="article-divider"></div>
+            <div class="article-shell"><hr class="article-divider"></div>
 
             <!-- 主图 -->
-            <figure class="article-figure" id="heroFigure">
-                <span class="tape tl" aria-hidden="true"></span>
-                <span class="tape tr" aria-hidden="true"></span>
-                <img id="heroImg" src="" alt="">
-                <figcaption id="heroCap"></figcaption>
-            </figure>
+            <div class="article-shell">
+                <figure class="article-figure" id="heroFigure">
+                    <span class="tape tl" aria-hidden="true"></span>
+                    <span class="tape tr" aria-hidden="true"></span>
+                    <img id="heroImg" src="" alt="">
+                    <figcaption id="heroCap"></figcaption>
+                </figure>
+            </div>
 
             <!-- 正文 -->
             <div class="article-body" id="articleBody"></div>

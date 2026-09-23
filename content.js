@@ -17,6 +17,17 @@
  *   { type: 'figure', src: 'assets/posts/xxx.png', caption: 'FIG.02 — 图注' }
  *   { type: 'video', src: 'assets/videos/xxx.mp4', caption: 'VIDEO — 图注' }
  *     （src 留空则显示复古测试卡占位，上传视频后填入路径即可）
+ *   { type: 'gallery', title: '簡報標題', file: 'assets/pdfs/xxx.pdf',
+ *     hint: '點擊提示', items: [ { src: 'assets/slides/xxx/p1.png', label: '頁面標籤' }, ... ] }
+ *     （簡報幻燈片畫廊：每頁一張高清圖，依序由左至右排列、可箭頭翻頁、
+ *       點圖全螢幕瀏覽；file 為原始 PDF，供「另開新頁 / 下載」按鈕；
+ *       圖檔路徑與語言無關，切換語言時畫廊本身不重建）
+ *
+ * 媒體目錄約定：
+ *   assets/posts/    文章配圖（png/jpg）
+ *   assets/videos/   文章视频（mp4）
+ *   assets/pdfs/     簡報 / 報告整份 PDF（原始檔，供下載）
+ *   assets/slides/   簡報逐頁渲染出的高清圖（畫廊用；由 .workbuddy/render-slides.py 產生）
  */
 
 const SUBJECTS = {
@@ -200,155 +211,86 @@ const SUBJECTS = {
       {
         id: 'bcm241-a1',
         no: 'No.01',
-        title: { en: 'Field Notes: A Week Without Algorithms', zh: '田野筆記：沒有演算法的一週' },
-        excerpt: {
-          en: 'Seven days of chronological feeds only. My circle of friends, observed from the inside — who noticed, who cared, and what crept back in.',
-          zh: '七天只看時間序動態。從內部觀察我的朋友圈——誰注意到了、誰在乎，以及什麼悄悄爬了回來。',
+        title: {
+          en: 'Global E-commerce Knowledge Niche: A Field Map',
+          zh: '全球電商知識領域：一張田野地圖',
         },
-        date: '2026-08-21',
+        excerpt: {
+          en: 'Why teach something I have never done? Mapping a media niche for cross-border e-commerce — who is in it, what they need, and how I turn a novice position into an honest "co-learner" voice.',
+          zh: '為什麼要教一件我從沒做過的事？為跨境電商描繪一個媒體領域——誰在其中、他們需要什麼，以及我如何把「新手」這個位置，變成一個誠實的「共同學習者」聲音。',
+        },
+        date: '2026-09-22',
         tags: [
-          { en: 'Fieldwork', zh: '田野工作' },
           { en: 'Autoethnography', zh: '自我民族誌' },
+          { en: 'E-commerce', zh: '電子商務' },
+          { en: 'Audience', zh: '受眾' },
         ],
         image: 'assets/posts/bcm241-a1-figures.png',
-        figLabel: { en: 'FIG.02 — The observed circle', zh: 'FIG.02 — 被觀察的圈子' },
+        figLabel: { en: 'FIG.02 — The niche, mapped', zh: 'FIG.02 — 被描繪的領域' },
         body: [
+          { type: 'h2', text: { en: 'The niche I chose', zh: '我選擇的領域' } },
           {
             type: 'p',
             text: {
-              en: 'The rules were simple: for one week, every feed I touch must run in chronological order. No recommended videos, no “for you” pages, no algorithmic anything. I recruited four friends to try it with me and kept a shared log of every slip.',
-              zh: '規則很簡單：一整週，我碰到的每一條動態都必須按時間序排列。沒有推薦影片、沒有「為你推薦」頁、沒有任何演算法介入。我找了四個朋友一起試，並共用一份紀錄記下每一次失守。',
+              en: 'My media niche is the global e-commerce community in China — the people teaching and learning how to sell across borders. Two kinds of people sit inside it: knowledge creators like me, sharing plain-language guides to global selling; and sellers or complete beginners who want to learn how to start a business that reaches beyond the domestic market.',
+              zh: '我的媒體領域是中國的全球電商社群——那些正在教、也正在學「如何跨境賣東西」的人。領域裡坐著兩種人：像我這樣的知識創作者，分享把全球銷售講成白話的指南；以及想學會做一門能走出內銷市場的生意、賣家或完全的新手。',
             },
           },
-          { type: 'h2', text: { en: 'Day two: the hand knows the way', zh: '第二天：手比腦子更熟悉路' } },
           {
             type: 'p',
             text: {
-              en: 'The most striking finding was muscular, not mental. My thumb kept performing the ritual of opening apps I had silently muted. Muscle memory outlived intention by about three days. By day five, two friends reported “boredom returning to rooms it had left years ago.”',
-              zh: '最驚人的發現是肌肉層面的，不是心理層面的。我的拇指依然反覆執行打開那些被我靜音的 App 的儀式。肌肉記憶比意圖多活了大概三天。到了第五天，兩位朋友回報「無聊回到了它幾年前離開的那些房間」。',
+              en: 'What we share falls into two buckets: marketing tips that explain how foreign platforms like TikTok and Shopify actually work, and visual styles — cross-cultural design ideas and the trends currently moving through them.',
+              zh: '我們分享的內容分成兩桶：解釋 TikTok、Shopify 這類海外平台實際如何運作的營銷技巧，以及視覺風格——跨文化的設計想法，與此刻正在其中流動的流行趨勢。',
+            },
+          },
+          { type: 'h2', text: { en: 'Why it matters', zh: '為什麼這件事重要' } },
+          {
+            type: 'p',
+            text: {
+              en: 'China has enormous manufacturing capacity, but the domestic market is close to saturated. I believe selling globally is where the next decade of opportunity sits — and the small businesses that could take that step usually lack anyone to explain it in plain words.',
+              zh: '中國擁有極大的製造能力，但內銷市場已接近飽和。我相信全球銷售就是下一個十年的機會所在——而那些有能力跨出這一步的小商家，往往找不到人用白話把事情講清楚。',
             },
           },
           {
             type: 'quote',
             text: {
-              en: 'The algorithm is not a feed. It is a habit wearing a feed’s clothes.',
-              zh: '演算法不是一條動態。它是一個穿著動態外衣的習慣。',
+              en: 'Zero practical experience versus the need to teach — that is the conflict this whole project lives inside.',
+              zh: '零實務經驗，對上「必須教人」的需求——這就是整個計畫所身處的衝突。',
+            },
+          },
+          { type: 'h2', text: { en: 'How I resolve it', zh: '我如何解決這個衝突' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My answer is not to pretend at expertise. I synthesise successful public cases to build credibility, and I analyse the audience to maximise engagement — but I keep my position honest as a co-learner moving through the same problems, one step ahead at best.',
+              zh: '我的答案不是假裝專業。我透過綜整公開的成功案例來建立可信度，也分析受眾以放大互動——但我讓自己的位置保持誠實：一個正在穿過同樣問題的共同學習者，頂多領先一步。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'Nobody lasted the full seven days cleanly. The average clean streak was 4.2 days, and every relapse traced back to the same trigger: needing one specific fact, now. Convenience is the payload; everything else is delivery mechanism.',
-              zh: '沒有人完整乾淨地撐過七天。平均連續達成 4.2 天，而每一次破功都指向同一個觸發點：現在、立刻、需要某個特定的事實。便利是真正的貨物，其餘一切都只是運送機制。',
+              en: 'The full deck below sets out the niche definition, the audience demographics, the autoethnographic method I will use to document the journey, the academic sources framing it, and the four-phase project timeline.',
+              zh: '下方完整簡報依序說明：領域定義、受眾人口結構、我將用來記錄這段歷程的自我民族誌方法、支撐它的學術來源，以及四階段的專案時間表。',
             },
           },
           {
-            type: 'p',
-            text: {
-              en: 'Full field notes, including the shared log and my ethics reflection, are in the attached workbook.',
-              zh: '完整的田野筆記，包含共用紀錄與我的倫理反思，都在附件的工作簿裡。',
+            type: 'gallery',
+            title: {
+              en: 'BCM241 A1 — Global E-commerce Knowledge Niche',
+              zh: 'BCM241 A1 — 全球電商知識領域',
             },
-          },
-        ],
-      },
-      {
-        id: 'bcm241-a2',
-        no: 'No.02',
-        title: { en: 'Autoethnography: My Phone, My Mirror', zh: '自我民族誌：我的手機，我的鏡子' },
-        excerpt: {
-          en: 'Turning the ethnographic lens on myself — a screen-time diary, three generations of family photos, and what my home screen says about who I am becoming.',
-          zh: '把民族誌的鏡頭轉向自己——螢幕使用日記、三個世代的家庭照片，以及我的主畫面透露了我正在成為誰。',
-        },
-        date: '2026-09-08',
-        tags: [
-          { en: 'Autoethnography', zh: '自我民族誌' },
-          { en: 'Diary', zh: '日記' },
-        ],
-        image: 'assets/posts/bcm241-a2-phone.png',
-        figLabel: { en: 'FIG.03 — Layers of the screen', zh: 'FIG.03 — 螢幕的層次' },
-        body: [
-          {
-            type: 'p',
-            text: {
-              en: 'Autoethnography asks you to treat your own life as a valid field site. Mine was the 6.1 inches of glass I touch 96 times a day, on average, according to the week I spent logging every unlock.',
-              zh: '自我民族誌要求你把自己的生活當成一個有效的田野現場。我的田野是我每天平均觸碰 96 次的那 6.1 吋玻璃——這個數字來自我記錄每一次解鎖的那一週。',
+            file: 'assets/pdfs/bcm241-a1.pdf',
+            hint: {
+              en: 'Click any slide to read it full screen',
+              zh: '點擊任一頁可全螢幕閱讀',
             },
-          },
-          { type: 'h2', text: { en: 'Three layers of a home screen', zh: '主畫面的三個層次' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Page one is performance: the tidy apps I show when someone glances over. Page two is function: banking, maps, the boring machinery of life. Page three — buried in a folder — is truth: the pinyin keyboard I keep for texting my grandmother, the sketching app from a hobby I abandoned, the audio Bible my mother sent me in June.',
-              zh: '第一頁是表演：當有人瞄過來時我展示的那些整齊的 App。第二頁是功能：銀行、地圖，生活裡無聊的機械裝置。第三頁——埋在一個資料夾裡——是真相：我為了傳訊息給奶奶而保留的拼音鍵盤、來自我放棄的某個興趣的繪圖 App、我媽六月傳給我的有聲聖經。',
-            },
-          },
-          {
-            type: 'quote',
-            text: {
-              en: 'Your home screen is an autobiography you did not know you were writing.',
-              zh: '你的主畫面是一部你不知道自己正在寫的自傳。',
-            },
-          },
-          {
-            type: 'p',
-            text: {
-              en: 'Cross-referencing the unlock log with my family photo archive revealed the quiet centre of it all: 41 of 96 daily touches ended in a conversation with someone I love. The phone is not the opposite of connection. It is connection’s smallest room.',
-              zh: '把解鎖紀錄與家庭相簿交叉比對之後，整件事安靜的核心浮現出來：每天 96 次觸碰中，有 41 次最後結束於和我愛的人的一段對話。手機不是連結的對立面，它是連結最小的那個房間。',
-            },
-          },
-        ],
-      },
-      {
-        id: 'bcm241-a3',
-        no: 'No.03',
-        title: { en: 'Listening Party: Family Media Rituals', zh: '聆聽派對：家庭媒體儀式' },
-        excerpt: {
-          en: 'An audio ethnography of three generations in one living room — grandfather’s radio, mum’s short videos, and the strange silence of shared screens.',
-          zh: '一個客廳、三個世代的聲音民族誌——爺爺的收音機、媽媽的短影片，以及共享螢幕之間那種奇特的沉默。',
-        },
-        date: '2026-09-17',
-        tags: [
-          { en: 'Audio', zh: '聲音' },
-          { en: 'Family', zh: '家庭' },
-        ],
-        image: 'assets/posts/bcm241-a3-ear.png',
-        figLabel: { en: 'FIG.04 — Listening, in rings', zh: 'FIG.04 — 一圈一圈的聆聽' },
-        video: {
-          src: '',
-          caption: {
-            en: 'VIDEO — Living room field recording (05:42)',
-            zh: 'VIDEO — 客廳田野錄音（05:42）',
-          },
-        },
-        body: [
-          {
-            type: 'p',
-            text: {
-              en: 'I recorded 40 minutes of my family’s Sunday evening and then listened to it twice: once for the voices, once for everything else. The second listen was the ethnography.',
-              zh: '我錄下家裡週日晚上的 40 分鐘，然後聽了兩次：一次聽人聲，一次聽其他所有東西。第二次聆聽才是民族誌。',
-            },
-          },
-          { type: 'h2', text: { en: 'Three medias, one room', zh: '三種媒體，一個房間' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Grandfather’s Cantonese opera radio fills the space at exactly conversational volume — loud enough to claim the room, soft enough to yield it. Mum’s short-video app is the opposite: earbuds in, shoulder-shaking laughter, a private theatre in public space. I sat between both with a laptop, performing my own solitude.',
-              zh: '爺爺的粵劇收音機以正好是對話音量的聲音填滿空間——大到足以佔據這個房間，又輕到足以讓出它。媽媽的短影片 App 恰好相反：戴著耳機、笑得肩膀發抖，在公共空間裡經營一座私人劇院。我抱著筆電坐在兩者之間，演出我自己的孤獨。',
-            },
-          },
-          {
-            type: 'quote',
-            text: {
-              en: 'A family does not share one media diet. It shares a room where three diets negotiate.',
-              zh: '一個家庭並不共享同一份媒體菜單。它共享的是一個房間，讓三份菜單在此協商。',
-            },
-          },
-          {
-            type: 'p',
-            text: {
-              en: 'The audio file attached below is edited to five minutes with everyone’s consent — including grandfather’s conditions: “no cutting my opera mid-phrase.” Fair.',
-              zh: '下方附上的音檔在徵得所有人同意後剪成五分鐘——包括爺爺的條件：「不准把我的戲曲在一句中間剪掉。」合理。',
-            },
+            items: [
+              { src: 'assets/slides/bcm241-a1/p1.png', label: { en: 'Media Niche', zh: '媒體領域' } },
+              { src: 'assets/slides/bcm241-a1/p2.png', label: { en: 'Industry Novice — Creator & Researcher', zh: '行業新手——創作者與研究者' } },
+              { src: 'assets/slides/bcm241-a1/p3.png', label: { en: 'My Autoethnographic Investigation', zh: '我的自我民族誌探究' } },
+              { src: 'assets/slides/bcm241-a1/p4.png', label: { en: 'Academic Sources & Framework', zh: '學術來源與框架' } },
+              { src: 'assets/slides/bcm241-a1/p5.png', label: { en: 'Project Timeline', zh: '專案時間表' } },
+            ],
           },
         ],
       },

@@ -1115,3 +1115,477 @@ jsdom 運行時驅動 + CSS 靜態斷言覆蓋）：
 回退性能優化：shared.js 把 bindChipsDismissOnce 的兩段
   document.addEventListener 搬回 bindChipsToggle 內即可
   （功能等價，但會恢復監聽器累積的舊問題，不建議）。
+
+
+================================================================
+第十階段補丁：BCM241 第一份真實作業上線（A1 簡報整份嵌入）
+================================================================
+
+更新日期：2026年9月22日
+對應交付：BCM 241 A1（5 頁 Canva 簡報）
+
+【需求】
+
+把 BCM 241 A1 這份 5 頁簡報更新進對應的科目頁（BCM241），
+不重寫文章模版 —— 直接採用第九階段「隱藏而非刪除」留下的
+assignments-section[hidden][data-articles-hidden] 結構，
+按「還原方式 A」取消隱藏即可。
+
+標題／簡介需依簡報內容重新撰寫（非照抄），標題旁標註
+Assignment 1；正文只放完整 5 頁 PDF 嵌入，不堆其他正文；
+視覺風格跟隨網站既有的復古獨立雜誌風。
+
+【一】BCM241 資料換血（content.js）
+
+原本 BCM241 有 3 條佔位記錄（bcm241-a1 / a2 / a3），
+現整段替換為 1 條真實記錄（id 沿用 bcm241-a1）：
+
+  no       : No.01
+  title    : Global E-commerce Knowledge Niche: A Field Map
+             全球電商知識領域：一張田野地圖
+  excerpt  : 為什麼要教一件我從沒做過的事？為跨境電商描繪
+             一個媒體領域 —— 誰在其中、他們需要什麼，以及
+             我如何把「新手」這個位置，變成一個誠實的
+             「共同學習者」聲音。
+  date     : 2026-09-22
+  tags     : Autoethnography / E-commerce / Audience
+  image    : assets/posts/bcm241-a1-figures.png
+
+正文結構（全部雙語）：
+  h2 我選擇的領域 → 2 段（兩類參與者 + 兩類分享內容）
+  h2 為什麼這件事重要 → 1 段（中國製造強、內銷市場飽和）
+  quote「零實務經驗，對上『必須教人』的需求……」
+  h2 我如何解決這個衝突 → 2 段（不假裝專業、綜整案例、
+     共同學習者定位）
+  pdf  → 完整嵌入下方 5 頁簡報
+
+判斷依據：簡報 P1 說明領域組成（Knowledge Creators /
+Sellers & Beginners；Marketing Tips / Visual Styles），
+P2 點出「Zero practical experience vs. Need to teach.」的
+核心衝突與解法（co-learner 定位），P3-P5 是研究方法、
+文獻框架與時程 —— 因此正文聚焦「領域是什麼 / 為何重要 /
+衝突怎麼解」，細節全留給 PDF 本身。
+
+※ content.js 由 .workbuddy/patch-bcm241.py 按行精確替換，
+   替換前已備份 .workbuddy/content.js.bak，改後 node --check
+   語法通過（578 行 → 504 行）。
+
+【二】新增 body 區塊類型：pdf（article-page.js）
+
+新增 renderPdf()，並在 renderBody() 的 switch 註冊 case 'pdf'：
+
+  { type: 'pdf', src: 'assets/pdfs/xxx.pdf', title: '簡報標題' }
+
+呈現結構：
+  figure.pdf-block
+    figcaption.pdf-head     ← 深色標籤條
+      span.pdf-badge        ←「PDF」徽章（Impact 字體）
+      span.pdf-title        ← 簡報標題
+      a.pdf-download        ←「另開新頁檢視 ↓」
+    div.pdf-frame
+      object.pdf-embed[type="application/pdf"][data=...]
+        div.pdf-fallback    ← 回退卡（不支援內嵌時顯示）
+          + 下載按鈕
+
+為何用 <object> 而非 <embed>：不支援內嵌 PDF 的環境
+（多數手機瀏覽器）會自動渲染 object 的子內容，即回退卡 +
+下載按鈕，而不是一片空白。
+
+路徑用 rootPrefix() 拼成 ../assets/pdfs/...，確保從
+articles/ 子目錄載入時仍能正確解析。
+
+【三】PDF 與語言切換解耦（設計要點）
+
+PDF 的 src 與語言無關，因此切換語言時該區塊完全不重建 ——
+避免 PDF 閱讀器被銷毀重載、閱讀進度丟失。
+實作上：paintArticleText 只回寫「無子元素的文字節點」，
+而 .pdf-block 的文字都在 figcaption 內含子元素 / 是 object
+屬性，天然被過濾，不需額外白名單。
+
+【四】樣式（article.css）
+
+新增 .pdf-block / .pdf-head / .pdf-badge / .pdf-title /
+.pdf-download / .pdf-frame / .pdf-embed / .pdf-fallback 系列。
+沿用網站母題：奶油白底 + 3px 粗黑邊 + 8px 大硬陰影，
+頂部深色標籤條形成「復古文件陳列架」觀感。
+.pdf-embed 高度 clamp(420px, 78vh, 860px)，最大寬 720px。
+手機端（≤768px）收矮至 clamp(360px, 62vh, 560px)，
+標籤條 padding / gap / 字號同步收緊。
+
+【五】i18n 新增鍵（shared.js）
+
+  pdf.badge        PDF / PDF
+  pdf.openHint     OPEN IN NEW TAB / 另開新頁檢視
+  pdf.fallbackHint 瀏覽器無法內嵌時提示 / 開啟檔案閱讀完整簡報
+
+【六】科目頁取消隱藏（subjects/bcm241.html）
+
+依第九階段記載的「還原方式 A」操作：
+  · 刪掉 <section class="assignments-section" ... hidden> 的
+    hidden 屬性
+  · 刪掉 #assignmentList 的 is-placeholder 類
+
+保留項（刻意不動）：
+  · data-articles-hidden 還原標記 —— 日後可一鍵重新隱藏
+  · 「持續更新中」小字 —— 用戶確認保留，待日後統一移除
+
+其餘三科（bcm212 / bcm206 / bcm222）維持原樣隱藏，
+形成「同模版、逐科上線」的漸進發布模式。
+
+【七】本地服務 MIME 修正（.workbuddy/serve.mjs）
+
+serve.mjs 的 MIME 表原本沒有 .pdf，導致回傳
+application/octet-stream —— 瀏覽器會「下載」而非「內嵌」。
+補上 '.pdf': 'application/pdf' 後實測確認為 application/pdf，
+PDF 可正常內嵌渲染。
+
+【八】驗證
+
+新增 verify-bcm241-a1.mjs（jsdom 運行時驅動）55 項全過：
+  · 科目頁：索引還原 / 渲染 1 張卡片 / ASSIGNMENT 01 標註 /
+    連結指向 bcm241-a1 / 小字保留（en + zh 各 7 項）
+  · 文章頁：pdf 區塊存在 / object type 為 application/pdf /
+    data 路徑為 ../assets/pdfs/bcm241-a1.pdf / 徽章 / 文案 /
+    回退卡 / 大標題 / 段落數 / 小標題數 / 引用塊（en + zh）
+  · 其餘三科仍保持隱藏（6 項）
+  · PDF 檔案存在 + %PDF- 檔頭合法 + 257 KB
+  · content.js 資料完整性（含 pdf 區塊 / 舊占位 a2 a3 已移除）
+
+全量回歸（本次改動後）：
+  domtest 153 / aboutest 76 / verify-hidden 60 /
+  verify-bcm241-a1 55 / verify-article 11 /
+  verify-langswitch 12 / verify-nav-static 49 /
+  verify-nav-runtime 25 / verify-narrow-geom 15
+  → 全部 0 失敗。
+
+※ 同步修正三支測試自身的過時斷言（皆因 BCM241 由隱藏轉上線）：
+  · domtest.mjs 第 0/2/12 節：
+    素材數 ≥13 → ≥11、新增 PDF 素材檢查、
+    文章頁用例由 bcm241-a3 改 bcm241-a1 並改斷 PDF 區塊、
+    第 12 節改為「隱藏科 / 已上線科」分支斷言。
+  · verify-hidden.mjs：四科一律斷「全隱藏」→ 改為分支
+    （bcm241 斷「卡片 1 張 + 索引無 hidden」），
+    並由真機 CDP 改寫為 jsdom 版本（本機 headless 受限）。
+  · verify-nav-static.mjs 第 5 節：同樣改為分支斷言 ——
+    bcm241 斷「data-articles-hidden 還原標記保留 +
+    已無 hidden + is-placeholder 已移除」。
+  · uishot.mjs：bcm241 卡片數 3 → 1、article 用例
+    bcm241-a3 → bcm241-a1，並新增 article-pdf.png 截圖用例。
+
+【九】還原方式
+
+若要重新隱藏 BCM241 的作業索引：
+  在 subjects/bcm241.html 的 <section class="assignments-section"
+  data-articles-hidden> 上加回 hidden 屬性，
+  並把 <div id="assignmentList"> 加回 class="is-placeholder"。
+
+若要下架整份 A1 作業：
+  刪掉 content.js 中 bcm241 的 assignments 陣列（改回空陣列 []）
+  即可，PDF 與模版程式碼均可安全保留不動。
+
+【十】素材
+
+新增 assets/pdfs/bcm241-a1.pdf（257 KB，5 頁）
+來源：C:/HOMEWORK/BCM 241 A1 .pdf
+封面圖沿用既有 assets/posts/bcm241-a1-figures.png（未新增）。
+
+
+================================================================
+第十一階段補丁：簡報改為大圖畫廊 + 正文大屏版心重排
+================================================================
+
+更新日期：2026年9月23日
+對應交付：BCM241 A1（5 頁簡報）
+
+【需求】
+
+一、優化簡報呈現：改為「大圖、依序由左至右排列、點箭頭滑動到
+    下一張、點圖全螢幕瀏覽」，取代原本突兀的 PDF 內嵌插件。
+    理由：這些是交給閱卷老師的作業，必須確保清晰易讀。
+
+二、優化正文分佈：文字原本全部堆在畫面中間。窄欄雖符合小螢幕
+    閱讀習慣，但在大螢幕上左右各留大片空白，觀感孤立。
+
+【一】簡報 → 逐頁高清圖畫廊（取代 PDF 內嵌）
+
+問題根源：<object type="application/pdf"> 讓瀏覽器自帶的 PDF
+閱讀器接管畫面 —— 樣式與站點風格割裂、手機端多半無法內嵌、
+且縮放體驗不可控。
+
+做法：
+  1. 用 PyMuPDF 把 assets/pdfs/bcm241-a1.pdf 逐頁渲染成 2.2 倍
+     高清 PNG（3168×1782，16:9），存到
+     assets/slides/bcm241-a1/p1.png … p5.png。
+     渲染腳本：.workbuddy/render-slides.py（可重複執行）
+  2. 新增 body 區塊類型 gallery：
+       { type: 'gallery', title, file, hint,
+         items: [ { src, label }, ... ] }
+     file 指向原始 PDF（供「開啟完整 PDF / 下載」按鈕）。
+  3. 卡片依序由左至右排成一條可橫向滑動的「膠片帶」，
+     每頁一張大圖 + 底部編號條（01–05）+ 頁面標籤。
+  4. 底部左右箭頭翻頁，箭頭在首/末頁自動變灰。
+  5. 點任一頁 → 全螢幕瀏覽（原生 <dialog>）。
+
+【二】翻頁與全屏的實作要點
+
+· 翻頁用 scrollTo({ behavior: 'smooth' }) 搭配 CSS
+  scroll-snap-type: x mandatory —— 不重建 DOM，圖片不重載，
+  滑動手感原生（觸控可直接滑）。
+· 頁碼由 scrollLeft 反推，滾動時以 requestAnimationFrame 節流
+  同步「n / 5」與箭頭禁用態，不抖動。
+· 全屏用 <dialog>.showModal()：天生有焦點陷阱、Esc 關閉、
+  頂層疊放，比自製 fixed 遮罩穩健。點背景或按 ✕ 皆可關閉，
+  開啟時鎖定 body 捲動。
+· 全屏內左右鍵翻頁並循環（末頁再按回到首頁）。
+· 畫廊本身在語言切換時不重建（圖檔路徑與語言無關），
+  避免已翻到的頁碼被重置；頁面標籤 / 標題 / 提示 / 下載文案
+  由 refreshGalleryText() 單獨刷新。
+
+【三】正文大屏版心重排
+
+診斷：問題不在「單欄限寬」本身 —— 那是長文最舒適的閱讀形式；
+真正的問題是**744px 的欄寬被塞在 1100px 的容器正中**，
+兩側各空出近三分之一，與站點「拼貼雜誌」的氣質不符。
+
+解法（不改段落的可讀行寬）：
+  · .article-body 版心 720px → 860px（容器仍 1100px，
+    兩側各留約 120px 呼吸位，段落不會貼邊）
+  · 段落 / 小標題 / 引用 / 內嵌圖 / 影片塊維持 680px 舒適行寬，
+    在放寬後的容器內居中
+  · **橫向展示型區塊（畫廊）突破段落限寬，鋪滿 860px** ——
+    這是「大屏該用起來」的關鍵：文字保持克制的行寬，
+    圖片與簡報則吃滿可用寬度，形成節奏對比。
+
+【四】移除的舊內容
+
+· article-page.js 的 renderPdf() 與 PDF 內嵌 / 回退卡邏輯整段移除
+· article.css 的 .pdf-* 樣式（含 .pdf-embed / .pdf-fallback）整段移除
+· shared.js 的 pdf.badge / pdf.openHint / pdf.fallbackHint 三鍵移除，
+  改註冊 gallery.badge / gallery.download / gallery.prev /
+  gallery.next / gallery.close / gallery.expand
+
+【五】新增樣式（article.css）
+
+.deck-block（奶油白底 + 粗黑邊 + 大硬陰影）
+.deck-head（深色標籤條：DECK 徽章 / 標題 / n/5 計數 / 開啟完整 PDF）
+.deck-viewport（橫向滑動視窗，隱藏滾動條，scroll-snap）
+.deck-slide（每頁白框 + 硬陰影，hover 微抬升，右上浮出放大提示）
+.deck-controls / .deck-arrow（箭頭按下物理位移 + 陰影歸零）
+.lightbox / .lb-*（全屏層：深色底、貼邊箭頭、底部說明條）
+手機端（≤768px）：標題獨占一行避免被擠掉，箭頭下沉避免遮擋；
+全屏箭頭移到圖片下方。
+
+【六】驗證
+
+新增 .workbuddy/shot-deck.mjs（CDP 截圖工具，支援 SHOT_PRE
+注入前置動作），用於視覺核對畫廊 / 全屏 / 手機端。
+
+verify-bcm241-a1.mjs 擴充至 87 項全過，新增覆蓋：
+  · 5 頁依 p1→p5 順序排列、編號 01–05、每頁標籤
+  · 左右箭頭存在、初始頁碼 1、計數含 / 5
+  · 翻頁：點下一頁 → 2；連點 → 4；上一頁回退 → 3
+  · 首頁時「上一頁」禁用、「下一頁」可用
+  · 全屏：惰性建立（初始不存在）→ 點第 3 頁開啟 →
+    顯示被點的那一頁 → 頁碼 3/5 → 翻頁 4/5、5/5 →
+    末頁循環回 1/5 → 首頁循環到 5/5（不越界）→ 關閉解除鎖定
+  · 語言切換：畫廊 DOM 與 5 張圖「同一節點」未重建，
+    但標題 / 標籤 / 提示已更新為中文
+  · 已無 .pdf-embed；content.js 含 gallery、已無 type: 'pdf'
+  · 5 頁幻燈片高清圖齊備（5/5）
+
+domtest 擴充至 162 項全過（新增畫廊區塊 / 順序 / 箭頭 /
+下載連結 / 素材存在性 / 關鍵類名護欄）。
+
+全量回歸：
+  domtest 162 / aboutest 76 / verify-hidden 60 /
+  verify-bcm241-a1 87 / verify-article 11 /
+  verify-langswitch 12 / verify-nav-static 49 /
+  verify-nav-runtime 25 / verify-narrow-geom 15
+  → 全部 0 失敗。
+
+【七】還原方式
+
+改回 PDF 內嵌：content.js 把 gallery 區塊換回
+  { type: 'pdf', src: 'assets/pdfs/xxx.pdf', title: '...' }
+並還原 article-page.js 的 renderPdf() 與 article.css 的 .pdf-* 樣式
+（見第十階段日誌，可完整還原）。
+
+正文版心回復：.article-body 的 max-width 860px → 720px，
+並刪掉「.article-body > p / h2 / blockquote … max-width: 680px」那組
+居中規則即可回到原狀。
+
+
+================================================================
+第十二階段補丁：文章頁大屏重排 + 引用塊 / 標籤 / 畫廊減重
+================================================================
+
+更新日期：2026年9月23日
+對應交付：articles/article.html 全模版（以 BCM241 A1 為樣例）
+
+【需求】
+
+一、大屏狀態下資訊仍全部集中在畫面中間，太擠（本次重點）。
+二、引用塊引號渲染錯誤（懸在框外）。
+三、元信息條的 emoji 換成更符合網站風格的黑色標記或純文字。
+四、畫廊過於厚重：要「乾淨的 PDF 展示」，使用者不用放大就能看清。
+五、確保頁面適配各尺寸，縮放時文字 / 簡報不裁切、不外溢。
+
+【一】統一版心 .article-shell（修「四條左邊緣」）
+
+診斷：頁頭用 .zine-container（1100px）、正文用寬版心、
+主圖又自居中 —— 四種元素四條左邊緣，視覺上「全擠在中間」。
+修法：新增 .article-shell（max-width: calc(var(--article-width) + 96px)，
+padding: 0 clamp(20px, 3.2vw, 48px)），頁頭 / 分割線 / 主圖 / 正文
+全部改掛同一版心，共用一條左右基線。
+
+--article-width 由 1100px 提升為 1400px（後於第十三階段收斂為 1360px）。
+
+【二】引用塊引號釘進框內
+
+.article-body blockquote::before 的引號改為絕對定位在框內左上角、
+壓住上邊框（奶油白底襯 + 邊框），不再是懸空的大引號。
+
+【三】元信息條 emoji → 純文字標籤
+
+.article-meta-bar 的 emoji 日期 / 作者改為 .meta-key 深色底白字小標籤
+（DATE / BY，繁中顯示「日期 / 作者」），i18n 鍵 meta.date / meta.by。
+
+【四】畫廊減重（deck 輕量化）
+
+舊版「重」的來源：深色頁眉 → 提示條 → 青色內襯 → 白卡 → 圖上再疊
+編號條，層層套框且內邊距吃掉圖寬。新版：
+  · 去掉外層大框，幻燈片頂滿版心；
+  · chrome 退成細線：頂部一行 DECK 徽章 + 標題 + n/5 + 開啟完整 PDF；
+  · .deck-stage 包視窗，箭頭絕對定位、hover 浮現；
+  · 新增 .deck-dots 縮略指示條（當前頁高亮、可點擊跳頁）；
+  · 手機端箭頭改掛在編號條高度帶內，簡報本體 100% 無遮擋。
+
+【五】窄屏溢出修復
+
+· @media (max-width: 900px)：主圖膠帶 left/right 由 -26px 收回 -8px
+  （audit-widths 溢出項 8 → 0）。
+· shared.css：html 加 scroll-padding-top（錨點不被固定導航遮擋）。
+
+【六】驗證
+
+新增 .workbuddy/verify-visual.mjs（單進程 CDP 切 6 檔尺寸：
+360/414/768/1024/1440/1920，量容器 + 偵測橫向溢出 / 文本裁切 /
+箭頭遮擋 + 截圖）——6 檔全過：無溢出、無裁切、img fits=true。
+verify-bcm241-a1.mjs 擴充至 101 項全過（dots / deck-stage 結構護欄、
+舊 .deck-controls 已移除斷言）。uishot.mjs 修復歷史遺留斷言
+（bcm212 索引已隱藏導致的 5 項誤報，改斷言 bcm241）→ 22/22。
+domtest 持續擴充（版心一致 / 引號 / meta-key / deck 護欄）。
+
+注意：Chrome headless 連續 spawn 會被沙箱限流 SIGTERM；
+殘留 chrome 進程會鎖 profile。度量工具一律單進程
+Emulation.setDeviceMetricsOverride 切換尺寸。
+
+
+================================================================
+第十三階段補丁：主圖封頂 + 版心固定開本 + 雙欄雜誌正文
+================================================================
+
+更新日期：2026年9月23日
+對應交付：article.css（article.html 全模版生效）
+
+【需求】
+
+一、視窗最大化時文章開場主圖過大（截圖中拍立得幾乎鋪滿整屏）。
+二、正文排版不要全部集中在正中間 —— 兩邊留白過多，
+    要求設計一套優化方案並執行。
+
+【設計方案：雜誌開本】
+
+把寬版心想成「雜誌的固定開本」：
+  · 開本不隨螢幕變寬而無限放大 —— 刪除 ≥1800px / ≥2300px
+    兩檔超寬放大，--article-width 固定 1360px；
+  · 開場主圖封頂 900px（約版心 2/3）：封面是「一張圖」，
+    不是整面牆，再寬會壓過正文的存在感；
+  · 正文排成雙欄（≥1100px）：每欄 ≈630-650px 舒適行寬，
+    欄間 2px 剪刀虛線 = 版面的「裁切線」，橫向空間被內容
+    真正用起來；
+  · 畫廊 column-span: all 跨欄鋪滿整個版心 —— 成為版面的
+    「跨頁大圖」，與雙欄文字形成節奏對比；
+  · 斷行保護：h2 不拆欄、不落單欄底（break-inside/avoid-column），
+    引用盒不拆，p 或孤行控制（orphans/widows=2）；
+  · <1100px 維持單欄 660px 居中（手機 / 平板閱讀流不變）。
+
+CSS 實作備忘：欄內元素必須覆寫回 max-width:none / margin:0
+（否則繼承窄屏的居中限寬，欄內排版會錯位）。
+
+【驗證】
+
+新增 .workbuddy/measure-columns.mjs（單進程 CDP，6 檔尺寸 +
+3 檔 lightbox 量測）：
+  · 1920：columns=2、欄寬 652px、畫廊跨欄 1360px、主圖 900px；
+  · 1440 / 1280：欄寬 645.9 / 571px，畫廊鋪滿，零橫向溢出；
+  · 1024 / 768 / 414：columns=auto 單欄居中，無溢出；
+  · 欄平衡：9 個區塊 4/4 分佈，視覺核對 1920/1440/1280 截圖
+    （雙欄 + 虛線欄線 + 跨欄畫廊全部符合預期）；
+  · 測量誤差備忘：.article-figure 量得 921.6px 是 rotate(1.4deg)
+    的包圍盒膨脹（版面寬恰為 900px）；scrollWidth 918>894 是
+    膠帶裝飾的刻意出血，皆非問題。
+
+回歸：domtest 188 / verify-bcm241-a1 101 / uishot 22 → 0 失敗
+（domtest 新增：版心固定開本不隨超寬屏放大、主圖 900px 上限、
+雙欄版式完整護欄 columns/column-gap/column-rule/span）。
+
+【還原方式】
+
+· 主圖回滿版心：.article-figure 的 max-width: 900px → var(--article-width)。
+· 回單欄居中：整段刪除 @media (min-width: 1100px) 雙欄區塊。
+· 版心回自適應：--article-width 改回 1400px 並還原 ≥1800/≥2300 檔
+  （見第十二階段前的版本）。
+
+
+================================================================
+第十三階段補丁二：中文版雙欄的兩個渲染缺陷修復
+================================================================
+
+更新日期：2026年9月23日
+對應交付：article.css（article.html 全模版生效）
+
+【問題】
+
+一、中文版第 1 欄末尾出現一個小奶油白塊（英文版沒有）。
+二、引用塊的引號壓住了正文首行（「零實務經驗……」被蓋住）。
+
+【診斷】
+
+· 白塊 = 引用塊的 ::before 引號盒。舊實現是 position: absolute
+  （top: -20px 釘在框上）。雙欄分欄平衡時，Chrome 先把引用塊在
+  第 1 欄底部排版、再因 break-inside: avoid 整體搬到第 2 欄，
+  但絕對定位盒的繪製位置沒有隨之失效 —— 引號盒被遺留在第 1 欄
+  底部，成為孤立的奶油白塊。中英文內容長度不同、分欄平衡點不同，
+  中文必現、英文剛好躲過。
+· 引號遮擋：引號盒高 68px、下緣伸入框內 ≈48px，正文首行卻從
+  框頂 +29px 開始。拉丁字形位置低勉強躲過；CJK 字形撐滿整個
+  em 框、位置更高，首行左端被奶油白底襯蓋住。
+
+【修法（根治：引號改為文檔流內元素）】
+
+· ::before 棄用 position: absolute，改為 display: block +
+  width: fit-content + margin: -22px 0 8px 20px —— 負 margin
+  上移釘住上邊框，「釘住」觀感不變；文檔流內元素隨盒子整體
+  重繪，分欄搬運時不可能被孤立。
+· blockquote 頂部內邊距 26px → 0（引號佔據流內第一行，
+  正文自然落在引號盒下方，首行頂部 +41，距引號盒下緣 +32
+  有 9px 淨空，中英文皆不受遮擋）。
+· blockquote 加 display: flow-root（獨立格式化上下文，
+  配合流內引號確保分欄時整塊搬運、內部不產生碎片）。
+
+【驗證】
+
+· .workbuddy/verify-quote-fix.mjs（網格 elementsFromPoint 掃描
+  第 1 欄末尾區域）：修復前 ZH 30 處 / EN 24 處命中 BLOCKQUOTE
+  （= 白塊洩漏），修復後 ZH / EN 均為 0。
+· 視覺核對 ZH / EN 1920 截圖：白塊消失、引號文字完整、
+  釘住觀感不變。
+· 回歸：domtest 189（引號護欄改為斷言「流內負 margin 實現 +
+  禁用絕對定位」）/ verify-bcm241-a1 101 / uishot 22 → 0 失敗。
+
+【經驗教訓（勿回退）】
+
+雙欄容器（multicol）內禁止對 ::before/::after 使用絕對定位 ——
+break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
+凡要「越出盒子邊緣」的裝飾（引號釘、膠帶），用流內負 margin 實現。
