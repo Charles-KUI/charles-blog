@@ -110,6 +110,29 @@
     opacity: 0.4;
 }
 
+/* 标签密集时（BCM206 有 6 个）整组换到下一行，与日期/作者/学号分开，
+   免得挤成一条读不出层次的杂色带 */
+.article-meta-bar #postTags:not(:empty) {
+    flex-basis: 100%;
+    margin-top: 4px;
+}
+
+/* 标签：浅描边小胶囊，安静地待在元信息栏里，不与主标题抢注意力 */
+.article-meta-bar .tag {
+    display: inline-block;
+    font-family: var(--font-round);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    line-height: 1;
+    padding: 5px 9px 6px;
+    border: 2px solid var(--dark-frame);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--dark-frame);
+    white-space: nowrap;
+}
+
 /* ===== 分割线 ===== */
 .article-divider {
     border: none;
@@ -176,7 +199,8 @@
 .article-body > blockquote,
 .article-body > .inline-figure,
 .article-body > .video-block,
-.article-body > .dg-block {
+.article-body > .dg-block,
+.article-body > .fw-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
@@ -280,7 +304,7 @@
     }
     .article-body > blockquote { break-inside: avoid; }
     .article-body > p { orphans: 2; widows: 2; }
-    /* 文献条目不被拆散：书目、链接、注解必须同栏同页 */
+    /* 文献条目不被拆散：书目、注解必须同栏同页 */
     .article-body > .ref-item { break-inside: avoid; }
 
     /* 画廊跨栏：占满整个版心宽度 */
@@ -436,49 +460,246 @@
     .article-body > .dg-block { column-span: all; max-width: 100%; margin-left: 0; margin-right: 0; }
 }
 
+/* ===== 概念框架图（type: 'framework'） =====
+   理论文献里的「上游 → 枢纽 → 下游」三段式。用 HTML 排版而非 SVG，
+   因为条目是长短不一的整句、需要自然折行。视觉沿用环形图的语汇：
+   奶油白底 + 粗黑边框 + 大硬阴影，栏目标题用圆润无衬线 + 前置短横。 */
+.fw-block {
+    margin: 2.4em 0;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 20px 20px 16px;
+}
+
+.fw-cols {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+}
+
+.fw-col { flex: 1 1 0; min-width: 0; }
+
+.fw-head {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--dark-frame);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.fw-head::before {
+    content: '';
+    flex: none;
+    width: 14px;
+    height: 3px;
+    background: var(--dark-frame);
+}
+
+/* 上游 / 下游条目：无边框、靠序号小圆点引导，避免「方框森林」 */
+.fw-inputs, .fw-outputs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.fw-inputs li, .fw-outputs li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 11px;
+    line-height: 1.45;
+}
+
+.fw-inputs li::before, .fw-outputs li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52em;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dark-frame);
+    opacity: 0.75;
+}
+
+.fw-item-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.fw-item-desc {
+    display: block;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    opacity: 0.68;
+    margin-top: 2px;
+}
+
+/* 枢纽栏：垂直居中，两侧用箭头示意流向。
+   栏宽要留出「箭头 + 呼吸」的空间，否则箭头会被枢纽黑框盖住。 */
+.fw-col-hub {
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0 30px;
+}
+
+/* 流向箭头：六条路径 → 策展 → 三项成果，两侧都朝右。
+   不能用负偏移把箭头推到栏外——祖先有 overflow 裁剪时会直接消失；
+   改成贴在栏内两端，与枢纽框之间留出净空。 */
+.fw-col-hub::before,
+.fw-col-hub::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 11px solid var(--dark-frame);
+    transform: translateY(-50%);
+    opacity: 0.55;
+}
+
+.fw-col-hub::before { left: 0; }
+.fw-col-hub::after { right: 0; }
+
+.fw-hub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    padding: 18px 12px;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    border-radius: 4px;
+    box-shadow: var(--shadow-hard);
+    transform: rotate(-1deg);
+    max-width: 100%;
+}
+
+.fw-hub-title {
+    font-family: var(--font-display);
+    font-size: 1.06rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.fw-hub-note {
+    font-size: 0.72rem;
+    line-height: 1.4;
+    opacity: 0.85;
+}
+
+.fw-caption {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 2px dashed rgba(38, 35, 32, 0.35);
+}
+
+/* 窄屏：三栏堆叠，枢纽栏的横向箭头改成上下箭头（上箭头指向策展，
+   下箭头指向成果——注意 base 用的是 border-left 画右向箭头，
+   这里必须先清掉 border-left，否则会残留一条竖线） */
+@media (max-width: 720px) {
+    .fw-cols { flex-direction: column; }
+    .fw-col-hub { flex: none; padding: 16px 0; }
+    .fw-col-hub::before,
+    .fw-col-hub::after {
+        left: 50%;
+        right: auto;
+        top: auto;
+        transform: translateX(-50%);
+        border-left: none;
+    }
+    .fw-col-hub::before {
+        top: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 10px solid var(--dark-frame);
+    }
+    .fw-col-hub::after {
+        bottom: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 10px solid var(--dark-frame);
+    }
+    .fw-hub { transform: none; width: 100%; }
+}
+
+/* 大屏双栏下，框架图跨栏铺满（横向示意图不该被压在窄栏里） */
+@media (min-width: 1100px) {
+    .article-body > .fw-block {
+        column-span: all;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
 /* ===== 参考文献条目（type: 'ref'） =====
    作业的 Reference 区块：每条文献都附一句「为什么引用它」。
    排版策略是「书目正文 + 注解旁注」——书目保持正文大小可读，
    注解退到小号、加左侧短竖线，像编辑在稿边写的批注；不用卡片，
    以免 Reference 长列表变成一片方框森林。 */
 .ref-item {
-    margin-bottom: 1.8em;
+    margin-bottom: 1.5em;
 }
 
+/* 第一层：书目。悬挂缩进让续行与首行文字对齐；右侧留出小箭头的位置 */
 .ref-cite {
-    margin-bottom: 0.35em;
-    /* 悬挂缩进：换行后与首行文字对齐，不缩到序号下方 */
-    padding-left: 1.4em;
-    text-indent: -1.4em;
+    margin: 0;
+    padding-left: 1.5em;
+    text-indent: -1.5em;
     line-height: 1.55;
     word-break: break-word;
 }
 
+/* 外链收成一枚紧跟书目末尾的小箭头（↗），不再单独占行露长 URL */
 .ref-link {
     display: inline-block;
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
+    margin-left: 4px;
     color: var(--dark-frame);
-    opacity: 0.7;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    word-break: break-all;
-    margin-bottom: 0.5em;
+    opacity: 0.55;
+    text-decoration: none;
+    vertical-align: baseline;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.ref-link-icon {
+    display: inline-block;
+    font-size: 0.82em;
+    line-height: 1;
 }
 
 .ref-link:hover,
 .ref-link:focus-visible {
     opacity: 1;
+    transform: translate(1px, -1px);
 }
 
-/* 注解：左侧短竖线 + 小号字，与书目形成层级 */
+/* 第二层：注解。左侧一条短竖线，小一号字，与书目形成明确层级 */
 .ref-note {
-    margin: 0;
-    padding-left: 12px;
+    margin: 0.35em 0 0;
+    padding-left: 13px;
     border-left: 3px solid var(--dark-frame);
     font-size: 0.86rem;
     line-height: 1.6;
-    opacity: 0.78;
+    opacity: 0.75;
 }
 
 /* 生成式 AI 使用声明：与文献区隔开，收成一条脚注感的短段 */

@@ -89,6 +89,10 @@
     // 文章页元信息栏（用纯文字标签取代 emoji，贴合复古印刷风）
     'meta.date': ['DATE', '日期'],
     'meta.by': ['BY', '作者'],
+    'meta.id': ['ID', '學號'],
+
+    // 参考文献条目的外链
+    'ref.open': ['Open source', '開啟來源'],
 
     // 幻灯片画廊（简报逐页高清图 + 全屏浏览）
     'gallery.badge': ['DECK', '簡報'],

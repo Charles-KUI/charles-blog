@@ -1698,3 +1698,109 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
   （含 ≥1100px 雙欄的解除限寬）→ 語言切換 texts 隊列加
   null 佔位 → 加 refreshXxxText() → 測試斷言 → 截圖核對。
   五個環節缺一不可，漏掉第 4 步就是「切語言後文字錯位」。
+
+
+================================================================
+第十四階段補丁：參考文獻層次收斂 + 環形圖自適應定寬 + 框架圖補齊
+================================================================
+
+更新日期：2026年9月23日
+對應交付：article-page.js / article.css / content.js / shared.js /
+          articles/article.html
+影響頁面：bcm206-a1（主要）、bcm241-a1（學號）
+
+【問題（用戶回饋四項）】
+
+一、Reference 區塊分了太多層，看起來雜亂，要求對齊收斂
+   （原結構：分組 h3 + 書目 + 獨立成行的裸 URL + 註解豎線 = 四層）。
+二、環形圖節點文字超出框外（節點 04
+   "Listen / Comments & community group" 溢出）。
+三、上一輪遺漏的任務：讀參考文獻 PDF，分析其中可圖表化的內容
+   並插入正文中間（未完成）。
+四、讀 BCM206 作業要求 PDF，優化標題下方小標籤，讓老師能看懂
+   這篇與作業的關聯；並在日期/作者處加上學生 ID（BCM241 同步）。
+
+【一、Reference 層次收斂】
+
+· renderRef() 重構：URL 不再單獨佔行，收成書目末尾的小箭頭
+  （.ref-link，↗ 圖示，hover 位移，title 顯示完整網址、
+  aria-label 讀「開啟來源」）。
+· 層級由四層降為兩層：.ref-cite（書目，懸掛縮排
+  padding-left 1.5em + text-indent -1.5em）+ .ref-note
+  （註解，左側 3px 豎線）。
+· refreshRefText() 修復：原本整體覆寫 cite.textContent 會抹掉
+  內聯箭頭 —— 改為只替換首個文本節點（firstChild.nodeValue），
+  再單獨更新 .ref-link 的 aria-label。
+
+【二、環形圖節點自適應寬（根治溢出）】
+
+· 新增 visualWidth()：按字元類別估算視覺寬（CJK ≈ 1em、
+  拉丁 ≈ 0.56em、窄字元 ijlt ≈ 0.32em、寬字元 mw ≈ 0.85em）。
+· 每節點獨立定寬：取主標（15px）與副標（11.5px）估寬較大者，
+  加左右內距 PAD_X×2 與安全餘量 SAFE，下限 MIN_W=150。
+  rect 寬改為逐節點 nw，文字 x 用 x - nw/2 + PAD_X 左對齊。
+· 畫布 W 由 720 增至 760（CX=380、R=218）容納最寬節點。
+· 雙重驗證：構建期字元估算 + 運行期 getBBox() 實測
+  （.workbuddy/check-diagram.mjs）。實測最小淨空：EN 8.7px、
+  ZH 18.6px，全部 ok。
+
+【三、新增 framework 區塊類型（正文區塊第 11 類）】
+
+· 來源：Mihailidis & Cohen (2013) 論文 Figure 6 ——
+  策展作為數位與媒體素養核心能力的六條教學路徑 → 策展樞紐 →
+  三項素養成果。
+· 因條目文字需自然折行，改用 HTML/CSS 佈局（非 SVG）：
+  .fw-block > .fw-cols > .fw-col-in / .fw-col-hub / .fw-col-out。
+· 樣式：奶油白底 + 粗黑邊 + 大硬陰影；主標 Varela Round
+  圓潤無襯線 + 短橫；.fw-hub 深色框旋轉 -1°；
+  左右流向箭頭 ▶（樞紐欄兩端）。窄屏（≤720px）改上下箭頭
+  （須先 border-left: none 清除 base 殘留）。
+· ≥1100px 雙欄下 .article-body > .fw-block { column-span: all; }
+  跨欄鋪滿，並已併入限寬列表的解除。
+· 內容插入位置：Methodology 段之後，附 caption
+  「FIG.03 — Curation as a core digital and media literacy
+  competence (adapted from Mihailidis & Cohen, 2013, Figure 6)」
+  + 一段導讀 p。
+· 環形圖 caption 由 FIG.03 改編號為 FIG.04，避免重號。
+· renderBody 加 case 'framework'；語言切換 texts 隊列加
+  null 佔位；新增 refreshFrameworkText() 刷新六處文字節點。
+
+【四、標題下方標籤 + 學生 ID】
+
+· meta 欄新增學號項（article.html 加 #postStudentId，
+  content.js 兩篇各加 studentId: '1723674'，
+  shared.js 加 i18n 鍵 meta.id = ['ID','學號']）。
+  render() 內無學號時自動隱藏該項與其前置分隔線。
+· bcm206-a1 標籤改為 6 枚膠囊：BCM206 A1 / Contextual
+  Statement / Video Pitch / Digital Artefact /
+  Cross-Border E-commerce / Curation。
+· 標籤樣式：.tag 膠囊（圓角 999px、2px 黑邊、Varela Round
+  700、white-space: nowrap）；標籤列 flex-basis 100% 獨占一行，
+  並移除標籤前那條懸空分隔線。
+
+【驗證】
+
+· verify-bcm206-a1.mjs 由 64 增至 86 項：更新段落數 6→7、
+  viewBox 720→760，新增 §2b 框架圖（8 項）、§2c 元信息
+  （學號 + 標籤，6 項）。
+· verify-bcm241-a1.mjs 由 101 增至 106 項：新增 §6 學生 ID
+  （5 項）。
+· 新工具：check-diagram.mjs（getBBox 溢出檢測）、
+  shot-review.mjs（多區塊中英截圖 + 溢出度量）。
+· 全量回歸 558 項 0 失敗：domtest 196 / verify-bcm241-a1 106 /
+  verify-bcm206-a1 86 / verify-hidden 62 / verify-nav-static 50 /
+  verify-nav-runtime 25 / verify-langswitch 12 / verify-article 11 /
+  verify-narrow-geom 15。
+· 視覺核對：1920 與 390 兩檔橫向溢出均 0；框架圖三欄（寬屏）
+  / 堆疊（窄屏）正確；環形圖中英節點均不溢出；meta 欄顯示
+  「日期 | 作者 | 學號 1723674」。
+
+【經驗教訓】
+
+· SVG 內文字不會自動換行 —— 凡是節點框寬固定的圖，必須按文字
+  內容逐節點定寬（字元寬估算 + getBBox 實測雙保險），
+  切勿寫死單一寬度。
+· 需要自然折行的「圖表」不要硬塞進 SVG，改用 HTML/CSS 佈局，
+  響應式與雙語都更省事。
+· 覆寫既有元素文字時，若該元素內含子元素（如外鏈箭頭），
+  只能改文本節點、不能整體 textContent，否則子元素被抹掉。

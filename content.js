@@ -215,6 +215,7 @@ const SUBJECTS = {
       {
         id: 'bcm241-a1',
         no: 'No.01',
+        studentId: '1723674',
         title: {
           en: 'Global E-commerce Knowledge Niche: A Field Map',
           zh: '全球電商知識領域：一張田野地圖',
@@ -315,6 +316,7 @@ const SUBJECTS = {
       {
         id: 'bcm206-a1',
         no: 'No.01',
+        studentId: '1723674',
         title: {
           en: 'The E-commerce Co-Learning Network: Demystifying Cross-Border Commerce Through Video Sharing',
           zh: '電商共學網絡：用影片分享拆解跨境電商',
@@ -325,6 +327,9 @@ const SUBJECTS = {
         },
         date: '2026-08-28',
         tags: [
+          { en: 'BCM206 A1', zh: 'BCM206 A1' },
+          { en: 'Contextual Statement', zh: '情境陳述' },
+          { en: 'Video Pitch', zh: '影片提案' },
           { en: 'Digital Artefact', zh: '數位作品' },
           { en: 'Cross-Border E-commerce', zh: '跨境電商' },
           { en: 'Curation', zh: '策展' },
@@ -357,10 +362,118 @@ const SUBJECTS = {
             },
           },
           {
+            type: 'framework',
+            caption: {
+              en: 'FIG.03 — Curation as a core digital and media literacy competence (adapted from Mihailidis & Cohen, 2013, Figure 6)',
+              zh: 'FIG.03 — 策展作為核心數位與媒介素養能力（改繪自 Mihailidis & Cohen, 2013, Figure 6）',
+            },
+            inputsLabel: {
+              en: 'Six pedagogical approaches to curation',
+              zh: '策展的六條教學路徑',
+            },
+            inputs: [
+              {
+                label: {
+                  en: 'Where top-down and bottom-up meet',
+                  zh: '由上而下與由下而上交會',
+                },
+                desc: {
+                  en: 'Merging formal news sources with peer-to-peer posts.',
+                  zh: '把正式新聞來源與同儕貼文並置。',
+                },
+              },
+              {
+                label: {
+                  en: 'Integrating mediums, messages, platforms',
+                  zh: '整合媒介、訊息與平台',
+                },
+                desc: {
+                  en: 'Combining video, image and text for depth and balance.',
+                  zh: '混合影片、圖像與文字，換取深度與平衡。',
+                },
+              },
+              {
+                label: {
+                  en: 'Sources, voices and credibility online',
+                  zh: '線上來源、聲音與可信度',
+                },
+                desc: {
+                  en: 'Justifying why one source is trusted over another.',
+                  zh: '說明為何信任某個來源而非另一個。',
+                },
+              },
+              {
+                label: {
+                  en: 'Framing, bias, agenda and perspective',
+                  zh: '框架、偏見、議程與視角',
+                },
+                desc: {
+                  en: 'Comparing how different parties frame the same issue.',
+                  zh: '比較不同立場如何框架同一個議題。',
+                },
+              },
+              {
+                label: { en: 'Appreciating diversity', zh: '理解多樣性' },
+                desc: {
+                  en: 'Recognising the range of voices an issue carries.',
+                  zh: '意識到一個議題承載了多少種聲音。',
+                },
+              },
+              {
+                label: {
+                  en: 'Empowering civic values and civic voices',
+                  zh: '賦權公民價值與公民聲音',
+                },
+                desc: {
+                  en: 'Each share shapes the quality of public information.',
+                  zh: '每一次分享都在形塑公共資訊的品質。',
+                },
+              },
+            ],
+            hub: {
+              title: { en: 'Curation', zh: '策展' },
+              note: {
+                en: 'Student-driven · creation-driven · integrated multimedia storytelling',
+                zh: '學生驅動 · 創作驅動 · 整合式多媒體敘事',
+              },
+            },
+            outputsLabel: {
+              en: 'Digital and media literacy outcomes',
+              zh: '數位與媒介素養成果',
+            },
+            outputs: [
+              {
+                label: {
+                  en: 'Savvy media consumption and production',
+                  zh: '成熟的媒體消費與生產',
+                },
+              },
+              {
+                label: {
+                  en: 'Critical evaluation and analysis',
+                  zh: '批判性評估與分析',
+                },
+              },
+              {
+                label: {
+                  en: 'Participation in local, national and global dialogue',
+                  zh: '參與在地、國家與全球的對話',
+                },
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Mihailidis and Cohen (2013) argue that curation is not simply collecting links — it is an act of problem solving, where the curator takes responsibility for turning scattered online material into a coherent story. Their framework reframes the six teaching approaches above into three literacy outcomes, and it is the model I follow when I decide what to keep, what to discard, and how to sequence a video so a beginner can follow it.',
+              zh: 'Mihailidis 與 Cohen（2013）主張，策展不只是收集連結——它是一種問題解決的行動，策展人必須為「把散落的線上素材變成一個連貫故事」負責。他們的框架把上述六條教學路徑收攏為三項素養成果，也正是我在決定「留下什麼、捨棄什麼、如何安排影片順序讓新手跟得上」時所依循的模型。',
+            },
+          },
+          {
             type: 'diagram',
             caption: {
-              en: 'FIG.03 — The co-learning loop: five stages on repeat',
-              zh: 'FIG.03 — 共學循環：五個階段，週而復始',
+              en: 'FIG.04 — The co-learning loop: five stages on repeat',
+              zh: 'FIG.04 — 共學循環：五個階段，週而復始',
             },
             items: [
               {
