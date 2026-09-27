@@ -1589,3 +1589,112 @@ CSS 實作備忘：欄內元素必須覆寫回 max-width:none / margin:0
 雙欄容器（multicol）內禁止對 ::before/::after 使用絕對定位 ——
 break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 凡要「越出盒子邊緣」的裝飾（引號釘、膠帶），用流內負 margin 實現。
+
+
+========================================
+
+更新日期：2026年9月23日
+更新阶段：第十四阶段 BCM206 A1 上線 + 正文區塊體系擴充
+
+========================================
+
+【本階段目標】
+
+把 BCM206 A1（跨境電商共學網絡）作業文檔原文搬上網站，
+並在正文中間插入一個帶動畫的環形流程圖。
+
+【一、BCM206 A1 文章上線】
+
+· content.js 的 bcm206-a1 記錄由佔位內容（From CRT to Cloud）
+  整條替換為真實作業：
+  - 標題：The E-commerce Co-Learning Network: Demystifying
+    Cross-Border Commerce Through Video Sharing
+    （繁中：電商共學網絡：用影片分享拆解跨境電商）
+  - 正文 21 個區塊，**英文原文一字未改**（原文直登），
+    繁中為對應翻譯，供語言切換
+  - 封面圖 assets/posts/bcm206-a1-cover.png（1024×683）
+  - 日期 2026-08-28 / 標籤 Digital Artefact ·
+    Cross-Border E-commerce · Curation
+· subjects/bcm206.html 去掉 hidden 與 is-placeholder，
+  科目索引正式上線；科目頁小字「持續更新中」改為收尾語
+  排在索引之後（.assignments-note-section.is-after-list）
+
+【二、正文區塊體系擴充：+4 種新類型】
+
+原本 6 種（p / h2 / quote / figure / video / gallery），
+本階段新增 4 種，全部接入 i18n 位置式刷新機制：
+
+· h3 —— 三級標題。與 h2 做視覺區分：h2 是襯線字 +
+  左側粗邊框；h3 是圓潤無襯線（Varela Round）+ 前置短橫。
+· note —— 腳註/聲明段（.inline-note）：上方虛線分隔、
+  縮小字號、降透明度。用於生成式 AI 使用聲明。
+· ref —— 文獻條目（.ref-item）。三段式結構：
+  .ref-cite 書目（懸掛縮排）+ .ref-link 連結 + .ref-note
+  註解（左側粗豎線）。書目中英同文不翻譯，連結獨立成行，
+  註解隨語言切換。
+· diagram —— 內聯 SVG 圖表。本次為環形流程圖。
+
+【三、環形流程圖（FIG.03）】
+
+· 內容：Methodology 的五步閉環 —— 原型製作 → 發布 →
+  追蹤 → 傾聽 → 修正，箭頭首尾相接。
+· 位置：Methodology 段落之後（用戶指定）。
+· 實現：renderDiagram() 在文章頁生成內聯 SVG。
+  - 視圖座標系寬 720，圓心 CX=360、半徑 R=208
+  - 節點框 176×62，從 -90° 起順時針均布，弧段留 30° 缺口
+  - 箭頭用 <marker id="dgArrow">；節點 01–05 編號
+  - 標籤用 ' / ' 拆主副標題，渲染成兩行
+· 動畫（雙軌）：
+  1. 光點沿閉合圓環運行 —— <circle class="dg-spark">
+     + <animateMotion dur="9s" repeatCount="indefinite">，
+     純 SVG SMIL，不依賴 JS，DOM 不重建則動畫不斷。
+  2. 節點與弧段依次點亮 —— CSS @keyframes，用
+     style="--dg-i:i" 做錯位延遲。
+  受 prefers-reduced-motion 保護：reduce 時隱藏光點、
+  取消入場動畫。
+· 大屏（≥1100px）跨欄鋪滿 1360px；窄屏縮至 660px 居中。
+
+【四、i18n 位置式刷新的三個坑（勿踩）】
+
+1. ref 區塊的 texts 隊列要 push **兩個 null** —— .ref-cite
+   與 .ref-note 各佔一個節點位置，少 push 會讓後續文字錯位。
+2. diagram 區塊 push 一個 null，由 refreshDiagramText() 單獨
+   刷新；刷新時只改 textContent，**不重建 DOM**，動畫不中斷。
+3. 測試語言切換必須走 window.ZineI18n.set('en')，不能用
+   dispatchEvent(new Event('zine:langchange')) —— i18n.js 內部
+   發的是 CustomEvent，裸 Event 監聽不到。
+   另注意 i18n.js 的 DEFAULT_LANG 是 'en'，空白 profile 打
+   開頁面預設是英文，截「中文態」前要先 set('zh')。
+
+【五、佔位文章機制 placeholder】
+
+· content.js 中 6 條示例文章（bcm212-a1/a2/t1、
+  bcm206-a2、bcm222-a1/a2）加 placeholder: true。
+· subject-page.js 渲染索引前先 filter(a => !a.placeholder)，
+  佔位文章不上科目索引。
+· 目的：新增/替換記錄期間，避免示例內容被誤當真上架。
+
+【六、驗證】
+
+· 新增 .workbuddy/verify-bcm206-a1.mjs（64 項）：結構、
+  原文忠實度（10 條 must-keep 原句逐字比對）、環形圖
+  （5 節點 / 5 弧 / 箭頭 / animateMotion / --dg-i / aria /
+  切語言不重建 DOM）、文獻 3 條、AI 聲明、雙語不混排。
+· 新增 .workbuddy/shot-bcm206.mjs（6 檔截圖 + 光點動畫兩幀
+  對比 + 幾何度量）、.workbuddy/shot-ring-lang.mjs
+  （環形圖中英對照）。
+· 視覺核對：1920 / 1280 / 760 三檔 overflowX 皆 0；光點確實在
+  位移（frame1 [839.4, 981.4] → frame2 [570.5, 634.9]）；
+  中英雙態節點文字皆正確。
+· 全量回歸：domtest 196 / verify-bcm241-a1 101 /
+  verify-bcm206-a1 64 / verify-hidden 62 / verify-nav-static 50 /
+  verify-nav-runtime 25 / verify-langswitch 12 / verify-article 11 /
+  verify-narrow-geom 15 → 全部 0 失敗。
+
+【經驗教訓】
+
+· 「新增一種正文區塊類型」是一條固定流水線：
+  content.js 寫區塊 → renderBody 加分支 → article.css 加樣式
+  （含 ≥1100px 雙欄的解除限寬）→ 語言切換 texts 隊列加
+  null 佔位 → 加 refreshXxxText() → 測試斷言 → 截圖核對。
+  五個環節缺一不可，漏掉第 4 步就是「切語言後文字錯位」。

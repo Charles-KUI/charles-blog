@@ -89,12 +89,29 @@
 
     if (list.classList.contains('is-placeholder')) return; // 文章索引暫時隱藏
 
-    var countBadge = document.getElementById('assignmentCount');    countBadge.textContent = util.t('subject.pieces', subject.assignments.length);
-    countBadge.setAttribute('aria-label', util.t('subject.piecesAria', subject.assignments.length));
+    // 已上線的作品：交付內容尚未到位（占位文案）的條目不上架，
+    // 否則索引會把示範內容當成真作業展示。等真實內容寫入 content.js 後，
+    // 移除該條目的 placeholder 標記即可自動出現。
+    var live = subject.assignments.filter(function (a) { return !a.placeholder; });
+    var countBadge = document.getElementById('assignmentCount');
+    countBadge.textContent = util.t('subject.pieces', live.length);
+    countBadge.setAttribute('aria-label', util.t('subject.piecesAria', live.length));
 
-    list.innerHTML = subject.assignments.length
-      ? subject.assignments.map(function (a) { return renderCard(a, root, util); }).join('')
+    list.innerHTML = live.length
+      ? live.map(function (a) { return renderCard(a, root, util); }).join('')
       : '<p class="assignments-empty">' + util.t('subject.noAssignments') + '</p>';
+
+    // 索引上線後，首頁原有的「持續更新中」小字改成收尾語：文案換掉、間距收緊。
+    // 文案用 JS 設定而非 data-i18n，才不會在語言切換時被 i18n 引擎覆寫回原句。
+    var noteSection = document.querySelector('.assignments-note-section');
+    if (noteSection) {
+      noteSection.classList.add('is-after-list');
+      var note = noteSection.querySelector('.assignments-note');
+      if (note) {
+        note.removeAttribute('data-i18n');
+        note.textContent = util.t('subject.moreComing');
+      }
+    }
 
     // 重新触发浮现动画（列表为动态生成）
     if (window.ZineReinitReveal) window.ZineReinitReveal();

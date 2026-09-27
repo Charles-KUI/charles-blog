@@ -32,14 +32,22 @@
       switch (block.type) {
         case 'h2':
           return '<h2>' + util.tr(block.text) + '</h2>';
+        case 'h3':
+          return '<h3>' + util.tr(block.text) + '</h3>';
         case 'quote':
           return '<blockquote>' + util.tr(block.text) + '</blockquote>';
+        case 'note':
+          return '<p class="inline-note">' + util.tr(block.text) + '</p>';
+        case 'ref':
+          return renderRef(block, util);
         case 'gallery':
           return renderGallery(block, root, util);
         case 'figure':
           return '<figure class="inline-figure">'
             + '<img src="' + root + block.src + '" alt="' + util.tr(block.caption) + '" loading="lazy">'
             + '<figcaption>' + util.tr(block.caption) + '</figcaption></figure>';
+        case 'diagram':
+          return renderDiagram(block, util);
         case 'video':
           return renderVideo(block, root, util);
         case 'p':
@@ -121,6 +129,134 @@
       }).join('')
       + '  </div>'
       + '</section>';
+  }
+
+  /**
+   * 环形流程图（type: 'diagram'）
+   * ---------------------------------------------------------------
+   * 把「一个闭环流程」画成 SVG 环：节点环绕圆周、箭头首尾相接，
+   * 并让一枚光点沿环路径循环流动（CSS 动画驱动 offset-path，不依赖 JS）。
+   *
+   * 为何用内联 SVG 而不是 PNG：
+   *   · 文字要随语言切换（中/英），PNG 做不到；
+   *   · 任意屏幕尺寸下都锐利，无需多倍图；
+   *   · 动画（光点流动 + 节点依次点亮）用 CSS 就能表达。
+   *
+   * 坐标计算：节点均匀分布在圆周上，从正上方（-90°）开始顺时针排布，
+   * 与阅读顺序一致；连线用圆弧路径，箭头方向即顺时针流向。
+   */
+  function renderDiagram(block, util) {
+    const items = block.items || [];
+    const n = items.length;
+    if (!n) return '';
+
+    // 视图坐标系：宽 720，圆心居中
+    const W = 720;
+    const CX = W / 2;
+    const R = 208;          // 节点中心所在圆的半径
+    const NODE_W = 176;     // 节点文字框宽
+    const NODE_H = 62;      // 节点文字框高
+
+    const pts = items.map(function (item, i) {
+      const ang = (-90 + (360 / n) * i) * Math.PI / 180;
+      return {
+        x: CX + R * Math.cos(ang),
+        y: CX + R * Math.sin(ang),
+        ang: ang,
+        item: item
+      };
+    });
+
+    // 顶部/底部留出说明空间
+    const topY = pts.reduce(function (m, p) { return Math.min(m, p.y); }, Infinity) - NODE_H / 2 - 26;
+    const botY = pts.reduce(function (m, p) { return Math.max(m, p.y); }, -Infinity) + NODE_H / 2 + 30;
+    const H = Math.round(botY - topY);
+    const dy = -topY;       // 整体下移，使内容顶到 0
+
+    // 环上的弧（每段从当前节点后缘到下一节点前缘，留出节点占位）
+    const gapDeg = 30;      // 节点两侧让出的角度
+    const segs = pts.map(function (p, i) {
+      const a0 = (-90 + (360 / n) * i + gapDeg / 2) * Math.PI / 180;
+      const a1 = (-90 + (360 / n) * ((i + 1) % n) - gapDeg / 2) * Math.PI / 180;
+      // 逆时针跨越时补正
+      const a1n = a1 < a0 ? a1 + Math.PI * 2 : a1;
+      const x0 = CX + R * Math.cos(a0), y0 = dy + CX + R * Math.sin(a0);
+      const x1 = CX + R * Math.cos(a1n), y1 = dy + CX + R * Math.sin(a1n);
+      const large = (a1n - a0) > Math.PI ? 1 : 0;
+      return { d: 'M' + x0.toFixed(1) + ' ' + y0.toFixed(1) + 'A' + R + ' ' + R + ' 0 ' + large + ' 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1), i: i };
+    });
+
+    const nodes = pts.map(function (p, i) {
+      const x = p.x, y = dy + p.y;
+      const label = util.tr(p.item.label);
+      const num = p.item.no || ('0' + (i + 1)).slice(-2);
+      // 文字换行：按「/」分隔主副标题
+      const parts = String(label).split(' / ');
+      const main = parts[0] || '';
+      const sub = parts[1] || '';
+      return '<g class="dg-node" style="--dg-i:' + i + '">'
+        + '<rect class="dg-node-bg" x="' + (x - NODE_W / 2).toFixed(1) + '" y="' + (y - NODE_H / 2).toFixed(1) + '" width="' + NODE_W + '" height="' + NODE_H + '" rx="3"></rect>'
+        + '<text class="dg-node-no" x="' + (x - NODE_W / 2 + 12).toFixed(1) + '" y="' + (y - NODE_H / 2 + 20).toFixed(1) + '">' + num + '</text>'
+        + '<text class="dg-node-main" x="' + (x - NODE_W / 2 + 12).toFixed(1) + '" y="' + (y - NODE_H / 2 + 38).toFixed(1) + '">' + esc(main) + '</text>'
+        + (sub ? '<text class="dg-node-sub" x="' + (x - NODE_W / 2 + 12).toFixed(1) + '" y="' + (y - NODE_H / 2 + 53).toFixed(1) + '">' + esc(sub) + '</text>' : '')
+        + '</g>';
+    }).join('');
+
+    const label = esc(util.tr(block.caption));
+    const altText = items.map(function (it) { return util.tr(it.label); }).join('；');
+
+    return '<figure class="dg-block">'
+      + '<div class="dg-frame">'
+      + '  <svg class="dg-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + label + '：' + esc(altText) + '">'
+      + '    <defs>'
+      + '      <marker id="dgArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">'
+      + '        <path d="M0 0 L10 5 L0 10 z" class="dg-arrow-head"></path>'
+      + '      </marker>'
+      + '    </defs>'
+      + '    <g class="dg-ring">'
+      + segs.map(function (s) {
+        return '<path class="dg-seg" d="' + s.d + '" marker-end="url(#dgArrow)" style="--dg-i:' + s.i + '"></path>';
+      }).join('')
+      + '    </g>'
+      + '    <circle class="dg-spark" r="5">'
+      + '      <animateMotion dur="9s" repeatCount="indefinite" path="' + ringPath(CX, dy + CX, R) + '"></animateMotion>'
+      + '    </circle>'
+      + nodes
+      + '  </svg>'
+      + '</div>'
+      + '<figcaption class="dg-caption">' + label + '</figcaption>'
+      + '</figure>';
+  }
+
+  /**
+   * 参考文献条目（type: 'ref'）
+   * ---------------------------------------------------------------
+   * 作业的 Reference 区块里，每条文献都带一句「为什么引用它」的注解。
+   * 视觉上把注解压成小号斜体，链接单独占一行，形成可扫读的卡片——
+   * 但字号与行距保持克制，避免把正文的阅读节奏打断成表格感。
+   *
+   * 文献书目（text）按学术规范保留原文，中英两版一致，不做翻译。
+   */
+  function renderRef(block, util) {
+    return '<div class="ref-item">'
+      + '<p class="ref-cite">' + util.tr(block.text) + '</p>'
+      + (block.url ? '<a class="ref-link" href="' + esc(block.url) + '" target="_blank" rel="noopener noreferrer">' + esc(block.url) + '</a>' : '')
+      + (block.note ? '<p class="ref-note">' + util.tr(block.note) + '</p>' : '')
+      + '</div>';
+  }
+
+  /** 生成一个完整闭合圆的路径（供 animateMotion 让光点沿环流动） */
+  function ringPath(cx, cy, r) {
+    return 'M' + cx + ' ' + (cy - r)
+      + ' A' + r + ' ' + r + ' 0 1 1 ' + (cx - 0.01) + ' ' + (cy - r)
+      + ' Z';
+  }
+
+  /** 极简 HTML 转义 */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   /** 视频块：有 src 用 <video>，无 src 显示测试卡占位 */
@@ -448,11 +584,13 @@
       a.body.forEach(function (b) {
         if (b.type === 'figure' || b.type === 'video') texts.push(b.caption);
         else if (b.type === 'gallery') texts.push(null); // 画廊文字单独刷新
+        else if (b.type === 'diagram') texts.push(null); // 环形图文字单独刷新
+        else if (b.type === 'ref') texts.push(null, null); // 文献引用 + 注解，节点数固定为 2
         else texts.push(b.text);
       });
       if (a.video) texts.push(a.video.caption);
 
-      const nodes = body.querySelectorAll('p, h2, blockquote, figcaption');
+      const nodes = body.querySelectorAll('p, h2, h3, blockquote, figcaption');
       let i = 0;
       nodes.forEach(function (node) {
         // 只替换纯文本、且顺序与数据一致；含子元素的节点保持不动
@@ -463,10 +601,63 @@
       });
 
       refreshGalleryText(body, a, util);
+      refreshDiagramText(body, a, util);
+      refreshRefText(body, a, util);
     }
 
     paintArticleText();
   });
+
+  /**
+   * 语言切换时刷新环形图的文字（节点标签 / 编号 / 图注）。
+   * SVG 里的 <text> 不是标准 figcaption 文本节点，所以单独重绘：
+   * 按节点顺序写回，位置与结构保持不变，动画不中断。
+   */
+  function refreshDiagramText(body, assignment, util) {
+    const blocks = assignment.body.filter(function (b) { return b.type === 'diagram'; });
+    const figs = body.querySelectorAll('.dg-block');
+    figs.forEach(function (fig, di) {
+      const data = blocks[di];
+      if (!data) return;
+      const groups = fig.querySelectorAll('.dg-node');
+      groups.forEach(function (g, gi) {
+        const item = data.items[gi];
+        if (!item) return;
+        const label = util.tr(item.label);
+        const parts = String(label).split(' / ');
+        const main = g.querySelector('.dg-node-main');
+        const sub = g.querySelector('.dg-node-sub');
+        if (main) main.textContent = parts[0] || '';
+        if (sub) sub.textContent = parts[1] || '';
+        g.setAttribute('aria-label', label);
+      });
+      const cap = fig.querySelector('.dg-caption');
+      if (cap) cap.textContent = util.tr(data.caption);
+      const svg = fig.querySelector('.dg-svg');
+      if (svg) {
+        svg.setAttribute('aria-label', util.tr(data.caption) + '：'
+          + data.items.map(function (it) { return util.tr(it.label); }).join('；'));
+      }
+    });
+  }
+
+  /**
+   * 语言切换时刷新文献条目的注解与链接文本。
+   * 文献书目本身中英一致（学术规范不翻译），只有「为什么引用」的注解随语言变化；
+   * 网址文本不变但重新写一次无副作用，且能保证结构顺序整齐。
+   */
+  function refreshRefText(body, assignment, util) {
+    const blocks = assignment.body.filter(function (b) { return b.type === 'ref'; });
+    const items = body.querySelectorAll('.ref-item');
+    items.forEach(function (item, ri) {
+      const data = blocks[ri];
+      if (!data) return;
+      const cite = item.querySelector('.ref-cite');
+      if (cite) cite.textContent = util.tr(data.text);
+      const note = item.querySelector('.ref-note');
+      if (note) note.textContent = util.tr(data.note);
+    });
+  }
 
   /** 语言切换时只刷新画廊里的文字（标题 / 提示 / 页码标签 / 下载链接） */
   function refreshGalleryText(body, assignment, util) {

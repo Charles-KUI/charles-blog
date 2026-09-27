@@ -51,6 +51,8 @@ const SUBJECTS = {
       {
         id: 'bcm212-a1',
         no: 'No.01',
+        // placeholder: 交付內容尚未到位（示範文案），科目索引不對外展示
+        placeholder: true,
         title: {
           en: 'The Curiosity Project: Research Proposal',
           zh: '好奇心計畫：研究提案',
@@ -108,6 +110,7 @@ const SUBJECTS = {
       {
         id: 'bcm212-a2',
         no: 'No.02',
+        placeholder: true,
         title: { en: 'Ethics in Focus: Interviewing Peers', zh: '倫理聚焦：訪談同儕' },
         excerpt: {
           en: 'A camera, a heart, and everything in between — what my pilot interviews taught me about consent, power and the weight of being quoted.',
@@ -162,6 +165,7 @@ const SUBJECTS = {
       {
         id: 'bcm212-t1',
         no: 'No.03',
+        placeholder: true,
         title: { en: 'Test Post: A Hundred Words Is Enough', zh: '測試文章：一百字就好' },
         excerpt: {
           en: 'A short test post to check the layout, video slot and byline. Feel free to delete this record once verified.',
@@ -311,46 +315,149 @@ const SUBJECTS = {
       {
         id: 'bcm206-a1',
         no: 'No.01',
-        title: { en: 'From CRT to Cloud: A Media Timeline', zh: '從映像管到雲端：一部媒體時間軸' },
+        title: {
+          en: 'The E-commerce Co-Learning Network: Demystifying Cross-Border Commerce Through Video Sharing',
+          zh: '電商共學網絡：用影片分享拆解跨境電商',
+        },
         excerpt: {
-          en: 'Six screens, seventy years — tracing how the centre of household media moved from the living room wall to a wrist, and guessing where it goes next.',
-          zh: '六個螢幕、七十年——追蹤家庭媒體的中心如何從客廳的牆面移动到手腕上，並猜測它接下來會去哪裡。',
+          en: 'A solo Digital Artefact across Bilibili, Douyin and Xiaohongshu — turning scattered, paywalled knowledge about going global into free 3-to-5-minute breakdowns, and learning in public while doing it.',
+          zh: '一個橫跨 B 站、抖音與小紅書的個人數位作品——把散落、被付費牆鎖住的出海知識，拆成免費的 3 至 5 分鐘影片，並在過程中公開地學習。',
         },
         date: '2026-08-28',
         tags: [
-          { en: 'Timeline', zh: '時間軸' },
-          { en: 'Essay', zh: '隨筆' },
+          { en: 'Digital Artefact', zh: '數位作品' },
+          { en: 'Cross-Border E-commerce', zh: '跨境電商' },
+          { en: 'Curation', zh: '策展' },
         ],
-        image: 'assets/posts/bcm206-a1-crt.png',
-        figLabel: { en: 'FIG.02 — The family CRT', zh: 'FIG.02 — 家中的映像管電視' },
+        image: 'assets/posts/bcm206-a1-cover.png',
+        figLabel: { en: 'FIG.02 — The co-learning network', zh: 'FIG.02 — 共學網絡' },
         body: [
+          { type: 'h2', text: { en: '1. Project Concept', zh: '1. 專案概念' } },
           {
             type: 'p',
             text: {
-              en: 'Every era of media has a furniture problem: where does the machine sit, and who faces it? The CRT television answered with a ritual — the whole family arranged around a single glowing rectangle, programming arrived on its schedule, not yours.',
-              zh: '每一個媒體時代都有一個家具問題：機器放在哪裡，而誰面對著它？映像管電視用一套儀式回答了這個問題——全家人圍著一個發光的長方形，節目按它的時刻表到來，而不是你的。',
+              en: 'The E-commerce Co-Learning Network is a personal Digital Artefact (DA) where I run individual creator accounts across major Chinese video platforms, including Bilibili, Douyin, and Xiaohongshu. The project specifically focuses on China’s cross-border e-commerce (chu hai), analyzing how domestic brands and sellers expand into international markets, which is why Mainland Chinese media platforms serve as my primary distribution channels. Through accessible 3 to 5-minute educational videos, I research and break down real-world success stories, starting with fast-growing Chinese apparel brands like Cider and Halara that sell overseas through TikTok Shop and Amazon. As a solo creator, I summarize publicly available information online into practical, bite-sized videos to help other beginners learn alongside me.',
+              zh: '「電商共學網絡」是一個個人的數位作品（Digital Artefact, DA）：我在 Bilibili、抖音和小紅書等中國主要影音平台上經營個人創作者帳號。專案特別聚焦於中國的跨境電商（出海），分析國內品牌與賣家如何拓展國際市場——這也是為什麼中國大陸的媒體平台是我的主要發布渠道。透過易於理解的 3 至 5 分鐘教學影片，我研究並拆解真實的成功案例，從 Cider、Halara 這些透過 TikTok Shop 與 Amazon 賣向海外、快速成長的中國服飾品牌開始。作為一個單人創作者，我把網路上公開可得的資訊整理成實用、好吸收的短片，幫助其他新手與我一起學習。',
             },
           },
-          { type: 'h2', text: { en: 'Centrifugal media', zh: '離心式的媒體' } },
+          { type: 'h2', text: { en: '2. Social Utility', zh: '2. 社會效益' } },
           {
             type: 'p',
             text: {
-              en: 'From broadcast to cable to broadband, each generation spun the screen further outward: one per house, one per person, one per eyeball. The cloud era inverts the question — the “screen” is now just the nearest pane of glass to whatever you are doing.',
-              zh: '從無線廣播到有線電視再到寬頻，每一個世代都把螢幕甩得更外圍：一戶一個、一人一個、一隻眼球一個。雲端時代把問題倒轉了過來——「螢幕」現在只是距離你手邊那件事最近的一片玻璃。',
+              en: 'The main purpose of this project is to bridge the huge information gap in cross-border e-commerce. The target audience is young people aged 18 to 35—especially university students and beginners who want to explore selling products to overseas markets. Most newcomers find it hard to understand overseas consumer tastes, platform algorithms, and visual branding because the information online is scattered, confusing, or hidden behind expensive paywalls. By researching and organizing real business cases into clear, free video breakdowns, I want to lower this learning curve and make global commerce knowledge accessible and easy to understand for everyone.',
+              zh: '這個專案的主要目的，是補上跨境電商中巨大的資訊落差。目標受眾是 18 至 35 歲的年輕人——尤其是想探索把產品賣向海外市場的大學生與新手。大多數新手難以理解海外消費者的品味、平台演算法與視覺品牌，因為網路上的資訊零散、混亂，或被藏在昂貴的付費牆之後。透過研究並整理真實的商業案例，做成清楚、免費的影片拆解，我想降低這條學習曲線，讓全球商業知識對每個人都可取得、容易理解。',
             },
           },
-          {
-            type: 'quote',
-            text: {
-              en: 'Media history is the story of a glow migrating: from the wall, to the palm, to the retinas.',
-              zh: '媒體史就是一則關於光暈遷徙的故事：從牆面，到掌心，再到視網膜。',
-            },
-          },
+          { type: 'h2', text: { en: '3. Methodology', zh: '3. 研究方法' } },
           {
             type: 'p',
             text: {
-              en: 'My speculative timeline ends in 2041 with “ambient consensus layers” — network surfaces that exist only when two or more people occupy the same physical space. A provocation, not a prediction. The full annotated timeline is in the attached PDF.',
-              zh: '我的推測時間軸結束在 2041 年的「環境共識層」——只有在兩個以上的人佔據同一物理空間時才存在的網路表面。這是一個挑釁，不是預測。完整註解的時序圖在附件的 PDF 裡。',
+              en: 'My project follows a continuous cycle of prototyping, reflecting, and adapting:',
+              zh: '我的專案遵循一個「 prototyping（原型製作）、反思、調整」的持續循環：',
+            },
+          },
+          {
+            type: 'diagram',
+            caption: {
+              en: 'FIG.03 — The co-learning loop: five stages on repeat',
+              zh: 'FIG.03 — 共學循環：五個階段，週而復始',
+            },
+            items: [
+              {
+                label: { en: 'Prototype / Plan each video', zh: '原型製作 / 規劃每一支影片' },
+              },
+              {
+                label: { en: 'Publish / Bilibili · Douyin · Xiaohongshu', zh: '發布 / B 站 · 抖音 · 小紅書' },
+              },
+              {
+                label: { en: 'Track / Views, likes, retention', zh: '追蹤 / 觀看、按讚、留存率' },
+              },
+              {
+                label: { en: 'Listen / Comments & community group', zh: '傾聽 / 留言與社群群組' },
+              },
+              {
+                label: { en: 'Correct / Public error-correction', zh: '修正 / 公開勘誤' },
+              },
+            ],
+          },
+          { type: 'h3', text: { en: 'Performance Tracking', zh: '成效追蹤' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Before uploading each 3 to 5-minute video, I write down my personal expectations for views, likes, and retention rates. After publishing across platforms, I compare the actual numbers with my guesses to see what worked, what fell flat, and how to improve the pacing of the next video.',
+              zh: '在每支 3 至 5 分鐘的影片上傳前，我會先寫下自己對觀看數、按讚數與留存率的預期。跨平台發布之後，我把實際數字與自己的猜測相比，看看什麼奏效、什麼反應平淡，以及下一支影片的節奏該如何改進。',
+            },
+          },
+          { type: 'h3', text: { en: 'Audience Feedback and Community', zh: '受眾回饋與社群' } },
+          {
+            type: 'p',
+            text: {
+              en: 'I check viewer comments to see what topics people want me to analyze next. Once my channels build regular viewers, I will personally set up a viewer discussion group where followers can share ideas and talk directly with me.',
+              zh: '我會查看觀眾留言，了解大家希望我接下來分析哪些主題。等到頻道累積出固定觀眾，我會親自成立一個觀眾討論群，讓追蹤者可以分享想法、直接與我對話。',
+            },
+          },
+          { type: 'h3', text: { en: 'Public Error-Correction as a Learning Asset', zh: '公開勘誤作為學習資產' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Because I am a beginner creator without hands-on store ownership, I rely on secondary research from public internet sources. In this process, I cannot completely avoid making mistakes or sharing outdated information. Instead of hiding my errors, I make public error-correction an essential part of my project. Whenever I discover a mistake through my own learning or viewer comments, I will correct it openly using pinned comments or dedicated follow-up videos. Making mistakes and fixing them is a natural part of my learning journey, and sharing these corrections offers real, honest lessons for my audience.',
+              zh: '因為我是一個沒有實際開店經驗的新手創作者，我依賴來自公開網路來源的次級研究。在這個過程中，我無法完全避免犯錯，或分享了過時的資訊。與其隱藏錯誤，我把「公開勘誤」變成專案中不可或缺的一部分。只要我在自己的學習過程或觀眾留言中發現錯誤，我就會用置頂留言或專門的後續影片公開更正。犯錯並修正，是我學習歷程中自然的一部分，而把這些更正分享出來，也為我的觀眾提供了真實、誠實的一課。',
+            },
+          },
+          { type: 'h2', text: { en: '4. Reference', zh: '4. 參考文獻' } },
+          {
+            type: 'h3',
+            text: { en: 'E-Commerce & Audience Context', zh: '電商與受眾脈絡' },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Wang, Y., & Lee, S. H. (2017). The effect of cross-border e-commerce on China’s international trade: An empirical study based on transaction cost analysis. Sustainability, 9(11), 2028.',
+              zh: 'Wang, Y., & Lee, S. H. (2017). The effect of cross-border e-commerce on China’s international trade: An empirical study based on transaction cost analysis. Sustainability, 9(11), 2028.',
+            },
+            url: 'https://www.mdpi.com/2071-1050/9/11/2028',
+            note: {
+              en: 'Proves the cross-border information gap and validates the practical need for my knowledge-sharing videos.',
+              zh: '證實了跨境資訊落差的存在，也印證了我的知識分享影片在實務上的必要性。',
+            },
+          },
+          {
+            type: 'h3',
+            text: { en: 'Content Curation & Digital Literacy', zh: '內容策展與數位素養' },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Mihailidis, P., & Cohen, J. N. (2013). Exploring curation as a core competency in digital and media literacy education. Journal of Interactive Media in Education, 2013(1), Article 2.',
+              zh: 'Mihailidis, P., & Cohen, J. N. (2013). Exploring curation as a core competency in digital and media literacy education. Journal of Interactive Media in Education, 2013(1), Article 2.',
+            },
+            url: 'https://digitalcommons.molloy.edu/dhnm_fac/4/?',
+            note: {
+              en: 'Validates content curation as a legitimate research method to turn scattered online data into structured video lessons.',
+              zh: '驗證了內容策展作為一種正當研究方法的地位——把散落於線上的資料，轉化為結構化的影片課程。',
+            },
+          },
+          {
+            type: 'h3',
+            text: { en: 'Platform Logic & Social Media', zh: '平台邏輯與社群媒體' },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Xu, L., Cheng, Z., Ma, J., & Jiang, B. (2026). Alcohol-related health information on Chinese short-video platforms: a cross-sectional content analysis of Douyin and Bilibili. Scientific Reports, 16(1), Article 56544.',
+              zh: 'Xu, L., Cheng, Z., Ma, J., & Jiang, B. (2026). Alcohol-related health information on Chinese short-video platforms: a cross-sectional content analysis of Douyin and Bilibili. Scientific Reports, 16(1), Article 56544.',
+            },
+            url: 'https://doi.org/10.1038/s41598-026-56544-z',
+            note: {
+              en: 'Reveals the algorithmic differences between Douyin and Bilibili, showing that high views do not equate to content quality.',
+              zh: '揭示了抖音與 Bilibili 之間的演算法差異，說明高觀看數並不等於內容品質。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
             },
           },
         ],
@@ -358,6 +465,7 @@ const SUBJECTS = {
       {
         id: 'bcm206-a2',
         no: 'No.02',
+        placeholder: true,
         title: { en: 'Network Topologies of Daily Life', zh: '日常生活的網路拓撲' },
         excerpt: {
           en: 'Your morning is a star topology, your group chat a mesh. Drawing the hidden network diagrams inside one ordinary day.',
@@ -419,6 +527,7 @@ const SUBJECTS = {
       {
         id: 'bcm222-a1',
         no: 'No.01',
+        placeholder: true,
         title: { en: 'The Gaze Economy: Surveillance on Social Media', zh: '凝視經濟：社群媒體上的監控' },
         excerpt: {
           en: 'We watch the feed; the feed watches back. A case study on how attention became the currency — and who prints it.',
@@ -466,6 +575,7 @@ const SUBJECTS = {
       {
         id: 'bcm222-a2',
         no: 'No.02',
+        placeholder: true,
         title: { en: 'Voice & Visibility: Who Gets the Mic?', zh: '發聲與可見性：誰拿到麥克風？' },
         excerpt: {
           en: 'Amplification is power. Comparing two student protests covered by the same campus paper — one front-page, one buried, and the structural reason why.',

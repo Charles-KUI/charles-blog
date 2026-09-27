@@ -172,15 +172,39 @@
    否则后面的简写 `margin:` 会把这里的 auto 覆盖掉，文字就会贴到左边缘。 */
 .article-body > p,
 .article-body > h2,
+.article-body > h3,
 .article-body > blockquote,
 .article-body > .inline-figure,
-.article-body > .video-block {
+.article-body > .video-block,
+.article-body > .dg-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .article-body p { margin-bottom: 1.4em; }
+
+/* 三级小标题：作业里的子项（Performance Tracking 之类）。
+   与 h2 的「左边框 + 衬线大字」区分开：改用小号圆润无衬线 + 前置短横，
+   让层级差一眼可见，且不打断双栏的行距节奏。 */
+.article-body h3 {
+    font-family: var(--font-round);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin-top: 1.6em;
+    margin-bottom: 0.5em;
+}
+
+.article-body h3::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 3px;
+    background: var(--dark-frame);
+    margin-right: 9px;
+    vertical-align: 5px;
+}
 
 .article-body h2 {
     font-family: var(--font-display);
@@ -234,6 +258,7 @@
     /* 栏内元素取消「居中限宽」，改为填满所在栏 */
     .article-body > p,
     .article-body > h2,
+    .article-body > h3,
     .article-body > blockquote,
     .article-body > .inline-figure,
     .article-body > .video-block {
@@ -241,7 +266,6 @@
         margin-left: 0;
         margin-right: 0;
     }
-
     /* 文章 opener 的 h2 不需要栏顶的 2em 悬空 */
     .article-body > h2:first-child { margin-top: 0.2em; }
 
@@ -250,8 +274,14 @@
         break-inside: avoid;
         break-after: avoid-column;
     }
+    .article-body > h3 {
+        break-inside: avoid;
+        break-after: avoid-column;
+    }
     .article-body > blockquote { break-inside: avoid; }
     .article-body > p { orphans: 2; widows: 2; }
+    /* 文献条目不被拆散：书目、链接、注解必须同栏同页 */
+    .article-body > .ref-item { break-inside: avoid; }
 
     /* 画廊跨栏：占满整个版心宽度 */
     .article-body > .deck-block { column-span: all; }
@@ -303,6 +333,162 @@
     letter-spacing: 1px;
     margin-top: 8px;
     text-align: center;
+}
+
+/* ===== 环形流程图（type: 'diagram'） =====
+   一个闭环流程画成 SVG 环：节点是奶油白「卡片」，粗黑边 + 硬阴影；
+   环上箭头首尾相接表示循环；一枚方形光点沿环循环流动（animateMotion）。
+   内联 SVG 而非 PNG：文字随语言切换、任意尺寸锐利、动画可表达。 */
+.dg-block {
+    margin: 2.4em 0;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    padding: 18px 18px 14px;
+}
+
+.dg-frame { position: relative; }
+
+.dg-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+/* 环上的弧线与箭头 */
+.dg-seg {
+    fill: none;
+    stroke: var(--dark-frame);
+    stroke-width: 2.5;
+    stroke-dasharray: 9 7;      /* 虚线 = 呼应剪刀裁切母题 */
+    opacity: 0.55;
+}
+.dg-arrow-head { fill: var(--dark-frame); opacity: 0.75; }
+
+/* 流动的光点：沿环路径循环（animateMotion 在 JS 里给 path） */
+.dg-spark {
+    fill: var(--dark-frame);
+    stroke: var(--cream-white);
+    stroke-width: 2;
+}
+
+/* 节点卡片 */
+.dg-node rect.dg-node-bg {
+    fill: var(--cream-white);
+    stroke: var(--dark-frame);
+    stroke-width: 2.5;
+}
+.dg-node text { font-family: var(--font-ui); }
+.dg-node-no {
+    font-family: var(--font-round);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    fill: var(--dark-frame);
+    opacity: 0.6;
+}
+.dg-node-main {
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--dark-frame);
+}
+.dg-node-sub {
+    font-size: 11.5px;
+    fill: var(--dark-frame);
+    opacity: 0.72;
+}
+
+.dg-caption {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* 光点流动：用 CSS 变量做「依次点亮」的入场 */
+@media (prefers-reduced-motion: no-preference) {
+    .dg-node {
+        animation: dgIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) backwards;
+        animation-delay: calc(var(--dg-i) * 0.12s + 0.2s);
+    }
+    @keyframes dgIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: none; }
+    }
+    .dg-seg {
+        animation: dgSeg 0.4s ease backwards;
+        animation-delay: calc(var(--dg-i) * 0.12s + 0.35s);
+    }
+    @keyframes dgSeg {
+        from { opacity: 0; }
+        to { opacity: 0.55; }
+    }
+}
+
+/* 动效敏感用户：静态呈现，不闪烁 */
+@media (prefers-reduced-motion: reduce) {
+    .dg-spark { display: none; }
+}
+
+/* 大屏双栏下，环形图跨栏铺满（横向示意图不该被压在窄栏里） */
+@media (min-width: 1100px) {
+    .article-body > .dg-block { column-span: all; max-width: 100%; margin-left: 0; margin-right: 0; }
+}
+
+/* ===== 参考文献条目（type: 'ref'） =====
+   作业的 Reference 区块：每条文献都附一句「为什么引用它」。
+   排版策略是「书目正文 + 注解旁注」——书目保持正文大小可读，
+   注解退到小号、加左侧短竖线，像编辑在稿边写的批注；不用卡片，
+   以免 Reference 长列表变成一片方框森林。 */
+.ref-item {
+    margin-bottom: 1.8em;
+}
+
+.ref-cite {
+    margin-bottom: 0.35em;
+    /* 悬挂缩进：换行后与首行文字对齐，不缩到序号下方 */
+    padding-left: 1.4em;
+    text-indent: -1.4em;
+    line-height: 1.55;
+    word-break: break-word;
+}
+
+.ref-link {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--dark-frame);
+    opacity: 0.7;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    word-break: break-all;
+    margin-bottom: 0.5em;
+}
+
+.ref-link:hover,
+.ref-link:focus-visible {
+    opacity: 1;
+}
+
+/* 注解：左侧短竖线 + 小号字，与书目形成层级 */
+.ref-note {
+    margin: 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--dark-frame);
+    font-size: 0.86rem;
+    line-height: 1.6;
+    opacity: 0.78;
+}
+
+/* 生成式 AI 使用声明：与文献区隔开，收成一条脚注感的短段 */
+.article-body .inline-note {
+    margin-top: 2em;
+    padding-top: 14px;
+    border-top: 2px dashed rgba(38, 35, 32, 0.35);
+    font-size: 0.86rem;
+    line-height: 1.6;
+    opacity: 0.75;
 }
 
 /* ===== 视频块：复古电视机框 ===== */

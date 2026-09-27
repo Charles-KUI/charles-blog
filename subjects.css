@@ -265,9 +265,19 @@
 
 /* ===== 「持續更新中」小字 =====
    文章索引暫時隱藏時，於該位置顯示的一行提示。
-   與 ASSIGNMENTS 標題同字體系統，但刻意收小、壓低存在感。 */
+   與 ASSIGNMENTS 標題同字體系統，但刻意收小、壓低存在感。
+   索引一旦上線，同一行小字降級為索引底部的收尾語（間距收緊），
+   避免同一科目既列作品、又喊「即將上線」而自相矛盾。 */
 .assignments-note-section {
     padding: 44px 0 64px;
+}
+
+.assignments-note-section.is-after-list {
+    padding: 8px 0 56px;
+}
+
+.assignments-note-section.is-after-list .assignments-note {
+    opacity: 0.5;
 }
 
 .assignments-note {

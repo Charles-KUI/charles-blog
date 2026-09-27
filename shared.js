@@ -58,6 +58,7 @@
     'subject.noAssignments': ['No assignments yet — check back soon.', '還沒有作業——請稍後再來。'],
     'subject.term': ['2026 Aut', '2026 秋'],
     'subject.updating': ['CONTINUOUSLY UPDATING — MORE WORK COMING SOON', '持續更新中 — 更多作品即將上線'],
+    'subject.moreComing': ['MORE WORK TO COME — CONTINUOUSLY UPDATING', '更多作品陸續上線 — 持續更新中'],
     'nav.subjectsToggle': ['Browse subjects', '瀏覽科目'],
     'nav.homeShort': ['Home', '首頁'],
 
