@@ -456,6 +456,19 @@ const SUBJECTS = {
               zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
             },
           },
+          {
+            type: 'embed',
+            provider: 'youtube',
+            id: 'hKcgyvl9nxw',
+            title: {
+              en: 'Watch the contextual statement & video pitch',
+              zh: '觀看情境陳述與影片提案',
+            },
+            caption: {
+              en: 'FIG.04 — The pitch: why cross-border e-commerce, and how this co-learning network runs',
+              zh: 'FIG.04 — 影片提案：為什麼做跨境電商，以及這個共學網絡如何運作',
+            },
+          },
         ],
       },
       {

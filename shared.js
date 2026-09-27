@@ -85,6 +85,9 @@
       'Drop a file into assets/videos/ then set its path in content.js',
       '把影片放進 assets/videos/，然後在 content.js 填入路徑',
     ],
+    'embed.head': ['Watch', '影片'],
+    'embed.videoFallback': ['Embedded video', '嵌入影片'],
+    'embed.invalid': ['Video unavailable', '影片無法載入'],
 
     // 文章页元信息栏（用纯文字标签取代 emoji，贴合复古印刷风）
     'meta.date': ['DATE', '日期'],

@@ -50,6 +50,8 @@
           return renderDiagram(block, util);
         case 'video':
           return renderVideo(block, root, util);
+        case 'embed':
+          return embedRule() + renderEmbed(block, util);
         case 'p':
         default:
           return '<p>' + util.tr(block.text) + '</p>';
@@ -320,6 +322,57 @@
       + '  <div class="video-frame">' + inner + '</div>'
       + '  <figcaption class="video-caption">' + util.tr(block.caption) + '</figcaption>'
       + '</figure>';
+  }
+
+  /* ── 外部视频嵌入（type: 'embed'） ────────────────────────────────
+     YouTube 等平台的播放器一律用 iframe 引入，原生 <video> 无法播放。
+     外观与站内 .video-block 完全一致（同一套「复古电视机框」规则），
+     只换内层元素：iframe + allowfullscreen，标题作为无障碍名称。
+
+     安全与隐私：只接受 provider 白名单里的 host，视频 id 强制走
+     [A-Za-z0-9_-]{6,} 校验 —— 数据虽由本项目 content.js 提供，
+     但把「拼 URL」这一步收敛成白名单表，日后接外部数据源也不会
+     变成注入口。iframe 属性固定模板，不拼接任何自由文本。        */
+  var EMBED_PROVIDERS = {
+    youtube: function (id, title) {
+      return {
+        src: 'https://www.youtube-nocookie.com/embed/' + id,
+        allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
+        name: title,
+      };
+    },
+  };
+
+  function renderEmbed(block, util) {
+    var make = EMBED_PROVIDERS[block.provider];
+    var vid = String(block.id || '');
+    var title = util.tr(block.title) || util.t('embed.videoFallback');
+    var ok = !!make && /^[A-Za-z0-9_-]{6,}$/.test(vid);
+
+    var inner = ok
+      ? (function () {
+        var p = make(vid, title);
+        return '<iframe src="' + p.src + '" title="' + esc(p.name) + '"'
+          + ' allow="' + p.allow + '" allowfullscreen'
+          + ' referrerpolicy="strict-origin-when-cross-origin"'
+          + ' loading="lazy" frameborder="0"></iframe>';
+      })()
+      : '<div class="embed-placeholder" role="note">' + util.t('embed.invalid') + '</div>';
+
+    return '<figure class="embed-block video-block">'
+      + '  <span class="embed-head">' + util.t('embed.head') + '</span>'
+      + '  <div class="video-frame">' + inner + '</div>'
+      + (block.caption
+        ? '<figcaption class="video-caption">' + util.tr(block.caption) + '</figcaption>'
+        : '')
+      + '</figure>';
+  }
+
+  /* 嵌入区块上方的剪刀虚线：作为 figure 之前的独立流内块返回。
+     为什么不写成 figure 的 ::before —— multicol 里绝对定位的伪元素
+     会随 break-inside 整栏搬运而被遗留成白块（CSS 陷阱 2）。 */
+  function embedRule() {
+    return '<span class="embed-rule" aria-hidden="true"></span>';
   }
 
   /** 只重绘会随语言变化的部分 */
@@ -646,6 +699,8 @@
         else if (b.type === 'gallery') texts.push(null); // 画廊文字单独刷新
         else if (b.type === 'diagram') texts.push(null); // 环形图文字单独刷新
         else if (b.type === 'ref') texts.push(null, null); // 文献引用 + 注解，节点数固定为 2
+        // 嵌入影片：字幕 + iframe 的无障碍标题（不是文本节点，单独刷新）
+        else if (b.type === 'embed') { texts.push(b.caption || null); }
         else texts.push(b.text);
       });
       if (a.video) texts.push(a.video.caption);
@@ -663,6 +718,7 @@
       refreshGalleryText(body, a, util);
       refreshDiagramText(body, a, util);
       refreshRefText(body, a, util);
+      refreshEmbedText(body, a, util);
     }
 
     paintArticleText();
@@ -721,9 +777,30 @@
     });
   }
 
+  /**
+   * 语言切换时刷新嵌入影片的文字。
+   * iframe 本身与语言无关（不应重建 —— 重建会中断播放），只更新两处：
+   *   · figcaption（文本节点，但它是 .video-caption，已在 texts 队列里跳过 null
+   *     之外的情况，这里交给主队列处理）；
+   *   · iframe 的 title 属性（无障碍名称，不是文本节点，必须单独写）。
+   */
+  function refreshEmbedText(body, assignment, util) {
+    const blocks = assignment.body.filter(function (b) { return b.type === 'embed'; });
+    const figs = body.querySelectorAll('.embed-block');
+    figs.forEach(function (fig, fi) {
+      const data = blocks[fi];
+      if (!data) return;
+      const iframe = fig.querySelector('iframe');
+      if (iframe) iframe.setAttribute('title', util.tr(data.title) || util.t('embed.videoFallback'));
+      const head = fig.querySelector('.embed-head');
+      if (head) head.textContent = util.t('embed.head'); // span 不在主文本队列里
+      const ph = fig.querySelector('.embed-placeholder');
+      if (ph) ph.textContent = util.t('embed.invalid');
+    });
+  }
+
   /** 语言切换时只刷新画廊里的文字（标题 / 提示 / 页码标签 / 下载链接） */
-  function refreshGalleryText(body, assignment, util) {
-    const blocks = assignment.body.filter(function (b) { return b.type === 'gallery'; });
+  function refreshGalleryText(body, assignment, util) {    const blocks = assignment.body.filter(function (b) { return b.type === 'gallery'; });
     const decks = body.querySelectorAll('[data-deck]');
     decks.forEach(function (deck, di) {
       const data = blocks[di];

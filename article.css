@@ -194,7 +194,9 @@
    注意：这些规则必须放在各元素自身样式**之前**（源码顺序即优先级），
    否则后面的简写 `margin:` 会把这里的 auto 覆盖掉，文字就会贴到左边缘。
    .ref-item 也在组里（第十八阶段补）：漏了它会导致窄屏下文献块贴满
-   版心、文字悬在居中标题左侧约 120px（用户截图实锤的错位）。 */
+   版心、文字悬在居中标题左侧约 120px（用户截图实锤的错位）。
+   .embed-block 同样在组里（第十九阶段）：嵌入影片盒必须和正文共用
+   这条居中基线，否则窄屏下会贴满版心、比标题宽出一大截。 */
 .article-body > p,
 .article-body > h2,
 .article-body > h3,
@@ -202,6 +204,7 @@
 .article-body > .ref-item,
 .article-body > .inline-figure,
 .article-body > .video-block,
+.article-body > .embed-block,
 .article-body > .dg-block {
     max-width: 660px;
     margin-left: auto;
@@ -288,7 +291,8 @@
     .article-body > blockquote,
     .article-body > .ref-item,
     .article-body > .inline-figure,
-    .article-body > .video-block {
+    .article-body > .video-block,
+    .article-body > .embed-block {
         max-width: none;
         margin-left: 0;
         margin-right: 0;
@@ -556,18 +560,96 @@
     max-width: 720px;
 }
 
+/* ===== 嵌入影片（type: 'embed'）：同款电视机框 + 收尾区块的抬头 =====
+   放在文章最末端当「放映区」，与文献区之间用剪刀虚线断开，
+   让"读文章"与"看影片"两种行为在版面上有明确分界。
+   边框复用 .video-block（见上方规则）—— 深色外框 + 粗黑边 + 硬阴影，
+   与站内本地视频、拍立得相框是同一套语言。 */
+.article-body > .embed-block {
+    margin-top: 1.7em;
+}
+
+/* 与上方文献区之间的裁切虚线（同 blockquote / 画廊的剪刀分割母题）。
+   它是 figure 之前的独立流内块（不是 figure 的伪元素）：
+   ① figure 在 multicol 里带 break-inside 语义，绝对定位伪元素会被
+      整栏搬运遗留成白块（CSS 陷阱 2）；
+   ② 流内块宽度 = 版心宽，天然收在居中基线内，不用手算偏移。 */
+.article-body > .embed-rule {
+    display: block;
+    max-width: 660px;
+    margin: 0 auto;
+    border-top: 2px dashed rgba(38, 35, 32, 0.35);
+    height: 0;
+    font-size: 0;
+    line-height: 0;
+    margin-bottom: -1.7em;
+}
+
+@media (min-width: 1100px) {
+    .article-body > .embed-rule { max-width: none; margin-left: 0; margin-right: 0; }
+}
+
+/* 抬头标签：小号圆润无衬线 + 字母间距，贴在影片框上沿，
+   像贴在电视机上的标签条。
+   对齐口径：标签【左缘】与影片框左缘对齐（即外框左缘 + 21px =
+   18px padding + 3px border），不再往外拉 —— 拉出外框会被裁切。 */
+.embed-head {
+    display: inline-block;
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--cream-white);
+    background: var(--dark-frame);
+    padding: 5px 12px;
+    margin: 0 0 12px 0;
+}
+
+/* 影片来源不可用时的降级提示（id 非法 / 未知平台） */
+.embed-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #262320;
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    opacity: 0.75;
+}
+
+/* 影片框：16:9 画框，深色底 + 中等粗边。
+   position:relative 是让内部 iframe 绝对定位时的基准盒 ——
+   必须挂在这里（content box 口径），不能挂到外层的 .embed-block，
+   否则父级的 18px padding 会把 iframe 撑大 80px，播放器底栏被裁掉。 */
 .video-block .video-frame {
+    position: relative;
     border: var(--border-medium);
     background: #111;
     aspect-ratio: 16 / 9;
     overflow: hidden;
 }
 
-.video-block video,
-.video-block iframe {
+/* 站内本地视频：直接撑满画框 */
+.video-block > .video-frame > video {
     display: block;
     width: 100%;
     height: 100%;
+}
+
+/* 嵌入影片（YouTube 等）：绝对定位严丝合缝填满画框，
+   width/height 100% 相对 .video-frame 的 padding box（无内边距即 content box）。 */
+.embed-block > .video-frame > iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 /* 视频占位测试卡 */

@@ -2180,3 +2180,121 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 · 前一輪的解法可能引入下一輪的病灶。第十七階段用「內軌」解決了
   文獻三層互相比齊，卻讓整組文獻相對全站段落右移 16px。
   修 bug 時要往上抬一層看：局部對齊 ≠ 全域對齊。
+
+================================================================
+第十九階段 · 文章末端嵌入 YouTube 影片（BCM206 A1）
+  日期：2026-09-28
+================================================================
+
+【用戶需求】
+
+· 提供了一份 YouTube 內嵌碼（影片 hKcgyvl9nxw），要求：
+  ① 放在該頁（BCM206 A1）最末端；
+  ② 不要影響其他部分的結構；
+  ③ 嵌入時加一個邊框，確保和網站風格統一。
+
+【新 body 區塊類型：embed】
+
+新增第 11 種正文區塊 `embed`，與站內既有的本地 `video` 區塊分開 ——
+本地影片用 <video src>，外部平台（YouTube）必須用 iframe 才能播放。
+
+· content.js：在 bcm206-a1 的 body 陣列末尾追加
+  { type: 'embed', provider: 'youtube', id: 'hKcgyvl9nxw',
+    title: {en, zh}, caption: {en, zh} }
+· article-page.js：
+  - `EMBED_PROVIDERS` 白名單表（目前僅 youtube → youtube-nocookie.com）
+  - `renderEmbed()`：provider 白名單 + 影片 id 正則校驗
+    （`^[A-Za-z0-9_-]{6,}$`），不合法時降級為 .embed-placeholder 提示；
+    iframe 屬性固定模板，不拼接任何自由文本
+  - `embedRule()`：在 figure 之前插入獨立的剪刀虛線塊
+  - `refreshEmbedText()`：語言切換時只換 figcaption / iframe title /
+    抬頭標籤文字，**不重建 iframe**（重建會中斷播放）
+· shared.js：新增 i18n 鍵 `embed.head`、`embed.videoFallback`、`embed.invalid`
+· article.css：`.embed-block` 複用 `.video-block` 的電視機框
+  （深色底 --dark-frame + 粗黑邊 --border-thick + 硬陰影 --shadow-hard-lg），
+  另加 .embed-head 抬頭標籤、.embed-rule 剪刀虛線、.embed-placeholder 降級態
+
+【邊框設計（用戶要求「風格統一」）】
+
+直接複用站內已有的「復古電視機框」：與本地影片塊、拍立得相框同一套語言。
+  · 外框：3px 暖調曜石黑邊 + 深色底 + 8px 硬陰影（三色限定系統之內）
+  · 內框：2px 中等邊 + 16:9 畫框
+  · 抬頭標籤「WATCH / 影片」：小號 Varela Round + 字母間距，
+    貼在影片框左上角，像貼在電視機上的標籤條
+  · 上方 2px 剪刀虛線：與文獻區斷開，呼應網站的剪紙拼貼母題
+
+【踩過的坑與修正】
+
+坑 1：`.ref-item` 之外又一個「漏掛排版組」的實例。
+      `.embed-block` 必須同時進「660px 居中組」與「≥1100px 欄內重置組」，
+      否則窄屏貼滿版心、雙欄被 660 卡住。已在 verify-bcm206-a1 加斷言釘住。
+
+坑 2：iframe 定位基準掛錯層級 → 播放器控制欄被裁。
+      最初把 iframe 的 `position:absolute; inset:0` 掛在 `.embed-block` 上，
+      而該盒有 18px 內邊距 —— 實測 iframe 比影片框大 80px，
+      overflow:hidden 把 YouTube 底欄（播放/全屏按鈕）裁掉了。
+      修正：改為 `.embed-block > .video-frame > iframe`，
+      並把 `position:relative` 移到 `.video-frame` 基礎規則上。
+      修正後 iframe 與影片框的差值 = −2px（正好是 2px 內框邊），幾何嚴絲合縫。
+
+坑 3：抬頭標籤的對齊口徑。
+      負 margin 拉出外框會被裁切（第一版 -21px 讓 WATCH 缺了左半邊）。
+      最終口徑：標籤【盒左緣】與影片框左緣對齊（= 外框 + 21px），
+      不外拉、不裁切；量測腳本也改為斷言「盒左緣」而非「文字左緣」。
+
+坑 4（量測手法）：YouTube iframe 是異步加載的，加載完會撐高頁面 ——
+      用 scrollTo 定位再截圖必然跑偏（前三版截圖都滾過頭）。
+      改用「調大視口 + captureBeyondViewport + clip 用頁面絕對座標」，
+      一次拍全「文獻尾 → 影片 → 頁腳」，不再受滾動影響。
+
+坑 5（測試環境噪聲）：jsdom 裡 iframe 一發請求就拋
+      `Cannot read properties of undefined (reading 'responseStart')`
+      —— jsdom 的 XHR 進度物件缺 PerformanceResourceTiming 字段，非頁面缺陷。
+      已在「中文態無運行時錯誤」斷言裡把該噪聲與 CSS 解析噪聲一併過濾。
+
+【驗證】
+
+· verify-bcm206-a1：91 → **127 項**。新增 36 項，覆蓋：
+  · 數據層：provider / id 正確、embed 位於 body 最末端（其後無其它區塊）
+  · 結構層：頁面末位元素是 .embed-block、全頁僅 1 個嵌入塊、
+    四個 h2 / 三條文獻 / 環形圖均未受影響（「不影響其他部分」的硬證據）
+  · iframe 屬性：youtube-nocookie 域名、正確影片 id、allowfullscreen、
+    白名單 host、中文態 title
+  · 圖號：FIG.04 正確且正文圖號仍無重複
+  · 語言切換：iframe 未重建、title / 圖注 / 抬頭標籤均換為英文且無中文殘留
+  · 排版組：.embed-block 在兩組內、.embed-rule 為流內虛線不依賴絕對定位、
+    電視機框三件套齊備、iframe 定位基準未錯掛到 .embed-block
+
+· `.workbuddy/_embedshell.mjs`（新增，保留）：7 檔尺寸
+  （1920/1440/1280/1024/1000/900/760）量測——
+  ① 嵌入盒與正文段落共用公共左軌；② 影片框在外框內左右各縮 21px；
+  ③ 抬頭標籤盒左緣 = 影片框左緣；④ 16:9 比例未塌陷；
+  ⑤ 外框三件套（深色底 / 3px 邊 / 硬陰影）；⑥ 無橫向溢出。
+  → **EMBED: PASS × 7 檔**
+
+· `.workbuddy/_embedgeom.mjs`（新增，保留）：邊框幾何精細核對
+  （外框內縮 21px、iframe 與影片框同心，差值 −2px）
+
+· 視覺確認：1440 / 1000 / 760 三檔尾部整段截圖，
+  確認「虛線分隔 → 深色外框（WATCH 標籤 + 影片 + FIG.04 圖注）→ 頁腳」
+  順序正確、影片框左右內縮均勻、標籤完整可見。
+
+· 全量回歸 **680 項 0 失敗**：domtest 196 / verify-bcm241-a1 106 /
+  verify-bcm206-a1 127 / verify-hidden 62 / verify-nav-static 50 /
+  verify-nav-runtime 25 / verify-langswitch 12 / verify-article 11 /
+  verify-narrow-geom 15 / aboutest 76。
+
+【經驗教訓】
+
+· 嵌入第三方內容（iframe）時，**絕對定位的基準層級決定成敗**：
+  外層容器只要有 padding，inset:0 就會溢出到 padding box 之外。
+  正確做法是把定位基準收在最內層那個「無內邊距的畫框」上。
+
+· 新增 body 區塊類型的檢查清單再添一項：
+  除了「三處排版組」，還要檢查【內部絕對定位元素的基準層級】。
+  這兩個都是「寫完樣式看不出問題、只在特定條件下暴雷」的坑。
+
+· 量測腳本要和設計口徑對齊。這次斷言從「文字左緣」改為「盒左緣」，
+  不是為了讓測試變綠，而是發現「盒左緣對齊」才是這個設計真正的要求
+  （標籤有內邊距是刻意的，不該被當成錯位）。
+  測試改口徑前必須先想清楚：是設計錯了，還是尺子錯了。
