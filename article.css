@@ -199,8 +199,7 @@
 .article-body > blockquote,
 .article-body > .inline-figure,
 .article-body > .video-block,
-.article-body > .dg-block,
-.article-body > .fw-block {
+.article-body > .dg-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
@@ -460,197 +459,6 @@
     .article-body > .dg-block { column-span: all; max-width: 100%; margin-left: 0; margin-right: 0; }
 }
 
-/* ===== 概念框架图（type: 'framework'） =====
-   理论文献里的「上游 → 枢纽 → 下游」三段式。用 HTML 排版而非 SVG，
-   因为条目是长短不一的整句、需要自然折行。视觉沿用环形图的语汇：
-   奶油白底 + 粗黑边框 + 大硬阴影，栏目标题用圆润无衬线 + 前置短横。 */
-.fw-block {
-    margin: 2.4em 0;
-    background: var(--cream-white);
-    border: var(--border-thick);
-    box-shadow: var(--shadow-hard-lg);
-    padding: 20px 20px 16px;
-}
-
-.fw-cols {
-    display: flex;
-    align-items: stretch;
-    gap: 16px;
-}
-
-.fw-col { flex: 1 1 0; min-width: 0; }
-
-.fw-head {
-    font-family: var(--font-round);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    text-transform: uppercase;
-    margin: 0 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--dark-frame);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.fw-head::before {
-    content: '';
-    flex: none;
-    width: 14px;
-    height: 3px;
-    background: var(--dark-frame);
-}
-
-/* 上游 / 下游条目：无边框、靠序号小圆点引导，避免「方框森林」 */
-.fw-inputs, .fw-outputs {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.fw-inputs li, .fw-outputs li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 11px;
-    line-height: 1.45;
-}
-
-.fw-inputs li::before, .fw-outputs li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.52em;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--dark-frame);
-    opacity: 0.75;
-}
-
-.fw-item-label {
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
-.fw-item-desc {
-    display: block;
-    font-size: 0.78rem;
-    line-height: 1.45;
-    opacity: 0.68;
-    margin-top: 2px;
-}
-
-/* 枢纽栏：垂直居中，两侧用箭头示意流向。
-   栏宽要留出「箭头 + 呼吸」的空间，否则箭头会被枢纽黑框盖住。 */
-.fw-col-hub {
-    flex: 0 0 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    padding: 0 30px;
-}
-
-/* 流向箭头：六条路径 → 策展 → 三项成果，两侧都朝右。
-   不能用负偏移把箭头推到栏外——祖先有 overflow 裁剪时会直接消失；
-   改成贴在栏内两端，与枢纽框之间留出净空。 */
-.fw-col-hub::before,
-.fw-col-hub::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 0;
-    height: 0;
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    border-left: 11px solid var(--dark-frame);
-    transform: translateY(-50%);
-    opacity: 0.55;
-}
-
-.fw-col-hub::before { left: 0; }
-.fw-col-hub::after { right: 0; }
-
-.fw-hub {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-align: center;
-    padding: 18px 12px;
-    background: var(--dark-frame);
-    color: var(--cream-white);
-    border-radius: 4px;
-    box-shadow: var(--shadow-hard);
-    transform: rotate(-1deg);
-    max-width: 100%;
-}
-
-.fw-hub-title {
-    font-family: var(--font-display);
-    font-size: 1.06rem;
-    font-weight: 800;
-    line-height: 1.25;
-}
-
-.fw-hub-note {
-    font-size: 0.72rem;
-    line-height: 1.4;
-    opacity: 0.85;
-}
-
-.fw-caption {
-    font-family: var(--font-round);
-    font-size: 0.78rem;
-    letter-spacing: 1px;
-    text-align: center;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 2px dashed rgba(38, 35, 32, 0.35);
-}
-
-/* 窄屏：三栏堆叠，枢纽栏的横向箭头改成上下箭头（上箭头指向策展，
-   下箭头指向成果——注意 base 用的是 border-left 画右向箭头，
-   这里必须先清掉 border-left，否则会残留一条竖线） */
-@media (max-width: 720px) {
-    .fw-cols { flex-direction: column; }
-    .fw-col-hub { flex: none; padding: 16px 0; }
-    .fw-col-hub::before,
-    .fw-col-hub::after {
-        left: 50%;
-        right: auto;
-        top: auto;
-        transform: translateX(-50%);
-        border-left: none;
-    }
-    .fw-col-hub::before {
-        top: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-bottom: 10px solid var(--dark-frame);
-    }
-    .fw-col-hub::after {
-        bottom: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 10px solid var(--dark-frame);
-    }
-    .fw-hub { transform: none; width: 100%; }
-}
-
-/* 大屏双栏下，框架图跨栏铺满（横向示意图不该被压在窄栏里） */
-@media (min-width: 1100px) {
-    .article-body > .fw-block {
-        column-span: all;
-        max-width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-    }
-}
-
 /* ===== 参考文献条目（type: 'ref'） =====
    作业的 Reference 区块：每条文献都附一句「为什么引用它」。
    排版策略是「书目正文 + 注解旁注」——书目保持正文大小可读，
@@ -669,21 +477,37 @@
     word-break: break-word;
 }
 
-/* 外链收成一枚紧跟书目末尾的小箭头（↗），不再单独占行露长 URL */
+/* 链接行：紧跟 APA 书目之后独立成行，字号收小、加下划线，
+   与书目正文拉开层级，又保证地址完整可见、可点。 */
+.ref-link-row {
+    margin: 0.25em 0 0;
+    padding-left: 1.5em;
+}
+
 .ref-link {
-    display: inline-block;
-    margin-left: 4px;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
+    max-width: 100%;
+    font-size: 0.82rem;
+    line-height: 1.5;
     color: var(--dark-frame);
-    opacity: 0.55;
-    text-decoration: none;
-    vertical-align: baseline;
+    opacity: 0.72;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
     transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .ref-link-icon {
-    display: inline-block;
-    font-size: 0.82em;
+    flex: none;
+    font-size: 0.9em;
     line-height: 1;
+}
+
+.ref-link-url {
+    min-width: 0;
+    word-break: break-all;
 }
 
 .ref-link:hover,
@@ -1066,8 +890,11 @@
 }
 
 .lb-img {
-    max-width: min(94vw, 1440px);
-    max-height: 84vh;
+    /* 全屏时图片不铺满整个视口——四面都留出呼吸空间，
+       否则 16:9 幻灯片在宽屏上会撑到贴边、显得压迫。
+       下方留白刻意多于上方，给底部说明条让位。 */
+    max-width: min(78vw, 1160px);
+    max-height: 68vh;
     display: block;
     background: #FFFFFF;
     border: var(--border-medium);

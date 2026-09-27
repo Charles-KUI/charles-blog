@@ -1804,3 +1804,99 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
   響應式與雙語都更省事。
 · 覆寫既有元素文字時，若該元素內含子元素（如外鏈箭頭），
   只能改文本節點、不能整體 textContent，否則子元素被抹掉。
+
+
+================================================================
+第十五階段補丁：四項內容修訂（Project Concept / Reference / 全屏尺寸）
+================================================================
+
+更新日期：2026年9月27日
+對應交付：content.js / article-page.js / article.css /
+          .workbuddy/verify-bcm206-a1.mjs
+影響頁面：bcm206-a1（主要）、全站畫廊全屏（article.html 模版）
+
+【用戶回饋四項】
+
+一、Project Concept 末尾補一句，說明形式與受眾媒體習慣的契合。
+二、Reference 每條文獻的連結一定要加上，加在 APA 書目後面。
+三、上一輪新增的「六條教學路徑」框架圖效果不佳，整塊撤下。
+四、全屏檢視時簡報圖尺寸過大（非全屏狀態沒問題）——
+    只收斂全屏狀態下的尺寸。
+
+【一、Project Concept 補句】
+
+· 英文：This bite-sized, video-driven format directly matches the
+  media habits of my target audience—Gen Z and student beginners
+  who favor quick visual breakdowns over dense commercial textbooks.
+· 中文（同步補上，不並排混排）：這種輕巧、以影片驅動的形式，
+  正好契合我目標受眾的媒體習慣——偏好快速、視覺化的拆解，
+  而非厚重的商業教科書的 Z 世代與學生新手。
+· 接在 Social Utility 段落「…accessible and easy to understand
+  for everyone.」之後。
+
+【二、Reference 連結還原為可見】
+
+· 第十四階段把 URL 收成一枚小箭頭（hover 才看得到完整網址），
+  本次改為**緊跟 APA 書目、獨立一行顯示完整網址**：
+  · 新增 .ref-link-row（padding-left 1.5em，與書目的懸掛縮排對齊）
+  · .ref-link 由 inline 小箭頭改為 inline-flex（↗ + 完整 URL），
+    字號 0.82rem、加下劃線、opacity 0.72，hover 變實並微位移
+  · .ref-link-url 用 word-break: break-all，長 DOI 不撐破欄寬
+· renderRef() 隨之調整：連結移出 .ref-cite，改為獨立 <p>。
+· ⚠️ refreshRefText() 連帶簡化：書目現在是純文本，可安全用
+  textContent 整體覆寫（不再有需保留的子元素）；箭頭另存引用
+  更新 aria-label。
+· 層級仍是兩級（書目 + 註解），只是多了一行附屬的連結行。
+
+【三、撤下框架圖】
+
+· 用戶認為六路徑框架圖效果不理想，整塊移除：
+  · content.js 刪掉 framework 區塊 + 其導讀段 + 支撐說明段
+    （共 3 個區塊，正文段落由 7 段回到 5 段）
+  · article-page.js 刪掉 renderFramework() / refreshFrameworkText()
+    / renderBody 的 case 分支 / 語言切換的 null 佔位 / 刷新調用
+  · article.css 刪掉整段 .fw-* 樣式（約 190 行）+ 限寬選擇器裡的
+    .article-body > .fw-block
+· 環形圖 caption 編號由 FIG.04 還原為 **FIG.03**（重號問題消失）。
+· 正文現在只保留 3 個圖號（FIG.01 封面 / FIG.02 主題圖 /
+  FIG.03 環形圖），無重號。
+· 五條 must-keep 原文斷言不變，另補上新補的那句。
+
+【四、全屏簡報圖尺寸收斂】
+
+· .lb-img 由 max-width: min(94vw, 1440px) / max-height: 84vh
+  收斂為 **max-width: min(78vw, 1160px) / max-height: 68vh**。
+· 只動全屏（.lb-img 僅存在於 <dialog> 燈箱內），
+  畫廊非全屏的 .deck-slide 尺寸完全未動 —— 符合用戶
+  「只優化全屏狀態」的要求。
+· 實測（BCM241，原始圖 3168×1782）：
+  · 1920×1080 → 顯示 1160×654（視口寬 60% / 高 61%），上下留白各 213px
+  · 1440×900  → 顯示 1085×612（75% / 68%）
+  · 1280×800  → 顯示 964×544（75% / 68%）
+  四邊都有呼吸空間，不再貼邊；底部說明條也不再被圖壓住。
+
+【驗證】
+
+· verify-bcm206-a1.mjs：64 → 86 → **77 項**（撤下框架圖後
+  刪掉 8 項框架圖斷言、新增 6 項「已移除」斷言、段落數 7→5）。
+  新增斷言：content.js 無 framework 區塊、article-page.js 無
+  renderFramework、頁面無 .fw-block、環形圖回到 FIG.03、
+  正文圖號無重複。
+· 全量回歸 **554 項 0 失敗**：domtest 196 / verify-bcm241-a1 106 /
+  verify-bcm206-a1 77 / verify-hidden 62 / verify-nav-static 50 /
+  verify-nav-runtime 25 / verify-langswitch 12 / verify-article 11 /
+  verify-narrow-geom 15。
+· 視覺核對：Reference 三條皆「APA → 完整 URL → 註解」；
+  研究方法段只剩環形圖（FIG.03），節點文字不溢出；
+  全屏燈箱三檔實測如上。
+· CSS 花括號平衡 170/170；content.js / article-page.js 語法檢查通過。
+
+【經驗教訓】
+
+· 撤下一個功能要**四處同時清**：內容區塊、渲染器、樣式、測試斷言。
+  只刪內容會留下死代碼與死 CSS；只刪代碼會讓測試掛掉。
+· 「附屬連結」的兩種取向各有代價：收成小箭頭畫面乾淨但網址不可見；
+  獨立成行網址清楚但多佔一行。用戶要「連結一定要加上」時，
+  選後者 —— 可提交的作業裡，可達性優先於版面潔癖。
+· 全屏圖的尺寸上限別給到 94vw / 84vh：16:9 簡報在 1920 寬屏上
+  會頂到近滿版，觀者反而有壓迫感。78vw / 68vh 是較舒服的區間。

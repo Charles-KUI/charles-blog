@@ -48,8 +48,6 @@
             + '<figcaption>' + util.tr(block.caption) + '</figcaption></figure>';
         case 'diagram':
           return renderDiagram(block, util);
-        case 'framework':
-          return renderFramework(block, util);
         case 'video':
           return renderVideo(block, root, util);
         case 'p':
@@ -265,62 +263,7 @@
       + '</figure>';
   }
 
-  /**
-   * 概念框架图（type: 'framework'）
-   * ---------------------------------------------------------------
-   * 把一篇理论文献里的框架，画成「上游 → 枢纽 → 下游」三段式：
-   *   inputs（若干条目） → hub（中心概念） → outputs（若干条目）
-   * 用于 Mihailidis & Cohen (2013) 的 Figure 6 —— 六条教学法汇入
-   * 「curation」，再产出三项数字与媒介素养成果。
-   *
-   * 为什么用 HTML/CSS 而不是 SVG：
-   *   条目是长短不一的整句，需要自然折行——HTML 排版能自动处理，
-   *   SVG <text> 不能换行（这正是环形图必须手工量宽的原因）。
-   *   三栏在窄屏堆叠、宽屏并排，交给 flex 即可。
-   */
-  function renderFramework(block, util) {
-    const col = function (side) {
-      const list = block[side] || [];
-      if (!list.length) return '';
-      const cls = side === 'inputs' ? 'fw-inputs' : 'fw-outputs';
-      return '<ul class="' + cls + '">'
-        + list.map(function (item) {
-          const label = util.tr(item.label);
-          const desc = item.desc ? util.tr(item.desc) : '';
-          return '<li>'
-            + '<span class="fw-item-label">' + label + '</span>'
-            + (desc ? '<span class="fw-item-desc">' + desc + '</span>' : '')
-            + '</li>';
-        }).join('')
-        + '</ul>';
-    };
-
-    const hub = block.hub || {};
-    const hubTitle = util.tr(hub.title);
-    const hubNote = hub.note ? util.tr(hub.note) : '';
-
-    return '<figure class="fw-block">'
-      + '<div class="fw-cols">'
-      + '<div class="fw-col fw-col-in">'
-      + '<h4 class="fw-head">' + util.tr(block.inputsLabel) + '</h4>'
-      + col('inputs')
-      + '</div>'
-      + '<div class="fw-col fw-col-hub">'
-      + '<div class="fw-hub">'
-      + '<span class="fw-hub-title">' + hubTitle + '</span>'
-      + (hubNote ? '<span class="fw-hub-note">' + hubNote + '</span>' : '')
-      + '</div>'
-      + '</div>'
-      + '<div class="fw-col fw-col-out">'
-      + '<h4 class="fw-head">' + util.tr(block.outputsLabel) + '</h4>'
-      + col('outputs')
-      + '</div>'
-      + '</div>'
-      + '<figcaption class="fw-caption">' + util.tr(block.caption) + '</figcaption>'
-      + '</figure>';
-  }
-
-  /**
+    /**
    * 参考文献条目（type: 'ref'）
    * ---------------------------------------------------------------
    * 作业的 Reference 区块里，每条文献都带一句「为什么引用它」的注解。
@@ -329,19 +272,23 @@
    * 四层堆叠造成的杂乱感：
    *   第一层 = 书目（正文大小、悬挂缩进，是主体）
    *   第二层 = 注解（小号、左侧一条短竖线，是附属）
-   * 链接不再单独占一整行露出长 URL，而是收成书目末尾一枚小箭头，
-   * 悬停时展开完整地址——需要跳转的人拿得到，扫读的人不被噪声干扰。
+   * 链接紧跟在 APA 书目之后单独成行（字号收小、加下划线，悬停变实），
+   * 需要跳转的人一眼拿得到地址，又不与书目正文争夺注意力。
    *
    * 文献书目（text）按学术规范保留原文，中英两版一致，不做翻译。
    */
   function renderRef(block, util) {
     const link = block.url
-      ? ' <a class="ref-link" href="' + esc(block.url) + '" target="_blank" rel="noopener noreferrer"'
+      ? '<p class="ref-link-row">'
+        + '<a class="ref-link" href="' + esc(block.url) + '" target="_blank" rel="noopener noreferrer"'
         + ' title="' + esc(block.url) + '" aria-label="' + util.t('ref.open') + '：' + esc(block.url) + '">'
-        + '<span class="ref-link-icon" aria-hidden="true">↗</span></a>'
+        + '<span class="ref-link-icon" aria-hidden="true">↗</span>'
+        + '<span class="ref-link-url">' + esc(block.url) + '</span>'
+        + '</a></p>'
       : '';
     return '<div class="ref-item">'
-      + '<p class="ref-cite">' + util.tr(block.text) + link + '</p>'
+      + '<p class="ref-cite">' + util.tr(block.text) + '</p>'
+      + link
       + (block.note ? '<p class="ref-note">' + util.tr(block.note) + '</p>' : '')
       + '</div>';
   }
@@ -698,7 +645,6 @@
         if (b.type === 'figure' || b.type === 'video') texts.push(b.caption);
         else if (b.type === 'gallery') texts.push(null); // 画廊文字单独刷新
         else if (b.type === 'diagram') texts.push(null); // 环形图文字单独刷新
-        else if (b.type === 'framework') texts.push(null); // 框架图文字单独刷新
         else if (b.type === 'ref') texts.push(null, null); // 文献引用 + 注解，节点数固定为 2
         else texts.push(b.text);
       });
@@ -716,7 +662,6 @@
 
       refreshGalleryText(body, a, util);
       refreshDiagramText(body, a, util);
-      refreshFrameworkText(body, a, util);
       refreshRefText(body, a, util);
     }
 
@@ -756,49 +701,10 @@
     });
   }
 
-  /**
-   * 语言切换时刷新框架图的文字（栏目标题 / 条目 / 枢纽 / 图注）。
-   * 结构与元素顺序不变，只改文字，避免重排造成的跳动。
-   */
-  function refreshFrameworkText(body, assignment, util) {
-    const blocks = assignment.body.filter(function (b) { return b.type === 'framework'; });
-    const figs = body.querySelectorAll('.fw-block');
-    figs.forEach(function (fig, fi) {
-      const data = blocks[fi];
-      if (!data) return;
-      const heads = fig.querySelectorAll('.fw-head');
-      if (heads[0]) heads[0].textContent = util.tr(data.inputsLabel);
-      if (heads[1]) heads[1].textContent = util.tr(data.outputsLabel);
-
-      ['inputs', 'outputs'].forEach(function (side) {
-        const list = fig.querySelector('.' + (side === 'inputs' ? 'fw-inputs' : 'fw-outputs'));
-        if (!list) return;
-        const lis = list.querySelectorAll('li');
-        (data[side] || []).forEach(function (item, ii) {
-          const li = lis[ii];
-          if (!li) return;
-          const lab = li.querySelector('.fw-item-label');
-          if (lab) lab.textContent = util.tr(item.label);
-          const desc = li.querySelector('.fw-item-desc');
-          if (desc && item.desc) desc.textContent = util.tr(item.desc);
-        });
-      });
-
-      const hubTitle = fig.querySelector('.fw-hub-title');
-      if (hubTitle) hubTitle.textContent = util.tr(data.hub.title);
-      const hubNote = fig.querySelector('.fw-hub-note');
-      if (hubNote && data.hub.note) hubNote.textContent = util.tr(data.hub.note);
-
-      const cap = fig.querySelector('.fw-caption');
-      if (cap) cap.textContent = util.tr(data.caption);
-    });
-  }
-
-  /**
+    /**
    * 语言切换时刷新文献条目的注解与链接文本。
-   * 文献书目本身中英一致（学术规范不翻译），只有「为什么引用」的注解随语言变化；
-   * 书目末尾挂着外链小箭头，所以只替换首个文本节点，不能整体覆盖 textContent，
-   * 否则箭头会被抹掉。
+   * 文献书目本身中英一致（学术规范不翻译），只有「为什么引用」的注解随语言变化。
+   * 链接现在独占一行（.ref-link-row），但 aria-label 仍需按当前语言更新。
    */
   function refreshRefText(body, assignment, util) {
     const blocks = assignment.body.filter(function (b) { return b.type === 'ref'; });
@@ -807,13 +713,9 @@
       const data = blocks[ri];
       if (!data) return;
       const cite = item.querySelector('.ref-cite');
-      if (cite) {
-        const link = cite.querySelector('.ref-link');
-        const first = cite.firstChild;
-        if (first && first.nodeType === 3) first.nodeValue = util.tr(data.text);
-        else cite.insertBefore(document.createTextNode(util.tr(data.text)), cite.firstChild);
-        if (link) link.setAttribute('aria-label', util.t('ref.open') + '：' + link.getAttribute('href'));
-      }
+      if (cite) cite.textContent = util.tr(data.text);
+      const link = item.querySelector('.ref-link');
+      if (link) link.setAttribute('aria-label', util.t('ref.open') + '：' + link.getAttribute('href'));
       const note = item.querySelector('.ref-note');
       if (note) note.textContent = util.tr(data.note);
     });

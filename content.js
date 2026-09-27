@@ -349,131 +349,16 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'The main purpose of this project is to bridge the huge information gap in cross-border e-commerce. The target audience is young people aged 18 to 35—especially university students and beginners who want to explore selling products to overseas markets. Most newcomers find it hard to understand overseas consumer tastes, platform algorithms, and visual branding because the information online is scattered, confusing, or hidden behind expensive paywalls. By researching and organizing real business cases into clear, free video breakdowns, I want to lower this learning curve and make global commerce knowledge accessible and easy to understand for everyone.',
-              zh: '這個專案的主要目的，是補上跨境電商中巨大的資訊落差。目標受眾是 18 至 35 歲的年輕人——尤其是想探索把產品賣向海外市場的大學生與新手。大多數新手難以理解海外消費者的品味、平台演算法與視覺品牌，因為網路上的資訊零散、混亂，或被藏在昂貴的付費牆之後。透過研究並整理真實的商業案例，做成清楚、免費的影片拆解，我想降低這條學習曲線，讓全球商業知識對每個人都可取得、容易理解。',
+              en: 'The main purpose of this project is to bridge the huge information gap in cross-border e-commerce. The target audience is young people aged 18 to 35—especially university students and beginners who want to explore selling products to overseas markets. Most newcomers find it hard to understand overseas consumer tastes, platform algorithms, and visual branding because the information online is scattered, confusing, or hidden behind expensive paywalls. By researching and organizing real business cases into clear, free video breakdowns, I want to lower this learning curve and make global commerce knowledge accessible and easy to understand for everyone. This bite-sized, video-driven format directly matches the media habits of my target audience—Gen Z and student beginners who favor quick visual breakdowns over dense commercial textbooks.',
+              zh: '這個專案的主要目的，是補上跨境電商中巨大的資訊落差。目標受眾是 18 至 35 歲的年輕人——尤其是想探索把產品賣向海外市場的大學生與新手。大多數新手難以理解海外消費者的品味、平台演算法與視覺品牌，因為網路上的資訊零散、混亂，或被藏在昂貴的付費牆之後。透過研究並整理真實的商業案例，做成清楚、免費的影片拆解，我想降低這條學習曲線，讓全球商業知識對每個人都可取得、容易理解。這種輕巧、以影片驅動的形式，正好契合我目標受眾的媒體習慣——偏好快速、視覺化的拆解，而非厚重的商業教科書的 Z 世代與學生新手。',
             },
           },
           { type: 'h2', text: { en: '3. Methodology', zh: '3. 研究方法' } },
           {
-            type: 'p',
-            text: {
-              en: 'My project follows a continuous cycle of prototyping, reflecting, and adapting:',
-              zh: '我的專案遵循一個「 prototyping（原型製作）、反思、調整」的持續循環：',
-            },
-          },
-          {
-            type: 'framework',
-            caption: {
-              en: 'FIG.03 — Curation as a core digital and media literacy competence (adapted from Mihailidis & Cohen, 2013, Figure 6)',
-              zh: 'FIG.03 — 策展作為核心數位與媒介素養能力（改繪自 Mihailidis & Cohen, 2013, Figure 6）',
-            },
-            inputsLabel: {
-              en: 'Six pedagogical approaches to curation',
-              zh: '策展的六條教學路徑',
-            },
-            inputs: [
-              {
-                label: {
-                  en: 'Where top-down and bottom-up meet',
-                  zh: '由上而下與由下而上交會',
-                },
-                desc: {
-                  en: 'Merging formal news sources with peer-to-peer posts.',
-                  zh: '把正式新聞來源與同儕貼文並置。',
-                },
-              },
-              {
-                label: {
-                  en: 'Integrating mediums, messages, platforms',
-                  zh: '整合媒介、訊息與平台',
-                },
-                desc: {
-                  en: 'Combining video, image and text for depth and balance.',
-                  zh: '混合影片、圖像與文字，換取深度與平衡。',
-                },
-              },
-              {
-                label: {
-                  en: 'Sources, voices and credibility online',
-                  zh: '線上來源、聲音與可信度',
-                },
-                desc: {
-                  en: 'Justifying why one source is trusted over another.',
-                  zh: '說明為何信任某個來源而非另一個。',
-                },
-              },
-              {
-                label: {
-                  en: 'Framing, bias, agenda and perspective',
-                  zh: '框架、偏見、議程與視角',
-                },
-                desc: {
-                  en: 'Comparing how different parties frame the same issue.',
-                  zh: '比較不同立場如何框架同一個議題。',
-                },
-              },
-              {
-                label: { en: 'Appreciating diversity', zh: '理解多樣性' },
-                desc: {
-                  en: 'Recognising the range of voices an issue carries.',
-                  zh: '意識到一個議題承載了多少種聲音。',
-                },
-              },
-              {
-                label: {
-                  en: 'Empowering civic values and civic voices',
-                  zh: '賦權公民價值與公民聲音',
-                },
-                desc: {
-                  en: 'Each share shapes the quality of public information.',
-                  zh: '每一次分享都在形塑公共資訊的品質。',
-                },
-              },
-            ],
-            hub: {
-              title: { en: 'Curation', zh: '策展' },
-              note: {
-                en: 'Student-driven · creation-driven · integrated multimedia storytelling',
-                zh: '學生驅動 · 創作驅動 · 整合式多媒體敘事',
-              },
-            },
-            outputsLabel: {
-              en: 'Digital and media literacy outcomes',
-              zh: '數位與媒介素養成果',
-            },
-            outputs: [
-              {
-                label: {
-                  en: 'Savvy media consumption and production',
-                  zh: '成熟的媒體消費與生產',
-                },
-              },
-              {
-                label: {
-                  en: 'Critical evaluation and analysis',
-                  zh: '批判性評估與分析',
-                },
-              },
-              {
-                label: {
-                  en: 'Participation in local, national and global dialogue',
-                  zh: '參與在地、國家與全球的對話',
-                },
-              },
-            ],
-          },
-          {
-            type: 'p',
-            text: {
-              en: 'Mihailidis and Cohen (2013) argue that curation is not simply collecting links — it is an act of problem solving, where the curator takes responsibility for turning scattered online material into a coherent story. Their framework reframes the six teaching approaches above into three literacy outcomes, and it is the model I follow when I decide what to keep, what to discard, and how to sequence a video so a beginner can follow it.',
-              zh: 'Mihailidis 與 Cohen（2013）主張，策展不只是收集連結——它是一種問題解決的行動，策展人必須為「把散落的線上素材變成一個連貫故事」負責。他們的框架把上述六條教學路徑收攏為三項素養成果，也正是我在決定「留下什麼、捨棄什麼、如何安排影片順序讓新手跟得上」時所依循的模型。',
-            },
-          },
-          {
             type: 'diagram',
             caption: {
-              en: 'FIG.04 — The co-learning loop: five stages on repeat',
-              zh: 'FIG.04 — 共學循環：五個階段，週而復始',
+              en: 'FIG.03 — The co-learning loop: five stages on repeat',
+              zh: 'FIG.03 — 共學循環：五個階段，週而復始',
             },
             items: [
               {
