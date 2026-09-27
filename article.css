@@ -192,11 +192,14 @@
 
 /* 纯文字区块：收在舒适阅读宽度，居中于宽版心
    注意：这些规则必须放在各元素自身样式**之前**（源码顺序即优先级），
-   否则后面的简写 `margin:` 会把这里的 auto 覆盖掉，文字就会贴到左边缘。 */
+   否则后面的简写 `margin:` 会把这里的 auto 覆盖掉，文字就会贴到左边缘。
+   .ref-item 也在组里（第十八阶段补）：漏了它会导致窄屏下文献块贴满
+   版心、文字悬在居中标题左侧约 120px（用户截图实锤的错位）。 */
 .article-body > p,
 .article-body > h2,
 .article-body > h3,
 .article-body > blockquote,
+.article-body > .ref-item,
 .article-body > .inline-figure,
 .article-body > .video-block,
 .article-body > .dg-block {
@@ -283,6 +286,7 @@
     .article-body > h2,
     .article-body > h3,
     .article-body > blockquote,
+    .article-body > .ref-item,
     .article-body > .inline-figure,
     .article-body > .video-block {
         max-width: none;
@@ -465,14 +469,14 @@
    注解退到小号、像编辑在稿边写的批注；不用卡片，
    以免 Reference 长列表变成一片方框森林。
 
-   对齐原则（第十七阶段定稿）：一条文献 = 一条左轨。
-   .ref-item 的 padding-left 就是那条轨，书目（含续行）、链接、
-   注解三层文字一律贴同一条线；注解的 3px 竖线用负 margin 退到
-   轨外的栏边，当作「编辑批注记号」，不再占文字的位置。
-   此前是悬挂缩进 + 各自 padding，三层各有一条左缘，读起来散。 */
+   对齐原则（第十八阶段定稿）：文献文字贴「公共左轨」。
+   版心内所有元素共用一条左轨 —— h2 边框条、h3 短横、正文段落、
+   文献的书目/链接/注解文字全部落在这条线上（第十七阶段的
+   .ref-item 内缩 16px 已撤销：那会让文献文字比段落右移 16px，
+   与其他章节的段落不共轨）。注解的 3px 竖线用负 margin 退到
+   轨外 16px 的栏边，当作「编辑批注记号」，不占文字位置。 */
 .ref-item {
     margin-bottom: 1.6em;
-    padding-left: 16px;
 }
 
 /* 第一层：书目。正文大小，首行与续行同贴左轨 */
