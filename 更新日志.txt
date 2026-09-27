@@ -2028,3 +2028,82 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 · 標籤不是越多越好。判斷取捨的準則是「這枚標籤是否對應作業
   評分要點」而非「是否與主題相關」—— 主題相關的詞留給正文，
   標籤只放能幫閱卷者定位作業歸屬的關鍵詞。
+
+================================================================
+第十七階段補丁：文獻條目左軌對齊（Reference 區塊排版收束）
+時間：2026-09-23
+================================================================
+
+【問題】
+
+· 使用者回饋：Reference（參考文獻）區塊「文字不對齊」，
+  要求僅優化這一處，讓各層文字對齊。
+
+· 病灶（實測三種左緣並存，同一條文獻內就有三個起點）：
+  · .ref-cite 用 padding-left:1.5em + text-indent:-1.5em
+    ＝懸掛縮進：首行文字被頂到 x=0，續行縮到 x=1.5em。
+  · .ref-link-row 用 padding-left:1.5em
+    ＝連結對齊的是「續行」那條線，不是書目首行。
+  · .ref-note 用 padding-left:13px + border-left:3px
+    ＝豎線在 x=0，注解文字卻在 x=16px，又是第三條左緣。
+  結果：書目首行 0 / 書目續行 1.5em / 連結 1.5em /
+  注解豎線 0 / 注解文字 16px —— 五個元素、三條左軌。
+
+【修訂】一条文獻 = 一条左軌
+
+· .ref-item 改為 padding-left:16px，這 16px 就是全條唯一左軌；
+  margin-bottom 1.5em → 1.6em。
+· .ref-cite 移除 padding-left 與 text-indent（撤掉懸掛縮進），
+  首行與續行同貼左軌。
+· .ref-link-row 移除 padding-left，連結緊貼左軌。
+· .ref-note 用 margin-left:-16px + padding-left:13px +
+  border-left:3px：
+  · margin-left:-16px → 方框左緣退回欄邊（x=0），豎線畫在欄外；
+  · padding-left:13px ＝ 16 − 3，抵掉豎線自身佔寬，
+    注解文字精準落回 x=16 那條左軌。
+  · 豎線因此成為「編輯在稿邊劃的批註記號」——呼應本區塊原有的
+    「編辑批注」設計語彙，且完全不佔文字位置。
+· 以 1440 實測：書目首行 / 書目續行 / 連結行 / 連結圖示 /
+  注解文字 五者左緣全部 = 62.08px；注解豎線 = 46.08px（欄邊）。
+· 未動任何內容資料（content.js）、未動渲染器（article-page.js），
+  本次為純 CSS 修訂。
+
+【驗證】
+
+· 新增 .workbuddy/_refalign.mjs：CDP 驅動本機 Chrome，用
+  Range.getBoundingClientRect() 量「首行文字的」精確左緣
+  （不是量方框，方框左緣會被 padding 誤導），逐條比對是否同軌，
+  並在 1920 / 1440 / 1280 / 1024 / 760 五檔尺寸各跑一次。
+  結論：ALIGN: PASS（五檔全過，每檔 3 條文獻 × 4 個對齊點）。
+· verify-bcm206-a1.mjs：84 → **89 項**。新增 5 項靜態 CSS 守衛：
+  · .ref-item 設 16px padding-left 作為唯一左軌
+  · .ref-cite 無懸掛縮進（不得再出現 text-indent）
+  · .ref-link-row 無額外 padding-left
+  · .ref-note 用負 margin 把豎線退到軌外
+  · .ref-note padding 扣除豎線 3px（16-3=13）
+· 全量回歸 **566 項 0 失敗**：domtest 196 / verify-bcm241-a1 106 /
+  verify-bcm206-a1 89 / verify-hidden 62 / verify-nav-static 50 /
+  verify-nav-runtime 25 / verify-langswitch 12 / verify-article 11 /
+  verify-narrow-geom 15。
+· 視覺核對（1440 與 1920，中英雙語）：三條文獻的書目、連結、
+  注解文字同貼一條垂直線；注解豎線懸在欄邊，不擠佔文字。
+  橫向溢出 overflowX = 0（五檔皆為 0）。
+
+【經驗教訓】
+
+· 對齊這件事要「量文字，不要量盒子」。
+  方框左緣 ≠ 文字左緣：padding-left / text-indent / border-left
+  都會讓方框與文字錯開。要驗證對齊，必須用 Range 取首行文字的
+  client rect，否則會誤判為已對齊。
+· 懸掛縮進（padding-left + 負 text-indent）本身是對的學術規範，
+  但它會製造「首行在軌外」的第二條左緣。當區塊內還有其它層
+  （連結、注解）時，就必須決定：其它層要貼首行、還是貼續行？
+  一旦選定，就要讓所有層統一，不能各用各的 padding。
+· 「東西退到盒子外面」優先用流內負 margin，不要用絕對定位。
+  這條在 multicol 環境裡尤其硬性——multicol 觸發整欄搬運時，
+  絕對定位的盒子會被遺留在原位變成白塊（本專案第十三階段踩過）；
+  負 margin 則跟著流一起搬，安全。
+· 結構對齊類的修訂最好留一個「腳本化守衛」。
+  純眼睛看容易漏（尤其是只有 3px、0.5px 的偏差），
+  寫成 _refalign.mjs 這種可重複執行、逐尺寸斷言的量測腳本，
+  以後改 padding 會立刻被抓出來。

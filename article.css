@@ -462,17 +462,22 @@
 /* ===== 参考文献条目（type: 'ref'） =====
    作业的 Reference 区块：每条文献都附一句「为什么引用它」。
    排版策略是「书目正文 + 注解旁注」——书目保持正文大小可读，
-   注解退到小号、加左侧短竖线，像编辑在稿边写的批注；不用卡片，
-   以免 Reference 长列表变成一片方框森林。 */
+   注解退到小号、像编辑在稿边写的批注；不用卡片，
+   以免 Reference 长列表变成一片方框森林。
+
+   对齐原则（第十七阶段定稿）：一条文献 = 一条左轨。
+   .ref-item 的 padding-left 就是那条轨，书目（含续行）、链接、
+   注解三层文字一律贴同一条线；注解的 3px 竖线用负 margin 退到
+   轨外的栏边，当作「编辑批注记号」，不再占文字的位置。
+   此前是悬挂缩进 + 各自 padding，三层各有一条左缘，读起来散。 */
 .ref-item {
-    margin-bottom: 1.5em;
+    margin-bottom: 1.6em;
+    padding-left: 16px;
 }
 
-/* 第一层：书目。悬挂缩进让续行与首行文字对齐；右侧留出小箭头的位置 */
+/* 第一层：书目。正文大小，首行与续行同贴左轨 */
 .ref-cite {
     margin: 0;
-    padding-left: 1.5em;
-    text-indent: -1.5em;
     line-height: 1.55;
     word-break: break-word;
 }
@@ -480,8 +485,7 @@
 /* 链接行：紧跟 APA 书目之后独立成行，字号收小、加下划线，
    与书目正文拉开层级，又保证地址完整可见、可点。 */
 .ref-link-row {
-    margin: 0.25em 0 0;
-    padding-left: 1.5em;
+    margin: 0.3em 0 0;
 }
 
 .ref-link {
@@ -516,9 +520,11 @@
     transform: translate(1px, -1px);
 }
 
-/* 第二层：注解。左侧一条短竖线，小一号字，与书目形成明确层级 */
+/* 第二层：注解。文字与书目、链接同贴左轨；3px 竖线用负 margin
+   退到轨外的栏边，像编辑在稿边划的批注记号，不挤占文字位置。
+   注意 padding 要减掉竖线自身的 3px，否则注解文字比左轨多缩 3px */
 .ref-note {
-    margin: 0.35em 0 0;
+    margin: 0.45em 0 0 -16px;
     padding-left: 13px;
     border-left: 3px solid var(--dark-frame);
     font-size: 0.86rem;
