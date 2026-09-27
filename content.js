@@ -331,8 +331,6 @@ const SUBJECTS = {
           { en: 'Contextual Statement', zh: '情境陳述' },
           { en: 'Video Pitch', zh: '影片提案' },
           { en: 'Digital Artefact', zh: '數位作品' },
-          { en: 'Cross-Border E-commerce', zh: '跨境電商' },
-          { en: 'Curation', zh: '策展' },
         ],
         image: 'assets/posts/bcm206-a1-cover.png',
         figLabel: { en: 'FIG.02 — The co-learning network', zh: 'FIG.02 — 共學網絡' },
@@ -354,30 +352,6 @@ const SUBJECTS = {
             },
           },
           { type: 'h2', text: { en: '3. Methodology', zh: '3. 研究方法' } },
-          {
-            type: 'diagram',
-            caption: {
-              en: 'FIG.03 — The co-learning loop: five stages on repeat',
-              zh: 'FIG.03 — 共學循環：五個階段，週而復始',
-            },
-            items: [
-              {
-                label: { en: 'Prototype / Plan each video', zh: '原型製作 / 規劃每一支影片' },
-              },
-              {
-                label: { en: 'Publish / Bilibili · Douyin · Xiaohongshu', zh: '發布 / B 站 · 抖音 · 小紅書' },
-              },
-              {
-                label: { en: 'Track / Views, likes, retention', zh: '追蹤 / 觀看、按讚、留存率' },
-              },
-              {
-                label: { en: 'Listen / Comments & community group', zh: '傾聽 / 留言與社群群組' },
-              },
-              {
-                label: { en: 'Correct / Public error-correction', zh: '修正 / 公開勘誤' },
-              },
-            ],
-          },
           { type: 'h3', text: { en: 'Performance Tracking', zh: '成效追蹤' } },
           {
             type: 'p',
@@ -401,6 +375,30 @@ const SUBJECTS = {
               en: 'Because I am a beginner creator without hands-on store ownership, I rely on secondary research from public internet sources. In this process, I cannot completely avoid making mistakes or sharing outdated information. Instead of hiding my errors, I make public error-correction an essential part of my project. Whenever I discover a mistake through my own learning or viewer comments, I will correct it openly using pinned comments or dedicated follow-up videos. Making mistakes and fixing them is a natural part of my learning journey, and sharing these corrections offers real, honest lessons for my audience.',
               zh: '因為我是一個沒有實際開店經驗的新手創作者，我依賴來自公開網路來源的次級研究。在這個過程中，我無法完全避免犯錯，或分享了過時的資訊。與其隱藏錯誤，我把「公開勘誤」變成專案中不可或缺的一部分。只要我在自己的學習過程或觀眾留言中發現錯誤，我就會用置頂留言或專門的後續影片公開更正。犯錯並修正，是我學習歷程中自然的一部分，而把這些更正分享出來，也為我的觀眾提供了真實、誠實的一課。',
             },
+          },
+                    {
+            type: 'diagram',
+            caption: {
+              en: 'FIG.03 — The co-learning loop: five stages on repeat',
+              zh: 'FIG.03 — 共學循環：五個階段，週而復始',
+            },
+            items: [
+              {
+                label: { en: 'Prototype / Plan each video', zh: '原型製作 / 規劃每一支影片' },
+              },
+              {
+                label: { en: 'Publish / Bilibili · Douyin · Xiaohongshu', zh: '發布 / B 站 · 抖音 · 小紅書' },
+              },
+              {
+                label: { en: 'Track / Views, likes, retention', zh: '追蹤 / 觀看、按讚、留存率' },
+              },
+              {
+                label: { en: 'Listen / Comments & community group', zh: '傾聽 / 留言與社群群組' },
+              },
+              {
+                label: { en: 'Correct / Public error-correction', zh: '修正 / 公開勘誤' },
+              },
+            ],
           },
           { type: 'h2', text: { en: '4. Reference', zh: '4. 參考文獻' } },
           {
