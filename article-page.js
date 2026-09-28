@@ -449,8 +449,10 @@
 
     paintArticleText();
 
-    // 封面解码完 → 收起翻页加载层（图片 404 或超过 1.2s 也会自动收）
-    if (window.ZineLoader) window.ZineLoader.waitImage(heroImg);
+    /* 正文里的图（inline-figure / 画廊页）是刚插进来的，补挂显影动画。
+       封面 heroImg 是页面自带的静态节点，shared.js 启动时就挂过了，
+       这里不需要再管 —— 它自己 load 完会显影。 */
+    if (window.ZineReinitImages) window.ZineReinitImages();
   }
 
   /* 脚本挂在 </body> 之前，此刻 DOM 已解析完整 —— 直接渲染，

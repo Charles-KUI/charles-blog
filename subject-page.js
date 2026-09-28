@@ -75,9 +75,9 @@
     if (heroImg.getAttribute('src') !== heroSrc) heroImg.src = heroSrc;
     heroImg.alt = util.t('card.imageAlt', code + ' ' + sName);
 
-    // 首图落地 → 收起翻页加载层。放在这里而不是函数末尾：
-    // 下面还有几处 return（索引隐藏／列表缺失），写在末尾会被跳过。
-    if (window.ZineLoader) window.ZineLoader.waitImage(heroImg);
+    /* HERO 是静态节点，shared.js 启动时已挂好显影；这里不用再管。
+       （放在函数中段而非末尾：后面还有 return（索引隐藏／列表缺失），
+         写在末尾会被跳过。） */
 
     document.getElementById('heroCaption').textContent = util.tr(subject.heroCaption);
     document.getElementById('heroSection').setAttribute('aria-label', util.t('subject.heroLabel', code));
@@ -119,6 +119,8 @@
 
     // 重新触发浮现动画（列表为动态生成）
     if (window.ZineReinitReveal) window.ZineReinitReveal();
+    // 卡片封面是刚插进来的新节点，补挂显影动画（幂等，已挂过的会跳过）
+    if (window.ZineReinitImages) window.ZineReinitImages();
   }
 
   document.addEventListener('DOMContentLoaded', function () {

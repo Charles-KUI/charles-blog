@@ -97,9 +97,6 @@
     // 参考文献条目的外链
     'ref.open': ['Open source', '開啟來源'],
 
-    // 加载动画
-    'loading.label': ['LOADING', '載入中'],
-
     // 幻灯片画廊（简报逐页高清图 + 全屏浏览）
     'gallery.badge': ['DECK', '簡報'],
     'gallery.download': ['OPEN FULL PDF', '開啟完整 PDF'],
@@ -310,55 +307,48 @@
       + '<a class="to-top" href="#top">' + t('footer.sitemap') + '</a>';
   }
 
-  /* ============ 翻页加载动画 ============ */
+  /* ============ 图片显影入场 ============ */
   /* ----------------------------------------------------------------
-     页面切换时，图片（尤其文章封面）要几百毫秒才下载完，中间那段时间
-     页面是半空的骨架 —— 看着像卡住。这里用一层「翻页动画」盖住这段时间，
-     等首图真正解码完再收起。
+     页面切换时图片还要几百毫秒才下载完。这里不给整页盖遮罩
+     （每次翻页都闪一层太生硬），只让图片自己把这段空档演掉：
+     加载中 = 奶油白相纸 + 扫光（尺寸由 --zine-ar 预留，不顶版面）；
+     加载完 = 一次「模糊转清晰」的显影。
 
-     两个关键阈值：
-       · 180ms 才亮起 —— 缓存命中、秒开的页面根本不会看到它，
-         不会凭空多出一闪而过的白屏；
-       · 没人接管时 300ms 就收；页面渲染器调 waitImage() 表示「本页要等图」，
-         期限放宽到 1.5s，且通常由图片的 load / error 提前触发。
-         宁可露出没图的版面，也不让人干等。
-     此外还有一条纯 CSS 的 6s 保险：万一脚本整个挂了，遮罩也会自己消失，
-     不会把页面永久锁住。
+     两个细节：
+      · 脚本启动时图已在缓存里（img.complete）——直接落定成 .is-instant，
+        不跑动画，秒开的页面不会凭空多出一段演出；
+      · 渲染器后来动态插入的图（正文图 / 画廊页 / 索引卡片）要再调一次
+        本函数，所以做成幂等的：带过 .zine-img 标记的图直接跳过。
      ---------------------------------------------------------------- */
-  var loaderDone = false;
-  var loaderClaimed = false;
-  var armTimer = null;
-  var doneTimer = null;
-
-  function loaderFinish() {
-    if (loaderDone) return;
-    loaderDone = true;
-    clearTimeout(armTimer);
-    clearTimeout(doneTimer);
-    var el = document.querySelector('.zine-loader');
-    if (!el) return;
-    el.classList.remove('is-armed');
-    el.classList.add('is-done');
-    // 淡出结束后从无障碍树里摘掉（动画节点留着没意义）
-    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+  function settleImage(img) {
+    img.classList.remove('is-loading');
+    img.classList.add('is-in');
   }
 
-  /**
-   * 等某张图真正落地再收动画（图片 404 / 超时也能正常收）。
-   * 调用它等于「本页要等图，别按默认时限收」—— 期限因此放宽到 1.5s。
-   * 没有首屏大图的页面（如首页）不调用，走 300ms 的默认时限，
-   * 不会莫名其妙转上好几秒。
-   */
-  function loaderWaitImage(img) {
-    if (!img || img.complete) { loaderFinish(); return; }
-    loaderClaimed = true;
-    clearTimeout(doneTimer);
-    doneTimer = setTimeout(loaderFinish, 1500);
+  function initImageReveal() {
+    document.querySelectorAll('img').forEach(function (img) {
+      if (img.classList.contains('zine-img')) return;
+      // 灯箱是点开瞬间出现的全屏层，尺寸由 max-width/max-height 定，
+      // 套预留比例反而会把画面压变形 —— 它也不缺加载时间（胶片带里已载过）。
+      if (img.classList.contains('lb-img')) return;
+      img.classList.add('zine-img');
 
-    var settled = false;
-    var once = function () { if (!settled) { settled = true; loaderFinish(); } };
-    img.addEventListener('load', once);
-    img.addEventListener('error', once);
+      // 缓存命中：图已经在手里，直接是清晰的样子
+      if (img.complete && img.naturalWidth) {
+        img.classList.add('is-in', 'is-instant');
+        return;
+      }
+
+      // src 还没填的（文章封面由渲染器稍后赋值）：先留位置，等它自己的 load
+      img.classList.add('is-loading');
+      var once = function () {
+        img.removeEventListener('load', once);
+        img.removeEventListener('error', once);
+        settleImage(img);
+      };
+      img.addEventListener('load', once);
+      img.addEventListener('error', once);
+    });
   }
 
   /** 滚动浮现观察器（复用单个实例，避免语言切换时反复新建导致 observer 泄漏） */
@@ -413,23 +403,9 @@
     initReveal();
     initPressEffect();
     bindChipsDismissOnce();
-
-    /* 加载动画的两道闸门：
-       · 180ms 还没收 → 亮起（缓存命中的秒开页面根本看不到它）；
-       · 300ms 默认收掉。有首屏大图的页面会调 waitImage() 把期限放宽到 1.5s，
-         并改由图片 load / error 触发 —— 这里只是「没人接管」时的退路。
-       注意别覆盖已接管的期限：渲染器有可能比本回调更早执行
-       （脚本位置变动 / readyState 已就绪时会走同步分支）。 */
-    armTimer = setTimeout(function () {
-      if (loaderDone) return;
-      var el = document.querySelector('.zine-loader');
-      if (el) el.classList.add('is-armed');
-    }, 180);
-    if (!loaderClaimed) {
-      doneTimer = setTimeout(function () {
-        if (!loaderClaimed) loaderFinish();
-      }, 300);
-    }
+    // 图片显影：必须在渲染器之前跑（shared.js 先于页面脚本加载），
+    // 这样渲染器随后插入的图也能被 ZineReinitImages() 补挂上。
+    initImageReveal();
   });
 
   /* 语言切换后：重建导航/页脚（它们含双语内容），再广播给页面渲染器 */
@@ -452,6 +428,6 @@
   // 供动态生成内容后重新触发浮现动画
   window.ZineReinitReveal = initReveal;
 
-  // 供页面渲染器在「首图就绪」时收起加载动画
-  window.ZineLoader = { finish: loaderFinish, waitImage: loaderWaitImage };
+  // 供页面渲染器在插入新图（正文图 / 画廊页 / 索引卡片）后补挂显影动画
+  window.ZineReinitImages = initImageReveal;
 })();

@@ -90,6 +90,8 @@
     width: 100%;
     height: auto;
     border: var(--border-medium);
+    /* 显影入场期间用真实素材比例顶住位置（1216×790），图来了不跳版面 */
+    --zine-ar: 1216 / 790;
 }
 
 .hero-figure figcaption {
@@ -234,6 +236,8 @@
     border: var(--border-medium);
     aspect-ratio: 1 / 1;
     object-fit: cover;
+    /* 卡片封面本来就是方图，显影期间沿用同一比例 */
+    --zine-ar: 1 / 1;
 }
 
 .assignment-figure .fig-label {

@@ -668,6 +668,8 @@ body {
     height: auto;
     border: 2px solid var(--dark-frame);
     /* 人像自带深色背景，与站点暖黑呼应 */
+    /* 显影入场期间用真实素材比例顶住位置（219×310） */
+    --zine-ar: 219 / 310;
 }
 
 .about-figure figcaption {

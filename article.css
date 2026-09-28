@@ -163,6 +163,8 @@
     width: 100%;
     height: auto;
     border: var(--border-medium);
+    /* 显影入场期间用真实素材比例顶住位置（1024×683），图来了不跳版面 */
+    --zine-ar: 1024 / 683;
 }
 
 .article-figure figcaption {
@@ -356,6 +358,8 @@
     width: 100%;
     height: auto;
     border: 2px solid var(--dark-frame);
+    /* 正文插图素材比例（1024×972），显影期间顶住位置 */
+    --zine-ar: 1024 / 972;
 }
 
 .inline-figure figcaption {
@@ -831,6 +835,8 @@
     height: 100%;
     object-fit: contain;
     user-select: none;
+    /* 胶片带里的幻灯片是 16:9，显影期间沿用同一比例 */
+    --zine-ar: 16 / 9;
 }
 
 /* 悬停时右上角浮出「放大」提示 */
