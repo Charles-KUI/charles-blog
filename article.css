@@ -216,8 +216,10 @@
 .article-body p { margin-bottom: 1.4em; }
 
 /* 三级小标题：作业里的子项（Performance Tracking 之类）。
-   与 h2 的「左边框 + 衬线大字」区分开：改用小号圆润无衬线 + 前置短横，
-   让层级差一眼可见，且不打断双栏的行距节奏。 */
+   与 h2 的「左边框 + 衬线大字」区分开：改用小号圆润无衬线 + 加粗，
+   靠字号/字重/字体拉出层级差，不打断双栏的行距节奏。
+   第二十三阶段撤掉了前置短横 —— 标题文字因此直接落在公共左轨上，
+   与正文段落、书目首行同一条线（原先短横占轨、文字被迫右移 27px）。 */
 .article-body h3 {
     font-family: var(--font-round);
     font-size: 1.02rem;
@@ -225,16 +227,6 @@
     letter-spacing: 0.3px;
     margin-top: 1.6em;
     margin-bottom: 0.5em;
-}
-
-.article-body h3::before {
-    content: '';
-    display: inline-block;
-    width: 18px;
-    height: 3px;
-    background: var(--dark-frame);
-    margin-right: 9px;
-    vertical-align: 5px;
 }
 
 .article-body h2 {
@@ -492,7 +484,7 @@
    以免 Reference 长列表变成一片方框森林。
 
    对齐原则（第十八阶段定稿）：文献文字贴「公共左轨」。
-   版心内所有元素共用一条左轨 —— h2 边框条、h3 短横、正文段落、
+   版心内所有元素共用一条左轨 —— h2 边框条、h3 首字、正文段落、
    文献的书目/链接/注解文字全部落在这条线上（第十七阶段的
    .ref-item 内缩 16px 已撤销：那会让文献文字比段落右移 16px，
    与其他章节的段落不共轨）。注解的 3px 竖线用负 margin 退到
