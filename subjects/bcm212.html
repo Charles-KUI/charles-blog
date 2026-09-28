@@ -16,6 +16,17 @@
 </head>
 <body data-subject="bcm212">
 
+    <!-- 翻页加载层：hero 图下载完之前盖住半空骨架，由 shared.js 在首图就绪时收起。
+         内联在 HTML 里（而非由 JS 生成）才能赶上首屏第一帧，不等脚本。 -->
+    <div class="zine-loader" aria-hidden="true">
+        <div class="loader-cards">
+            <span class="loader-card"></span>
+            <span class="loader-card"></span>
+            <span class="loader-card"></span>
+        </div>
+        <p class="loader-label" data-i18n="loading.label">LOADING</p>
+    </div>
+
     <div class="texture-overlay" aria-hidden="true"></div>
 
     <nav class="navbar" role="navigation">
@@ -45,7 +56,7 @@
                 <figure class="hero-figure">
                     <span class="tape tl" aria-hidden="true"></span>
                     <span class="tape tr" aria-hidden="true"></span>
-                    <img id="heroImage" src="" alt="">
+                    <img id="heroImage" fetchpriority="high" src="" alt="">
                     <figcaption id="heroCaption"></figcaption>
                 </figure>
             </div>

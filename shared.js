@@ -97,6 +97,9 @@
     // 参考文献条目的外链
     'ref.open': ['Open source', '開啟來源'],
 
+    // 加载动画
+    'loading.label': ['LOADING', '載入中'],
+
     // 幻灯片画廊（简报逐页高清图 + 全屏浏览）
     'gallery.badge': ['DECK', '簡報'],
     'gallery.download': ['OPEN FULL PDF', '開啟完整 PDF'],
@@ -140,6 +143,41 @@
       i++;
       return v === undefined ? '' : String(v);
     });
+  }
+
+  /* ============ 图片路径 ============ */
+
+  /**
+   * 图片路径 → 取同名 .webp
+   * ---------------------------------------------------------------
+   * 站点图片原本都是未压缩 PNG：1024px 宽却要 1.2–1.8 MB，全站 23 MB。
+   * 这就是翻页时会「顿一下」的主因 —— 一张封面图顶得上半本杂志。
+   * 现已批量转出同名 .webp（约原体积 1/9，全站 23 MB → 3.3 MB）。
+   *
+   * content.js 里仍写原来的 .png 路径，由这里统一改写后缀：
+   * 一处改完全站生效，数据文件一字不用动，原图也全部留在原位。
+   * 万一某张 .webp 加载失败（漏生成、或浏览器不支持），
+   * 下面那个 error 委托会把它退回同名原图，不会开天窗。
+   */
+  function imgSrc(path) {
+    return String(path).replace(/\.(png|jpe?g)$/i, '.webp');
+  }
+
+  /**
+   * WebP 兜底：图片加载失败且路径以 .webp 结尾时，退回同名原图。
+   * 用捕获阶段监听 —— error 事件不冒泡，只能在捕获阶段捞到。
+   * 一处覆盖全站（含灯箱里动态改 src 的图），不用给每张图挂 onerror。
+   */
+  function bindImageFallback() {
+    document.addEventListener('error', function (e) {
+      var img = e.target;
+      if (!img || img.tagName !== 'IMG') return;
+      var src = img.getAttribute('src') || '';
+      if (!/\.webp$/i.test(src)) return;
+      if (img.dataset.fallbackTried) return; // 已退回过一次，别绕成死循环
+      img.dataset.fallbackTried = '1';
+      img.src = src.replace(/\.webp$/i, '.png');
+    }, true);
   }
 
   /* ============ 日期与数字 ============ */
@@ -272,6 +310,57 @@
       + '<a class="to-top" href="#top">' + t('footer.sitemap') + '</a>';
   }
 
+  /* ============ 翻页加载动画 ============ */
+  /* ----------------------------------------------------------------
+     页面切换时，图片（尤其文章封面）要几百毫秒才下载完，中间那段时间
+     页面是半空的骨架 —— 看着像卡住。这里用一层「翻页动画」盖住这段时间，
+     等首图真正解码完再收起。
+
+     两个关键阈值：
+       · 180ms 才亮起 —— 缓存命中、秒开的页面根本不会看到它，
+         不会凭空多出一闪而过的白屏；
+       · 没人接管时 300ms 就收；页面渲染器调 waitImage() 表示「本页要等图」，
+         期限放宽到 1.5s，且通常由图片的 load / error 提前触发。
+         宁可露出没图的版面，也不让人干等。
+     此外还有一条纯 CSS 的 6s 保险：万一脚本整个挂了，遮罩也会自己消失，
+     不会把页面永久锁住。
+     ---------------------------------------------------------------- */
+  var loaderDone = false;
+  var loaderClaimed = false;
+  var armTimer = null;
+  var doneTimer = null;
+
+  function loaderFinish() {
+    if (loaderDone) return;
+    loaderDone = true;
+    clearTimeout(armTimer);
+    clearTimeout(doneTimer);
+    var el = document.querySelector('.zine-loader');
+    if (!el) return;
+    el.classList.remove('is-armed');
+    el.classList.add('is-done');
+    // 淡出结束后从无障碍树里摘掉（动画节点留着没意义）
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 400);
+  }
+
+  /**
+   * 等某张图真正落地再收动画（图片 404 / 超时也能正常收）。
+   * 调用它等于「本页要等图，别按默认时限收」—— 期限因此放宽到 1.5s。
+   * 没有首屏大图的页面（如首页）不调用，走 300ms 的默认时限，
+   * 不会莫名其妙转上好几秒。
+   */
+  function loaderWaitImage(img) {
+    if (!img || img.complete) { loaderFinish(); return; }
+    loaderClaimed = true;
+    clearTimeout(doneTimer);
+    doneTimer = setTimeout(loaderFinish, 1500);
+
+    var settled = false;
+    var once = function () { if (!settled) { settled = true; loaderFinish(); } };
+    img.addEventListener('load', once);
+    img.addEventListener('error', once);
+  }
+
   /** 滚动浮现观察器（复用单个实例，避免语言切换时反复新建导致 observer 泄漏） */
   var revealIO = null;
 
@@ -309,12 +398,38 @@
     });
   }
 
+  /** 静态 HTML 里写死的 <img>（如首页人像）也换成 WebP：
+      它们不经渲染器，没法走 imgSrc()，这里统一扫一遍。 */
+  function upgradeStaticImages() {
+    document.querySelectorAll('img[src$=".png"], img[src$=".jpg"], img[src$=".jpeg"]')
+      .forEach(function (img) { img.src = imgSrc(img.getAttribute('src')); });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    bindImageFallback();
+    upgradeStaticImages();
     renderNavbarChips(window.CURRENT_SUBJECT || null);
     renderFooterLinks();
     initReveal();
     initPressEffect();
     bindChipsDismissOnce();
+
+    /* 加载动画的两道闸门：
+       · 180ms 还没收 → 亮起（缓存命中的秒开页面根本看不到它）；
+       · 300ms 默认收掉。有首屏大图的页面会调 waitImage() 把期限放宽到 1.5s，
+         并改由图片 load / error 触发 —— 这里只是「没人接管」时的退路。
+       注意别覆盖已接管的期限：渲染器有可能比本回调更早执行
+       （脚本位置变动 / readyState 已就绪时会走同步分支）。 */
+    armTimer = setTimeout(function () {
+      if (loaderDone) return;
+      var el = document.querySelector('.zine-loader');
+      if (el) el.classList.add('is-armed');
+    }, 180);
+    if (!loaderClaimed) {
+      doneTimer = setTimeout(function () {
+        if (!loaderClaimed) loaderFinish();
+      }, 300);
+    }
   });
 
   /* 语言切换后：重建导航/页脚（它们含双语内容），再广播给页面渲染器 */
@@ -331,8 +446,12 @@
     formatDate: formatDate,
     rootPrefix: rootPrefix,
     langSwitchHtml: langSwitchHtml,
+    imgSrc: imgSrc,
   };
 
   // 供动态生成内容后重新触发浮现动画
   window.ZineReinitReveal = initReveal;
+
+  // 供页面渲染器在「首图就绪」时收起加载动画
+  window.ZineLoader = { finish: loaderFinish, waitImage: loaderWaitImage };
 })();

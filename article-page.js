@@ -26,36 +26,35 @@
     return null;
   }
 
+  /**
+   * 各区块类型的渲染函数表。
+   * 新增一种区块时只在这里加一条，不必再往 switch 里塞分支 ——
+   * 表本身就是「本页支持哪些区块」的清单，比 switch 好读也好找。
+   */
+  const BLOCK_RENDERERS = {
+    h2: function (b, root, util) { return '<h2>' + util.tr(b.text) + '</h2>'; },
+    h3: function (b, root, util) { return '<h3>' + util.tr(b.text) + '</h3>'; },
+    p: function (b, root, util) { return '<p>' + util.tr(b.text) + '</p>'; },
+    quote: function (b, root, util) { return '<blockquote>' + util.tr(b.text) + '</blockquote>'; },
+    note: function (b, root, util) { return '<p class="inline-note">' + util.tr(b.text) + '</p>'; },
+    ref: function (b, root, util) { return renderRef(b, util); },
+    gallery: function (b, root, util) { return renderGallery(b, root, util); },
+    figure: function (b, root, util) {
+      return '<figure class="inline-figure">'
+        + '<img src="' + util.imgSrc(root + b.src) + '" alt="' + util.tr(b.caption) + '" loading="lazy" decoding="async">'
+        + '<figcaption>' + util.tr(b.caption) + '</figcaption></figure>';
+    },
+    diagram: function (b, root, util) { return renderDiagram(b, util); },
+    video: function (b, root, util) { return renderVideo(b, root, util); },
+    // 剪刀虚线必须是 figure 之前的独立流内块，不能做成伪元素（CSS 陷阱 2）
+    embed: function (b, root, util) { return embedRule() + renderEmbed(b, util); },
+  };
+
   /** 渲染正文区块 */
   function renderBody(blocks, root, util) {
     return blocks.map(function (block) {
-      switch (block.type) {
-        case 'h2':
-          return '<h2>' + util.tr(block.text) + '</h2>';
-        case 'h3':
-          return '<h3>' + util.tr(block.text) + '</h3>';
-        case 'quote':
-          return '<blockquote>' + util.tr(block.text) + '</blockquote>';
-        case 'note':
-          return '<p class="inline-note">' + util.tr(block.text) + '</p>';
-        case 'ref':
-          return renderRef(block, util);
-        case 'gallery':
-          return renderGallery(block, root, util);
-        case 'figure':
-          return '<figure class="inline-figure">'
-            + '<img src="' + root + block.src + '" alt="' + util.tr(block.caption) + '" loading="lazy">'
-            + '<figcaption>' + util.tr(block.caption) + '</figcaption></figure>';
-        case 'diagram':
-          return renderDiagram(block, util);
-        case 'video':
-          return renderVideo(block, root, util);
-        case 'embed':
-          return embedRule() + renderEmbed(block, util);
-        case 'p':
-        default:
-          return '<p>' + util.tr(block.text) + '</p>';
-      }
+      const fn = BLOCK_RENDERERS[block.type] || BLOCK_RENDERERS.p;
+      return fn(block, root, util);
     }).join('');
   }
 
@@ -75,13 +74,24 @@
    * 避免翻页位置被重置。页面标题 / 页码 / 缩略图标签等随语言变化的文字，
    * 由 refreshGalleryText() 单独处理。
    */
+  /** 翻页箭头：两个方向只有路径与文案不同，抽出来避免整段 SVG 抄两遍 */
+  function deckArrow(dir, util) {
+    var d = dir === 'prev' ? 'M15 4 L7 12 L15 20' : 'M9 4 L17 12 L9 20';
+    return '<button type="button" class="deck-arrow deck-' + dir + '" data-deck-' + dir
+      + ' aria-label="' + util.t('gallery.' + dir) + '">'
+      + '  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"'
+      + ' fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"'
+      + ' stroke-linejoin="round"/></svg>'
+      + '</button>';
+  }
+
   function renderGallery(block, root, util) {
     var title = util.tr(block.title);
     var hint = util.tr(block.hint);
     var total = block.items.length;
 
     var slides = block.items.map(function (item, i) {
-      var src = root + item.src;
+      var src = util.imgSrc(root + item.src);
       var label = util.tr(item.label) || (i + 1);
       return '<figure class="deck-slide" data-index="' + i + '" tabindex="0" role="button"'
         + ' aria-label="' + label + ' — ' + util.t('gallery.expand') + '">'
@@ -110,18 +120,8 @@
       + '         role="group" aria-roledescription="carousel" aria-label="' + title + '">'
       + '      <div class="deck-track" data-deck-track>' + slides + '</div>'
       + '    </div>'
-      + '    <button type="button" class="deck-arrow deck-prev" data-deck-prev aria-label="'
-      + util.t('gallery.prev') + '">'
-      + '      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4 L7 12 L15 20"'
-      + ' fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"'
-      + ' stroke-linejoin="round"/></svg>'
-      + '    </button>'
-      + '    <button type="button" class="deck-arrow deck-next" data-deck-next aria-label="'
-      + util.t('gallery.next') + '">'
-      + '      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 L17 12 L9 20"'
-      + ' fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"'
-      + ' stroke-linejoin="round"/></svg>'
-      + '    </button>'
+      + deckArrow('prev', util)
+      + deckArrow('next', util)
       + '  </div>'
       + '  <div class="deck-dots" role="tablist" aria-label="' + title + '">'
       + block.items.map(function (item, i) {
@@ -309,6 +309,18 @@
       .replace(/"/g, '&quot;');
   }
 
+  /**
+   * 电视机画框：本地影片与外部嵌入共用同一副外壳，只换内层。
+   * head 是画框之上的抬头标签（只有嵌入影片用得到）。
+   */
+  function mediaFrame(cls, inner, caption, util, head) {
+    return '<figure class="' + cls + '">'
+      + (head || '')
+      + '  <div class="video-frame">' + inner + '</div>'
+      + (caption ? '<figcaption class="video-caption">' + util.tr(caption) + '</figcaption>' : '')
+      + '</figure>';
+  }
+
   /** 视频块：有 src 用 <video>，无 src 显示测试卡占位 */
   function renderVideo(block, root, util) {
     const inner = block.src
@@ -318,10 +330,7 @@
         + '  <div class="ph-text"><strong>' + util.t('video.placeholderTitle') + '</strong><br>'
         + util.t('video.placeholderHint') + '</div>'
         + '</div>';
-    return '<figure class="video-block">'
-      + '  <div class="video-frame">' + inner + '</div>'
-      + '  <figcaption class="video-caption">' + util.tr(block.caption) + '</figcaption>'
-      + '</figure>';
+    return mediaFrame('video-block', inner, block.caption, util);
   }
 
   /* ── 外部视频嵌入（type: 'embed'） ────────────────────────────────
@@ -359,13 +368,8 @@
       })()
       : '<div class="embed-placeholder" role="note">' + util.t('embed.invalid') + '</div>';
 
-    return '<figure class="embed-block video-block">'
-      + '  <span class="embed-head">' + util.t('embed.head') + '</span>'
-      + '  <div class="video-frame">' + inner + '</div>'
-      + (block.caption
-        ? '<figcaption class="video-caption">' + util.tr(block.caption) + '</figcaption>'
-        : '')
-      + '</figure>';
+    return mediaFrame('embed-block video-block', inner, block.caption, util,
+      '<span class="embed-head">' + util.t('embed.head') + '</span>');
   }
 
   /* 嵌入区块上方的剪刀虚线：作为 figure 之前的独立流内块返回。
@@ -435,7 +439,8 @@
       if (prevDivider && prevDivider.classList.contains('divider-v')) prevDivider.hidden = !sid;
     }
 
-    document.getElementById('heroImg').src = root + a.image;
+    const heroImg = document.getElementById('heroImg');
+    heroImg.src = util.imgSrc(root + a.image);
 
     // 正文区块 + 文章级视频块（最多一个）
     let bodyHtml = renderBody(a.body, root, util);
@@ -443,9 +448,16 @@
     document.getElementById('articleBody').innerHTML = bodyHtml;
 
     paintArticleText();
+
+    // 封面解码完 → 收起翻页加载层（图片 404 或超过 1.2s 也会自动收）
+    if (window.ZineLoader) window.ZineLoader.waitImage(heroImg);
   }
 
-  document.addEventListener('DOMContentLoaded', render);
+  /* 脚本挂在 </body> 之前，此刻 DOM 已解析完整 —— 直接渲染，
+     不必再等一轮 DOMContentLoaded 回调，正文能早一帧出现。
+     （readyState 判断是为了兼容脚本被挪到 <head> 的意外情况。） */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
+  else render();
 
   /* ================================================================
      幻灯片画廊：横向翻页 + 全屏浏览
@@ -725,16 +737,26 @@
   });
 
   /**
+   * 把「数据区块」与「已渲染节点」按类型一一对齐。
+   * 语言切换时四个刷新函数都要做同一件事：按类型过滤数据、按选择器取节点、
+   * 按下标配对、跳过对不上的。抽出来省掉四份同样的样板。
+   */
+  function pairBlocks(assignment, body, type, selector) {
+    const data = assignment.body.filter(function (b) { return b.type === type; });
+    return Array.prototype.map.call(body.querySelectorAll(selector), function (node, i) {
+      return data[i] ? { data: data[i], node: node } : null;
+    }).filter(Boolean);
+  }
+
+  /**
    * 语言切换时刷新环形图的文字（节点标签 / 编号 / 图注）。
    * SVG 里的 <text> 不是标准 figcaption 文本节点，所以单独重绘：
    * 按节点顺序写回，位置与结构保持不变，动画不中断。
    */
   function refreshDiagramText(body, assignment, util) {
-    const blocks = assignment.body.filter(function (b) { return b.type === 'diagram'; });
-    const figs = body.querySelectorAll('.dg-block');
-    figs.forEach(function (fig, di) {
-      const data = blocks[di];
-      if (!data) return;
+    pairBlocks(assignment, body, 'diagram', '.dg-block').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
       const groups = fig.querySelectorAll('.dg-node');
       groups.forEach(function (g, gi) {
         const item = data.items[gi];
@@ -763,11 +785,9 @@
    * 链接现在独占一行（.ref-link-row），但 aria-label 仍需按当前语言更新。
    */
   function refreshRefText(body, assignment, util) {
-    const blocks = assignment.body.filter(function (b) { return b.type === 'ref'; });
-    const items = body.querySelectorAll('.ref-item');
-    items.forEach(function (item, ri) {
-      const data = blocks[ri];
-      if (!data) return;
+    pairBlocks(assignment, body, 'ref', '.ref-item').forEach(function (pair) {
+      const item = pair.node;
+      const data = pair.data;
       const cite = item.querySelector('.ref-cite');
       if (cite) cite.textContent = util.tr(data.text);
       const link = item.querySelector('.ref-link');
@@ -785,11 +805,9 @@
    *   · iframe 的 title 属性（无障碍名称，不是文本节点，必须单独写）。
    */
   function refreshEmbedText(body, assignment, util) {
-    const blocks = assignment.body.filter(function (b) { return b.type === 'embed'; });
-    const figs = body.querySelectorAll('.embed-block');
-    figs.forEach(function (fig, fi) {
-      const data = blocks[fi];
-      if (!data) return;
+    pairBlocks(assignment, body, 'embed', '.embed-block').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
       const iframe = fig.querySelector('iframe');
       if (iframe) iframe.setAttribute('title', util.tr(data.title) || util.t('embed.videoFallback'));
       const head = fig.querySelector('.embed-head');
@@ -800,11 +818,11 @@
   }
 
   /** 语言切换时只刷新画廊里的文字（标题 / 提示 / 页码标签 / 下载链接） */
-  function refreshGalleryText(body, assignment, util) {    const blocks = assignment.body.filter(function (b) { return b.type === 'gallery'; });
-    const decks = body.querySelectorAll('[data-deck]');
-    decks.forEach(function (deck, di) {
-      const data = blocks[di];
-      if (!data) return;
+  function refreshGalleryText(body, assignment, util) {
+    const blocks = assignment.body.filter(function (b) { return b.type === 'gallery'; });
+    pairBlocks(assignment, body, 'gallery', '[data-deck]').forEach(function (pair) {
+      const deck = pair.node;
+      const data = pair.data;
       const title = deck.querySelector('.deck-title');
       if (title) title.textContent = util.tr(data.title);
       const hint = deck.querySelector('.deck-hint');

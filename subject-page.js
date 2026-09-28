@@ -49,7 +49,7 @@
       + '  </div>'
       + '  <figure class="assignment-figure">'
       + '    <span class="tape tr" aria-hidden="true"></span>'
-      + '    <img src="' + root + a.image + '" alt="' + util.t('card.imageAlt', title) + '" loading="lazy">'
+      + '    <img src="' + util.imgSrc(root + a.image) + '" alt="' + util.t('card.imageAlt', title) + '" loading="lazy" decoding="async">'
       + '    <figcaption class="fig-label">' + util.tr(a.figLabel) + '</figcaption>'
       + '  </figure>'
       + '</article>';
@@ -71,9 +71,13 @@
 
     // 图片路径与语言无关：仅在变化时赋值，避免语言切换触发图片重新加载/重绘
     var heroImg = document.getElementById('heroImage');
-    var heroSrc = root + subject.heroImage;
+    var heroSrc = util.imgSrc(root + subject.heroImage);
     if (heroImg.getAttribute('src') !== heroSrc) heroImg.src = heroSrc;
     heroImg.alt = util.t('card.imageAlt', code + ' ' + sName);
+
+    // 首图落地 → 收起翻页加载层。放在这里而不是函数末尾：
+    // 下面还有几处 return（索引隐藏／列表缺失），写在末尾会被跳过。
+    if (window.ZineLoader) window.ZineLoader.waitImage(heroImg);
 
     document.getElementById('heroCaption').textContent = util.tr(subject.heroCaption);
     document.getElementById('heroSection').setAttribute('aria-label', util.t('subject.heroLabel', code));
