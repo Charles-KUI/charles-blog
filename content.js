@@ -325,7 +325,7 @@ const SUBJECTS = {
           en: 'A solo Digital Artefact across Bilibili, Douyin and Xiaohongshu — turning scattered, paywalled knowledge about going global into free 3-to-5-minute breakdowns, and learning in public while doing it.',
           zh: '一個橫跨 B 站、抖音與小紅書的個人數位作品——把散落、被付費牆鎖住的出海知識，拆成免費的 3 至 5 分鐘影片，並在過程中公開地學習。',
         },
-        date: '2026-08-28',
+        date: '2026-08-27',
         tags: [
           { en: 'BCM206 A1', zh: 'BCM206 A1' },
           { en: 'Contextual Statement', zh: '情境陳述' },
