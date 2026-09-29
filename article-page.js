@@ -48,32 +48,23 @@
   };
 
   /**
-   * 渲染正文区块 —— 每个 h2 章节包成一个 .zine-spread（跨页）
+   * 渲染正文区块 —— 全站单栏，一条阅读流到底
    * ---------------------------------------------------------------
-   * 为什么不再整篇共用一个分栏容器：
-   *   CSS multicol 会把整篇文字**均分**成两栏，两栏都从文章开头往下长。
-   *   于是读法是「左栏一路读到文章一半 → 划回顶部 → 右栏再读一遍」——
-   *   实测 BCM206 要往回划 1736px、BCM222 1600px，读起来是折返跑。
+   * 第二十九階段：撤掉双栏。分栏无论「整篇一个容器」还是「每章节一个容器」，
+   *   两栏都从容器顶部往下长，读完左半必须折返回顶部再读右半 —— 这是
+   *   multicol 的定义，调间距救不了（实测折返 BCM206 1736px / BCM222 1600px）。
    *
-   *   改成每章节一个跨页后，每个 h2 章节自己分两栏、章节之间纵向堆叠。
-   *   实测最长的一个章节（BCM222 Introduction）双栏高 694px < 一屏，
-   *   左右两栏**同屏可见** —— 读完左栏不用划回去，往下一屏就是下一章节。
+   *   改单栏后，版面的密度感改由**宽窄对比**提供，而不是左右分栏：
+   *   正文收在 660px 居中（与窄屏同一条基线），环图／表格在 ≥1100px 挣脱
+   *   限宽铺满版心，画廊本来就是全宽。层级差靠宽度，不靠分栏。
    *
-   * 分组规则：遇到 h2 就另起一页；h2 之前的开场块（引言等）自成第一页。
    * 注意 embed 渲染器会返回「剪刀虚线 + figure」两个兄弟节点，
    * 所以这里只做字符串拼接，不假设「一个块 = 一个元素」。
    */
   function renderBody(blocks, root, util) {
-    const pages = [];
-    let cur = null;
-    blocks.forEach(function (block) {
+    return blocks.map(function (block) {
       const fn = BLOCK_RENDERERS[block.type] || BLOCK_RENDERERS.p;
-      const html = fn(block, root, util);
-      if (block.type === 'h2' || !cur) { cur = []; pages.push(cur); }
-      cur.push(html);
-    });
-    return pages.map(function (page) {
-      return '<div class="zine-spread">' + page.join('') + '</div>';
+      return fn(block, root, util);
     }).join('');
   }
 

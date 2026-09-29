@@ -181,7 +181,7 @@
    大屏（≥1100px）：正文排成两栏（每栏 ≈630px 舒适行宽），栏间用
    剪刀虚线分割 —— 既复用杂志的排版母题，又让宽版心的横向空间
    被内容真正用起来，而不是让文字孤零零挤在正中、两边全是留白。
-   横向展示型区块（画廊）用 column-span 铺满整个版心，作为版面的「跨页大图」。 */
+   横向展示型区块（画廊 / 环图 / 表格）挣脱段落限宽铺满版心，作为版面的「跨页大图」。 */
 .article-body {
     width: 100%;
     max-width: calc(var(--article-width) + 96px);
@@ -201,27 +201,20 @@
    这条居中基线，否则窄屏下会贴满版心、比标题宽出一大截。
    .tbl-block 也在组里（第二十四阶段）：三列表格在窄屏同样要收在
    阅读宽度里居中，不能贴满版心。 */
-.article-body > .zine-spread > p,
-.article-body > .zine-spread > h2,
-.article-body > .zine-spread > h3,
-.article-body > .zine-spread > blockquote,
-.article-body > .zine-spread > .ref-item,
-.article-body > .zine-spread > .inline-figure,
-.article-body > .zine-spread > .video-block,
-.article-body > .zine-spread > .embed-block,
-.article-body > .zine-spread > .dg-block,
-.article-body > .zine-spread > .tbl-block {
+.article-body > p,
+.article-body > h2,
+.article-body > h3,
+.article-body > blockquote,
+.article-body > .ref-item,
+.article-body > .inline-figure,
+.article-body > .video-block,
+.article-body > .embed-block,
+.article-body > .dg-block,
+.article-body > .tbl-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
 }
-
-/* 章节之间不叠加上下外边距。
-   .zine-spread 是分栏容器，不吃外边距合并 —— 上一页末块的 margin-bottom
-   会和下一页 h2 的 margin-top:2em 相加成 3.4em，五个章节就多出近 300px。
-   让非末页的最后一个块下边距归零，章节间距统一由下一页 h2 的 2em 提供；
-   单栏下这两个边距本来就会合并成 2em，所以两种版式的章节间距就此一致。 */
-.article-body > .zine-spread:not(:last-child) > *:last-child { margin-bottom: 0; }
 
 .article-body p { margin-bottom: 1.4em; }
 
@@ -270,92 +263,23 @@
 }
 
 /* 大屏：横向展示型区块挣脱段落限宽，铺满整个宽版心 */
-.article-body > .zine-spread > .deck-block {
+.article-body > .deck-block {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
 
-/* ===== 大屏双栏杂志版式（≥1100px） =====
-   · 每栏 ≈630px：正文行宽收在 60-75 字符的舒适区间；
-   · 栏间剪刀虚线 = 版面的「裁切线」，呼应剪纸拼贴母题；
-   · 画廊跨栏（column-span: all）铺满版心，成为版面的跨页大图；
-   · h2 / 引用块禁止被拦腰截断，标题不落单在栏底。
-
-   ⚠️ 分栏容器是 .zine-spread（每个 h2 章节一页），**不是** .article-body。
-   整篇共用一个 multicol 时，两栏都从文章开头往下长，读法是
-   「左栏读到文章一半 → 划回顶部 → 右栏再读一遍」；实测 BCM206 要往回划
-   1736px、BCM222 1600px（`.workbuddy/_spread.mjs` 量的）。
-   改成每章节一页后，最长的一页（BCM222 Introduction）双栏高 694px < 一屏，
-   左右两栏同屏可见，读完往下就是下一章节 —— 不必折返。 */
+/* ===== 大屏单栏版式（≥1100px）=====
+   第二十九階段：撤掉双栏，全站一条阅读流。
+   分栏无论「整篇一个容器」还是「每章节一个容器」，两栏都从容器顶部往下长，
+   读完左半必须折返回顶部再读右半 —— 这是 multicol 的定义，调间距救不了
+   （实测折返 BCM206 1736px / BCM222 1600px，`.workbuddy/_spread.mjs` 量的）。
+   单栏之后，版面的密度感改由**宽窄对比**提供，而不是左右分栏：
+   正文收在 660px 居中（与窄屏同一条基线），环图／表格挣脱限宽铺满版心，
+   画廊本来就是全宽 —— 层级差靠宽度，不靠分栏。 */
 @media (min-width: 1100px) {
-    .article-body > .zine-spread {
-        columns: 2;
-        column-gap: 56px;
-        column-rule: 2px dashed rgba(38, 35, 32, 0.4);
-    }
-
-    /* 栏内元素取消「居中限宽」，改为填满所在栏 */
-    .article-body > .zine-spread > p,
-    .article-body > .zine-spread > h2,
-    .article-body > .zine-spread > h3,
-    .article-body > .zine-spread > blockquote,
-    .article-body > .zine-spread > .ref-item,
-    .article-body > .zine-spread > .inline-figure,
-    .article-body > .zine-spread > .video-block,
-    .article-body > .zine-spread > .embed-block {
-        max-width: none;
-        margin-left: 0;
-        margin-right: 0;
-    }
-    /* 文章开头那一页的 h2 不需要栏顶的 2em 悬空。
-       注意是「第一页的第一个 h2」—— 后面每一页的 h2 都是该页首元素，
-       但只有开页那个不该留 2em（否则正文顶部会掉下来一截）。 */
-    .article-body > .zine-spread:first-child > h2:first-child { margin-top: 0.2em; }
-
-    /* 断行保护：标题不拆、引用盒不拆、标题不落单在栏底 */
-    .article-body > .zine-spread > h2 {
-        break-inside: avoid;
-        break-after: avoid-column;
-    }
-    .article-body > .zine-spread > h3 {
-        break-inside: avoid;
-        break-after: avoid-column;
-    }
-    .article-body > .zine-spread > blockquote { break-inside: avoid; }
-    .article-body > .zine-spread > p { orphans: 2; widows: 2; }
-    /* 文献条目不被拆散：书目、注解必须同栏同页 */
-    .article-body > .zine-spread > .ref-item { break-inside: avoid; }
-
-    /* ===== 图 / 影片与它的说明绑成一个不可拆的单元（第二十七階段） =====
-       这两类盒子的说明（figcaption / .video-caption）就是图片、影片下方
-       那段解释「它为什么在论证里」的文字。漏了这条保护，双栏下会出现
-       「图停在左栏底部、说明飘到右栏顶部」—— 读起来像两条无关的内容，
-       而这正是作者特意写在媒体下面的解读。cancel 掉分栏内部的断点后，
-       说明永远贴着自己的图（整块搬到下一栏，而不是被切开）。
-       .tbl-block / .dg-block 跨栏铺满，本身不会在栏内被拆，无需列出。 */
-    .article-body > .zine-spread > .inline-figure,
-    .article-body > .zine-spread > .video-block,
-    .article-body > .zine-spread > .embed-block {
-        break-inside: avoid;
-    }
-
-    /* 画廊跨栏：占满整个版心宽度 */
-    .article-body > .zine-spread > .deck-block { column-span: all; }
-
-    /* ===== 收尾区块独占右栏 —— Reference 区排平的关键 =====
-       Reference 区是三组「h3 + 文献条目」：三组高度相同，而每一组都是
-       break-inside:avoid 的不可拆分块。分栏平衡取「内容刚好装下的最小栏高」，
-       于是左栏装到第二组就停住，第三组整块被推到右栏顶部，
-       左栏底部空出 200px 以上（用户截图反馈的「那个空位」）。
-       解法：让紧接影片块的 AI 使用声明强制另起一栏 —— 断栏点被钉死，
-       左栏就必须装下全部文献。实测 1100 / 1180 / 1280 / 1440 四档，
-       左栏空位均为 0，第三组落在左栏最底部；声明与影片留在右栏收尾。
-       用 :has() 精确锁定「影片块前的那条声明」，正文中段的声明不受影响；
-       窄屏单栏没有分栏，这条规则天然不生效。 */
-    .article-body > .zine-spread > .inline-note:has(+ .embed-rule) {
-        break-before: column;
-    }
+    /* 开场 h2 不留 2em 悬空：正文顶部不该莫名掉下来一截 */
+    .article-body > h2:first-child { margin-top: 0.2em; }
 }
 
 /* 引号：钉在框上左上角（压住上边框形成「钉住」的观感）。
@@ -528,9 +452,10 @@
     .dg-spark { display: none; }
 }
 
-/* 大屏双栏下，环形图跨栏铺满（横向示意图不该被压在窄栏里） */
+/* 大屏：环图挣脱 660px 段落限宽铺满版心 —— 横向示意图压在窄栏里必然憋屈，
+   铺开后也正好给单栏版面制造一处「破格」的宽窄对比。 */
 @media (min-width: 1100px) {
-    .article-body > .zine-spread > .dg-block { column-span: all; max-width: 100%; margin-left: 0; margin-right: 0; }
+    .article-body > .dg-block { max-width: 100%; margin-left: 0; margin-right: 0; }
 }
 
 /* ===== 剪报表格（type: 'table'） =====
@@ -642,11 +567,10 @@
     opacity: 0.82;
 }
 
-/* 大屏双栏：整块跨栏铺满（同画廊 / 环形图）——三列表格压在 630px 的单栏里
-   必然憋屈，跨栏之后台面才够宽敞。 */
+/* 大屏：整块铺满版心（同画廊 / 环形图）——三列表格压在 660px 的段落宽度里
+   必然憋屈，铺开之后台面才够宽敞。 */
 @media (min-width: 1100px) {
-    .article-body > .zine-spread > .tbl-block {
-        column-span: all;
+    .article-body > .tbl-block {
         max-width: 100%;
         margin-left: 0;
         margin-right: 0;
@@ -811,7 +735,7 @@
    让"读文章"与"看影片"两种行为在版面上有明确分界。
    边框复用 .video-block（见上方规则）—— 深色外框 + 粗黑边 + 硬阴影，
    与站内本地视频、拍立得相框是同一套语言。 */
-.article-body > .zine-spread > .embed-block {
+.article-body > .embed-block {
     margin-top: 1.7em;
 }
 
@@ -820,7 +744,7 @@
    ① figure 在 multicol 里带 break-inside 语义，绝对定位伪元素会被
       整栏搬运遗留成白块（CSS 陷阱 2）；
    ② 流内块宽度 = 版心宽，天然收在居中基线内，不用手算偏移。 */
-.article-body > .zine-spread > .embed-rule {
+.article-body > .embed-rule {
     display: block;
     max-width: 660px;
     margin: 0 auto;
@@ -831,9 +755,9 @@
     margin-bottom: -1.7em;
 }
 
-@media (min-width: 1100px) {
-    .article-body > .zine-spread > .embed-rule { max-width: none; margin-left: 0; margin-right: 0; }
-}
+/* 单栏下这条虚线必须和 .embed-block 一起收在 660px 居中 ——
+   放宽到满版心的话，虚线比影片框宽一大截，两者就对不齐了。
+   （基础样式里已经是 660 + margin:0 auto，这里无需覆写。） */
 
 /* 抬头标签：小号圆润无衬线 + 字母间距，贴在影片框上沿，
    像贴在电视机上的标签条。
