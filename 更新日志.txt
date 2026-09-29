@@ -2684,3 +2684,34 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 · 像素掃描找分隔線，判據要用「**橫向最長連續暗段**」而不是「暗像素佔比」：
   文字成簇、虛線短段、實線長段三者能一次分開；佔比法會把大片色底誤判成
   暗區（本站松石青底灰階 149，低於常用閾值 165）。
+
+
+第二十五階段：撤掉表格抬頭的「TABLE 01」標籤條（2026-09-29）
+
+【起因】使用者圈出表格左上角的「TABLE 01」深色小簽，要求去掉。
+
+【判斷】深色小簽和它正下方的表頭墨條是同一套配色，兩塊黑一上一下疊在
+  一起互相搶戲，而標籤本身不帶任何資訊（全站只有一張表格，編號是多餘的）。
+  標題（襯線 Serif）保留 —— 它是真的在說明這張表在講什麼。
+
+【改動（五處同清）】
+· content.js：表格區塊刪掉 `tag: { en, zh }` 欄位（資料形狀成
+  `type / title / columns / groups / caption`）。
+· article-page.js：`renderTable()` 拿掉 `<span class="tbl-tag">`；
+  `refreshTableText()` 拿掉對應的 textContent 寫回；渲染器上方註解裡的
+  資料形狀同步更新（`.tbl-head` 只留標題一行）。
+· article.css：刪掉整條 `.tbl-tag` 規則；`.tbl-head` 不再是 flex 排版
+  （只剩一個子元素），改成單行內距 `14px 16px 12px`。
+· 測試：`verify-bcm212-a1` 原本兩條「標籤文字正確」斷言，改寫成
+  **「已撤除」**斷言（中英雙態皆不得出現 `.tbl-tag`，且表格內外不得留有
+  `TABLE 01 / 表格 01` 字樣），另補一條「英文態標題已切換」。
+
+【驗證】
+· `verify-bcm212-a1`：105 → **107 條**，0 失敗。
+· `_tblalign`（真機 11 檔 1920→320）：PASS，左軌 / 跨欄 / 無溢出不受影響。
+· 全量回歸 0 失敗：domtest 225 / verify-bcm206-a1 129 / verify-bcm241-a1 106 /
+  verify-hidden 64 / verify-nav-static 51 / verify-mobile 33 / verify-nav-runtime 25 /
+  verify-narrow-geom 15 / verify-langswitch 12 / verify-article 11；`_refalign` PASS。
+· 截圖核對：1440 雙欄態抬頭只剩一行襯線標題，390 窄屏堆疊態同；
+  分組軸的深色小簽（變項 / 常數）保留 —— 那是分組必需的標識，與被撤的
+  裝飾性編號性質不同。

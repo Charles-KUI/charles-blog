@@ -144,7 +144,6 @@ const SUBJECTS = {
           },
           {
             type: 'table',
-            tag: { en: 'TABLE 01', zh: '表格 01' },
             title: { en: 'Experimental design: variables & controls', zh: '實驗設計：變項與控制變項' },
             columns: [
               { en: 'Factor Type', zh: '因素類型' },

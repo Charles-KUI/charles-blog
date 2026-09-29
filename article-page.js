@@ -319,7 +319,7 @@
    * 轴标签由 group.label 提供。看 data 时先认清这一点。
    *
    *   数据形状（写法见 content.js）：
-   *     { type: 'table', tag: {en,zh}, title: {en,zh},
+   *     { type: 'table', title: {en,zh},
    *       columns: [ {en,zh}, {en,zh}, {en,zh} ],        // 表头 3 格
    *       groups: [ { label: {en,zh},                     // 分组轴标签
    *                   rows: [ [{en,zh}, {en,zh}], ... ] } ]  // 每行 2 格
@@ -355,7 +355,6 @@
 
     return '<figure class="tbl-block">'
       + '<div class="tbl-head">'
-      + '<span class="tbl-tag">' + esc(util.tr(block.tag)) + '</span>'
       + '<span class="tbl-title">' + esc(util.tr(block.title)) + '</span>'
       + '</div>'
       + '<div class="tbl-wrap">'
@@ -883,7 +882,7 @@
   }
 
   /**
-   * 语言切换时刷新表格里的文字：抬头标签 / 标题 / 表头 / 分组轴 / 单元格 / 图注。
+   * 语言切换时刷新表格里的文字：标题 / 表头 / 分组轴 / 单元格 / 图注。
    * 整块重绘最省事，但重建 <table> 会丢掉横向滚动位置与文本选区，
    * 所以仍然只写 textContent。行的顺序是「组 → 组内行」，
    * 用一个游标同步推进，不必给每个 <tr> 挂 data 属性。
@@ -893,8 +892,6 @@
       const fig = pair.node;
       const data = pair.data;
 
-      const tag = fig.querySelector('.tbl-tag');
-      if (tag) tag.textContent = util.tr(data.tag);
       const title = fig.querySelector('.tbl-title');
       if (title) title.textContent = util.tr(data.title);
 
