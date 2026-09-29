@@ -12,11 +12,28 @@
  *
  * body 区块类型：
  *   { type: 'p',     text: '段落文字' }
- *   { type: 'h2',    text: '小标题' }
+ *   { type: 'h2',    text: '章标题（衬线大字 + 左侧边框条）' }
+ *   { type: 'h3',    text: '小节标题（圆润无衬线加粗，无前置短横）' }
  *   { type: 'quote', text: '引用金句' }
+ *   { type: 'note',  text: '声明 / 脚注段' }
  *   { type: 'figure', src: 'assets/posts/xxx.png', caption: 'FIG.02 — 图注' }
+ *     多图共用一个说明时改用 srcs（数组），例：
+ *     { type: 'figure', srcs: ['assets/posts/a.png', 'assets/posts/b.png'],
+ *       alt: '无障碍短描述', caption: '图下的成句描述', captionStyle: 'note' }
+ *     · alt 可省（省则退回用 caption）；captionStyle: 'note' 把说明排成
+ *       左对齐正文级文字，用于「这段文字就是在说这张图」的长描述；
+ *       缺省是短标签式图注（小字居中）。
  *   { type: 'video', src: 'assets/videos/xxx.mp4', caption: 'VIDEO — 图注' }
- *     （src 留空则显示复古测试卡占位，上传视频后填入路径即可）
+ *     （src 留空则显示复古测试卡占位，上传视频后填入路径即可；
+ *       captionStyle: 'note' 同上）
+ *   { type: 'embed', provider: 'youtube', id: '影片ID',
+ *     title: {en,zh}, caption: {en,zh}, captionStyle: 'note' }
+ *     （外部影片必须用 iframe 才播得起来；provider 走白名单，id 做正则校验）
+ *   { type: 'ref', text: {en,zh}, url: '链接', note: {en,zh} }
+ *     （文献条目：书目 → 可见的完整链接 → 左竖线注解）
+ *   { type: 'diagram', ... }  内联 SVG 环形流程图
+ *   { type: 'table', tag?, title, columns, groups, caption }  剪报风分组表格
+ *     （tag 已于第二十五階段撤除，不要再写；分组轴由 groups[].label 提供）
  *   { type: 'gallery', title: '簡報標題', file: 'assets/pdfs/xxx.pdf',
  *     hint: '點擊提示', items: [ { src: 'assets/slides/xxx/p1.png', label: '頁面標籤' }, ... ] }
  *     （簡報幻燈片畫廊：每頁一張高清圖，依序由左至右排列、可箭頭翻頁、
@@ -678,47 +695,221 @@ const SUBJECTS = {
       {
         id: 'bcm222-a1',
         no: 'No.01',
-        placeholder: true,
-        title: { en: 'The Gaze Economy: Surveillance on Social Media', zh: '凝視經濟：社群媒體上的監控' },
-        excerpt: {
-          en: 'We watch the feed; the feed watches back. A case study on how attention became the currency — and who prints it.',
-          zh: '我們看著動態，動態也回看著我們。一份關於注意力如何成為貨幣——以及由誰印鈔——的個案研究。',
+        studentId: '1723674',
+        title: {
+          en: "The Digital Illusion: How Global Streaming Platforms Keep Neo-Orientalism Alive",
+          zh: "數位幻象：全球串流平台如何讓新東方主義繼續存活",
         },
-        date: '2026-09-05',
+        excerpt: {
+          en: "Netflix looks global — but who actually gets to tell the story? A critical response on how streaming platforms upgraded Orientalism into an algorithm, and who pays for it.",
+          zh: "Netflix 看起來很國際，但誰才有權說故事？一篇批判回應，拆解串流平台如何把東方主義升級成演算法，以及代價由誰承擔。",
+        },
+        date: '2026-09-30',
         tags: [
-          { en: 'Surveillance', zh: '監控' },
-          { en: 'Case Study', zh: '個案研究' },
+          {
+            en: "BCM222 A1",
+            zh: "BCM222 A1",
+          },
+          {
+            en: "Critical Response",
+            zh: "批判回應",
+          },
+          {
+            en: "Film Analysis",
+            zh: "影片分析",
+          },
         ],
         image: 'assets/posts/bcm222-a1-eye.png',
         figLabel: { en: 'FIG.02 — The watching eye', zh: 'FIG.02 — 觀看的眼睛' },
         body: [
           {
-            type: 'p',
-            text: {
-              en: 'Every social platform sells the same product twice: to us, the feeling of being seen; to advertisers, the certainty of seeing us. The eye in my collage is double-sided on purpose — it is both audience and lens.',
-              zh: '每一個社群平台都把同一個產品賣兩次：賣給我們「被看見」的感覺；賣給廣告主「看見我們」的確定性。我拼貼裡的那隻眼睛是刻意做成雙面的——它既是觀眾，也是鏡頭。',
-            },
-          },
-          { type: 'h2', text: { en: 'Consent at scale', zh: '規模化的同意' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Individual privacy choices are real but asymmetrical: I can close my curtains, but I cannot close the street’s. Data protection frameworks treat surveillance as a series of private transactions, when its effects are entirely collective — the algorithmic neighbourhood is shaped by everyone’s data, governed by no one’s consent.',
-              zh: '個人的隱私選擇是真實的，但並不對稱：我可以拉上自己的窗簾，卻拉不上整條街的。資料保護框架把監控當成一連串私人交易，但它的效果完全是集體的——演算法社區由所有人的資料塑造，卻不由任何人的同意所治理。',
-            },
-          },
-          {
             type: 'quote',
             text: {
-              en: 'Surveillance is the only economy where the product watches you back.',
-              zh: '監控是唯一一種產品會回看著你的經濟。',
+              en: "（How have Western global streaming platforms perpetuated Orientalist stereotypes when representing non-Western cultures to general audiences over the past five years?）",
+              zh: "（過去五年，西方全球串流平台在向一般觀眾再現非西方文化時，如何延續了東方主義的刻板印象？）",
+            },
+          },
+          {
+            type: 'h2',
+            text: {
+              en: "Introduction",
+              zh: "導論",
             },
           },
           {
             type: 'p',
             text: {
-              en: 'The case study closes with three design fictions for “consent-preserving feeds” — timelines that could personalise without retaining. Naive? Possibly. The point of the exercise was discovering how much of surveillance is a default, not a necessity.',
-              zh: '這份個案研究以三個「保留同意的動態牆」設計虛構作結——能在不保留資料的前提下個人化的時間軸。太天真？也許。但這個練習的重點是發現：監控之中有多少只是預設值，而不是必需品。',
+              en: "Big Western streaming platforms often talk about \"diversity\" and \"going global\" to look like they treat all cultures equally. If you scroll through their apps, you will see many international shows, which makes them look very inclusive. But having more foreign shows does not mean giving other cultures real power to tell their own stories.",
+              zh: "西方大型串流平台經常把「多元」與「走向全球」掛在嘴邊，好讓自己看起來平等對待所有文化。滑一遍它們的 App，你會看到大量國際節目，顯得非常包容。但外國節目變多，並不代表把「說自己故事」的實權交給了其他文化。",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "To fully understand this problem, we need to look at what \"Orientalism\" means. Orientalism is a way of thinking that separates the \"West\" from the \"East.\" Historically, the West used this idea to control the East and take away its freedom to think and act for itself (Al Hasan, 2025). Westerners built a cultural myth that the East was backward and inferior, which helped them feel superior. Over the past five years, streaming platforms have not ended this problem. Instead, they upgraded it for the digital age, creating \"Neo-Orientalism.\" They use algorithms and Hollywood-style storytelling to change non-Western cultures into safe, exotic entertainment for Western viewers. This keeps the West in charge as the main judge of what is civilized, while still denying the East its own voice (Al Hasan, 2025).",
+              zh: "要徹底理解這個問題，得先看「東方主義」是什麼。東方主義是一套把「西方」與「東方」切分開的思維方式。歷史上，西方靠這套觀念控制東方、剝奪它為自己思考和行動的自由（Al Hasan, 2025）。西方人建構出一套文化神話：東方落後而低劣——這讓他們感覺自己優越。過去五年，串流平台並沒有終結這個問題，而是把它升級成數位版本，造出「新東方主義」。它們用演算法與好萊塢式的敘事，把非西方文化改造成對西方觀眾而言安全、帶異國情調的娛樂。西方因此繼續充當「什麼才算文明」的裁判，同時依舊不讓東方擁有自己的聲音（Al Hasan, 2025）。",
+            },
+          },
+          {
+            type: 'figure',
+            srcs: [
+              'assets/posts/bcm222-a1-chart-leads.png',
+              'assets/posts/bcm222-a1-chart-directors.png',
+            ],
+            alt: {
+              en: "Two charts from the USC Annenberg Inclusion Initiative: the share of underrepresented leads and co-leads in Netflix content, and the race/ethnicity and gender of Netflix series directors, 2018–23.",
+              zh: "兩張 USC Annenberg 包容性倡議的圖表：Netflix 內容中代表性不足族群擔任主角／共同主角的比例，以及 2018–23 年 Netflix 影集導演的族裔與性別構成。",
+            },
+            caption: {
+              en: "This data contrast exposes the diversity illusion on streaming platforms. While underrepresented groups made up 42% of speaking characters in 2023 Netflix content, the actual storytelling power remained overwhelmingly white. In 2023 Netflix films, 80.9% of writers and 83.3% of producers were white. More non-Western faces on screen is a corporate façade; the structural power to define and present non-Western cultures stays firmly in Western hands. (Smith et al., 2025)",
+              zh: "這組數據對照揭穿了串流平台的多元假象。2023 年 Netflix 內容中，代表性不足的族群雖佔 42% 的台詞角色，真正的敘事權卻仍壓倒性地掌握在白人手上。2023 年的 Netflix 電影中，80.9% 的編劇與 83.3% 的製片是白人。螢幕上更多非西方臉孔只是企業門面；定義與再現非西方文化的結構性權力，仍牢牢握在西方手裡。（Smith et al., 2025）",
+            },
+            captionStyle: 'note',
+          },
+          {
+            type: 'h2',
+            text: {
+              en: "The Myth of \"Diversity\" and Cultural Extraction",
+              zh: "「多元」的神話與文化掠奪",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "People who support these platforms say they break down old movie theater barriers. They believe streaming gives non-Western creators big budgets and global audiences. However, this is more about making money than helping cultures. Since fewer new people are subscribing in North America and Europe, streaming companies are just taking \"cultural resources\" from emerging markets to keep making a profit.",
+              zh: "支持這些平台的人說，它們打破了舊電影院的門檻。他們相信串流給了非西方創作者大筆預算與全球觀眾。然而，這更關乎賺錢，而不是幫助文化。由於北美與歐洲的新訂戶成長趨緩，串流公司只是從新興市場拿取「文化資源」來維持獲利。",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "But there is a hidden rule: non-Western shows only get money and promotion if Western audiences can easily understand them. This acts like a secret filter. Instead of truly accepting other cultures, platforms force these stories to change and fit into a Western point of view. The uniqueness of local cultures gets erased just to make the shows easier to sell globally.",
+              zh: "但有一條隱藏的規則：非西方節目只有在西方觀眾能輕鬆看懂時，才拿得到資金與宣傳。這像一道秘密篩網。平台並非真正接納其他文化，而是逼這些故事改變、塞進西方的視角。地方文化的獨特性，就為了讓節目更好賣而被抹去。",
+            },
+          },
+          {
+            type: 'h2',
+            text: {
+              en: "How It Works: A Look at The Swimmers",
+              zh: "運作機制：以《The Swimmers》為例",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "We can see this problem clearly in how movies look and how platform algorithms work. The 2022 Netflix movie The Swimmers is a great example of this.",
+              zh: "這個問題在電影的視覺語言與平台演算法的運作方式上看得最清楚。2022 年的 Netflix 電影《The Swimmers》就是很好的例子。",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "First, the movie makes non-Western places look bad visually. In The Swimmers, countries like Turkey and Syria are shown with cold, dark green colors to make them look scary, dangerous, and backward. In contrast, European places like Greece and Germany are shown with warm, bright colors to make the West look like a sunny, safe paradise. The filmmakers even filmed in beautiful parts of Turkey but pretended it was Greece in the movie. This tricks the audience into feeling that the East is dark and backward while Europe is a perfect savior",
+              zh: "第一，這部片在視覺上把非西方地區拍得很糟。在《The Swimmers》裡，土耳其、敘利亞等國家被以冷調的暗綠色呈現，看起來可怕、危險、落後。相對地，希臘、德國等歐洲地點則用溫暖明亮的色調，讓西方看起來像陽光普照、安全的樂園。製片甚至到土耳其風景優美的地方取景，卻在片中假裝那是希臘。這讓觀眾誤以為東方陰暗落後，而歐洲是完美的救世主。",
+            },
+          },
+          {
+            type: 'embed',
+            provider: 'youtube',
+            id: "OY4IMBdwH3A",
+            title: {
+              en: "The Swimmers (Netflix, 2022) — official trailer",
+              zh: "《The Swimmers》（Netflix, 2022）— 官方預告",
+            },
+            caption: {
+              en: "In The Swimmers (Netflix, 2022) trailer, the perilous refugee journey is visually coded with cold, dark tones, while European destinations are bathed in warm, heroic light. This contrast reinforces the Neo-Orientalist narrative of the East as a place of despair and the West as the ultimate sanctuary.",
+              zh: "在《The Swimmers》（Netflix, 2022）預告中，險惡的難民旅程以冷調、暗色調編碼，而歐洲的目的地則沐浴在溫暖、英雄式的光線裡。這組對比強化了新東方主義的敘事：東方是絕望之地，西方則是最終的庇護所。",
+            },
+            captionStyle: 'note',
+          },
+          {
+            type: 'p',
+            text: {
+              en: "Second, platforms make complex politics look too simple. Algorithms and tags reduce complicated real-world issues into basic, negative ideas like \"strict control\" or \"lack of progress\" (Araujo & de Albuquerque, 2024). The movie's story itself also makes things too black-and-white. In The Swimmers, only Western or Christian characters are shown as modern, moral, and helpful. On the other hand, Muslim characters are only shown as either violent attackers or completely helpless victims who need saving (Çelik, 2024).",
+              zh: "第二，平台把複雜的政治變得過於簡單。演算法與標籤把現實世界的複雜議題簡化成「嚴格管控」「缺乏進步」這類基本而負面的概念（Araujo & de Albuquerque, 2024）。電影本身的敘事也把一切說得太黑白分明。在《The Swimmers》裡，只有西方或基督徒角色被刻畫成現代、有道德、樂於助人；穆斯林角色則不是暴力的施暴者，就是完全無助、等著被拯救的受害者（Çelik, 2024）。",
+            },
+          },
+          {
+            type: 'h2',
+            text: {
+              en: "The Real-World Harm",
+              zh: "現實中的傷害",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "This updated form of Orientalism causes real harm to both audiences and creators. For the audience, the algorithms create an \"echo chamber\" of stereotypes. For example, if you search for \"China\" on Netflix, the algorithm often mixes up content from China with content from South Korea or Japan, treating all East Asian cultures as if they are exactly the same (Araujo & de Albuquerque, 2024). It also pushes documentaries that frame the East as a threat. By grouping different Asian cultures together, the recommendation system spreads false ideas and confirms old prejudices instead of breaking them.",
+              zh: "這種升級版的東方主義對觀眾與創作者都造成真實傷害。對觀眾而言，演算法製造出充滿刻板印象的「回音室」。例如在 Netflix 搜尋「China」，演算法經常把中國的內容和南韓、日本的內容混在一起，把所有東亞文化當成完全一樣（Araujo & de Albuquerque, 2024）。它也會推送把東方框架成威脅的紀錄片。把不同的亞洲文化歸為一類，讓推薦系統散播錯誤觀念、強化舊偏見，而不是打破它們。",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "For non-Western creators, this system forces them into a trap of \"self-Orientalization.\" To get Western money and global attention, local filmmakers feel forced to change their true stories to match what the West expects to see—usually exotic suffering. For example, in The Swimmers, the filmmakers added a fake scene about an attempted rape in Hungary just to add the kind of dark drama Western viewers expect from a refugee story (Çelik, 2024). Because of this pressure to please Western bosses, real and complex local stories are pushed aside.",
+              zh: "對非西方創作者而言，這套系統把他們逼進「自我東方化」的陷阱。為了拿到西方的資金與全球關注，在地導演覺得必須改掉自己真實的故事，去迎合西方期待看到的東西——通常是異國情調的苦難。例如《The Swimmers》的製片就加入了一場匈牙利強暴未遂的假戲，只為了添上西方觀眾對難民故事所期待的那種陰暗戲劇性（Çelik, 2024）。在這種討好西方老闆的壓力下，真實而複雜的在地故事被推到一旁。",
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "Having many foreign shows on a streaming app does not mean there is cultural justice. Just showing more non-Western faces on a screen is not enough to fix a deeply unfair system. To truly decolonize global media, we must break the monopoly that Western platforms have over algorithms and what gets funded (Araujo & de Albuquerque, 2024). The real goal is not just to be visible on a Western platform, but to give local cultures the power to tell their own stories on their own terms.",
+              zh: "一個串流 App 上有大量外國節目，並不代表文化正義已經實現。只是在螢幕上多放幾張非西方的臉孔，並不足以修正一個極度不公平的系統。要真正去殖民化全球媒體，就必須打破西方平台對演算法與資金流向的壟斷（Araujo & de Albuquerque, 2024）。真正的目標不只是在西方平台上被看見，而是讓在地文化有權用自己的方式說自己的故事。",
+            },
+          },
+          {
+            type: 'h2',
+            text: {
+              en: "References",
+              zh: "參考文獻",
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: "Al Hasan, H. K. K. (2025). The East - West phobia: Deconstructing Edward Said's Orientalism. TPM, 32(S4), 1643-1648.",
+              zh: "Al Hasan, H. K. K. (2025). The East - West phobia: Deconstructing Edward Said's Orientalism. TPM, 32(S4), 1643-1648.",
+            },
+            url: "https://tpmap.org/submission/index.php/tpm/article/view/1035",
+            note: {
+              en: "Defines the Orientalism this piece argues has been rebuilt in digital form — and supplies the historical frame for the “the West judges, the East obeys” structure.",
+              zh: "界定本文主張已被數位化重建的東方主義，並提供「西方審判、東方聽命」這套結構的歷史框架。",
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: "Çelik, K. (2024). Cinematic orientalism: East-West perception in Netflix's 'Swimmers'. Medya ve Kültür, 4(1), 43-63.",
+              zh: "Çelik, K. (2024). Cinematic orientalism: East-West perception in Netflix's 'Swimmers'. Medya ve Kültür, 4(1), 43-63.",
+            },
+            url: "https://doi.org/10.60077/medkul.1482205",
+            note: {
+              en: "The close reading of The Swimmers itself: the invented rape scene and the Muslim-as-villain-or-victim binary both come from this source.",
+              zh: "對《The Swimmers》的細讀本身就是依據：片中虛構的強暴戲，以及「穆斯林不是惡徒就是受害者」的二元對立，皆出自此文。",
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: "Araujo, M., & de Albuquerque, A. (2024). Algorithmic orientalism? Netflix's representation of China in Brazil. Global Media and China, 9(4), 508-520.",
+              zh: "Araujo, M., & de Albuquerque, A. (2024). Algorithmic orientalism? Netflix's representation of China in Brazil. Global Media and China, 9(4), 508-520.",
+            },
+            url: "https://doi.org/10.1177/20594364241254626",
+            note: {
+              en: "Documents what the algorithm does, not only what the film does — the China/Brazil mixing and the “threat” documentaries come from here.",
+              zh: "記錄的是演算法做了什麼，而不只是電影做了什麼——把中國與巴西的內容混為一談、「威脅」類紀錄片的證據都出自此文。",
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: "Smith, S. L., Pieper, K., Neff, K., & Wheeler, S. (2025, May). Inclusion in Netflix original U.S. scripted films & series: Executive summary. USC Annenberg Inclusion Initiative.",
+              zh: "Smith, S. L., Pieper, K., Neff, K., & Wheeler, S. (2025, May). Inclusion in Netflix original U.S. scripted films & series: Executive summary. USC Annenberg Inclusion Initiative.",
+            },
+            url: "https://assets.uscannenberg.org/docs/aii-2025-netflix-executive-summary.pdf",
+            note: {
+              en: "Provides the numbers behind the two charts: on-screen inclusion rising while writers and producers stay overwhelmingly white.",
+              zh: "兩張圖表背後的數據來源：螢幕上的多元比例在上升，編劇與製片卻仍壓倒性地是白人。",
             },
           },
         ],

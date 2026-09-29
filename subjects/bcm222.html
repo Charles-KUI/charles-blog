@@ -62,23 +62,27 @@
             </svg>
         </div>
 
-        <!-- 「持續更新中」小字（文章索引暫時隱藏時顯示） -->
-        <section class="assignments-note-section">
-            <div class="zine-container">
-                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
-            </div>
-        </section>
-
-        <!-- 作業索引（暫時隱藏，資料與標記完整保留；還原方式見 更新日志.txt 第九階段）
-             隱藏：把 hidden 換成 data-articles-hidden 即可 -->
-        <section class="assignments-section" hidden data-articles-hidden>
+        <!-- 作業索引（BCM222 已上線第一份真實作業，依「還原方式 A」取消隱藏）
+             還原／隱藏方式見 更新日志.txt 第九階段：把 hidden 換回
+             data-articles-hidden 即可整段收起，不必刪資料。 -->
+        <section class="assignments-section" data-articles-hidden>
             <div class="zine-container">
                 <div class="section-head">
                     <h2 class="section-title" data-i18n="subject.sectionTitle">ASSIGNMENTS</h2>
                     <span class="section-count" id="assignmentCount"></span>
                     <span class="section-note" data-i18n="subject.sectionNote">click a piece to read →</span>
                 </div>
-                <div id="assignmentList" class="is-placeholder"></div>
+                <div id="assignmentList"></div>
+            </div>
+        </section>
+
+        <!-- 「持續更新中」小字 —— 必須排在索引**之後**：
+             索引上線後它降級為列表收尾語（「還有更多作品會陸續上線」）；
+             留在索引之前會被讀成「這個科目還沒有作品」。
+             （BCM241 曾因排在前而被用戶抓到，見第二十六階段） -->
+        <section class="assignments-note-section">
+            <div class="zine-container">
+                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
             </div>
         </section>
 

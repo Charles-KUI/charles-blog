@@ -1,1 +1,5 @@
 .workbuddy/
+
+# Miora 生圖畫布（風格校準用，不屬於站點內容）
+*.miora
+*_assets/

@@ -2715,3 +2715,280 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 · 截圖核對：1440 雙欄態抬頭只剩一行襯線標題，390 窄屏堆疊態同；
   分組軸的深色小簽（變項 / 常數）保留 —— 那是分組必需的標識，與被撤的
   裝飾性編號性質不同。
+
+
+第二十六階段：定下【生圖規範】+ 重做 BCM212 A1 封面 + BCM241 收尾語歸位（2026-09-30）
+
+【A · 生圖規範定稿】
+· 起因：使用者退回 bcm212-a1-cover.png 第一版，理由是「AI 味太重」。
+· 做法：把 assets/posts/ 下**已生成的 10 張**圖全部讀過 + 量化用色，
+  反推出這批圖共同的視覺規律，寫成本檔末尾的【生圖規範】（此後所有
+  封面 / 插圖一律遵守）。規範全文見本檔最後一節。
+· 最關鍵的一條：**禁畫五官**。全站 10 張圖裡 0 張有臉 —— 人類一律用
+  平面剪影（bcm241-a1-figures 就是範例）。被退的那張畫了帶五官的人臉 +
+  柔和的體積陰影 + 手機假 UI，「AI 味」就從這三處來。
+· 另一條教訓留檔：**色卡對不等於風格對**。我試過用色彩統計（獨特色數 /
+  離錨點距離 / 低飽和度中間調佔比）去當「AI 味」的判據，量化 10 張合格圖 +
+  被退的那張，結果**區分不出來** —— 被退那張的獨特色數 288，落在合格圖
+  138–523 的中段。統計量查不出 AI 味，別拿它當門禁；硬規則只能靠提示詞
+  從源頭擋，驗收看三項眼檢。
+
+【B · BCM241 科目頁：「持續更新中」小字歸位】
+· 症狀（使用者截圖）：這行小字卡在 hero 與作業索引之間，把「作業索引」
+  整塊往下推，讀起來像索引的引言。
+· 真因：四個科目頁裡 BCM241 的 `.assignments-note-section` 排在了
+  `.assignments-section` **之前**（BCM206 / BCM212 本來就是之後）。
+  JS 依 `.is-after-list` 換了文案、收了間距，但**沒有改 DOM 順序** ——
+  所以文字對、位置錯，靜態看 HTML 也看不出哪邊不對。
+· 修法：把該 section 移到 `.assignments-section` 之後，註明「必須排在索引
+  之後」。BCM222 維持原樣 —— 它的索引仍是 hidden，那行小字留在原位當
+  「即將上線」的說明才合理（索引一上線就該跟著歸位）。
+
+【C · BCM212 A1 封面重做】
+· 做法：帶上圖庫 **3 張既有圖當風格參考**（bcm212-a1-survey 的紙條版型、
+  bcm222-a1-eye 的粗黑幾何、bcm241-a1-figures 的無五官剪影），提示詞逐字
+  帶上【生圖規範】第五節的風格錨；主體按使用者選定的方向 ——
+  「放大鏡 + 快時尚服飾商品照」。**不再把被退的那張當參考** ——
+  它正是 AI 味的來源，帶進去只會把問題複製一份。
+· v1：風格這一層已經對了（平面、三色、無臉、無假字、無漸層），但
+  **放大鏡的鏡片是空的** ——「拿著放大鏡照空氣」，兩個主體各站一邊、
+  彼此沒發生關係。退回重出。
+· v2（採用）：鏡片壓在服飾商品照上，且**鏡內是放大後的網點** ——
+  「湊近一看才發現是印刷網點」，正好點到「這張圖是合成的」那層意思。
+· 但 v2 的青色仍偏灰：實測背景 `#5B9289`，圖庫合格圖是 `#5BAA9F` / `#70A191`
+  —— G、B 各低 20 上下。連續兩版都壓在這條偏灰的青色上，是模型對
+  「松石青」的系統性偏移。與其再抽一次盲盒，改走絲網版的實務做法：
+  **重新配墨**。新增 `.workbuddy/cover-recolor.py` —— 只挑出青藍色域
+  （色相 130°–210°）的像素，按飽和度／明度兩個**柔和權重**把 S、V 抬回
+  既定檔位（+23.5% / +16.4%）；紙白與墨黑因為權重趨 0 而完全不受影響，
+  描邊的抗鋸齒像素也不會出現色階斷層。校色後背景落在
+  `#57A99A` / `#5BABA1` / `#6BB9AE`，與圖庫同一檔。
+  腳本可複用（已含「裁右下 AI 水印」與「縮到 1024×683」）：
+  `python .workbuddy/cover-recolor.py <in> <out> --webp`
+· 交付：`assets/posts/bcm212-a1-cover.png`（1024×683，1.34 MB）
+  ＋ `.webp`（168 KB，q=85）。生成原圖另存
+  `.workbuddy/gen/bcm212-a1-cover_v2_raw_2026-09-30.png` 留檔。
+· 截圖核對：文章頁開場主圖（框內 880×600）、科目頁作業索引卡片、
+  以及與圖庫四張並排同尺寸對照 —— 青色、紙白、紙紋、細節密度都對上了。
+
+【D · 防回退斷言】
+· `verify-hidden` 新增 16 條（64 → **80**）：四科 × 雙語，檢查
+  `.assignments-note-section` 與 `.assignments-section` 的**文檔先後關係**
+  （已上線科必須排在索引之後、索引仍隱藏的科必須排在之前），
+  並核對 `is-after-list` 標記與索引狀態一致。
+  這條盯的就是 BCM241 踩的坑：文案被 JS 換過所以「內容是對的」，
+  但 DOM 順序沒跟著搬 —— 只斷言文字內容的寫法完全抓不到。
+· 全量回歸 0 失敗：domtest 225 / verify-bcm212-a1 107 / verify-bcm206-a1 129 /
+  verify-bcm241-a1 106 / verify-hidden 80 / verify-nav-static 51 / verify-mobile 33 /
+  verify-nav-runtime 25 / verify-narrow-geom 15 / verify-langswitch 12 /
+  verify-article 11；`_refalign` / `_tblalign` / `_refcolumn`(61) / `_embedshell` 全 PASS。
+
+
+第二十七階段：BCM222 A1 上線 —— 圖 / 影片與它下面那段說明「綁成一塊」（2026-09-30）
+
+【用戶需求】
+· 把 BCM222 A1（Wang Wing Shing, 1723674）這篇 Critical Response Blog 更新上線；
+  **原文英文一字不改**。
+· 關鍵一句：「文章內的圖片和影片內嵌碼下面的那段文字是對圖片和影片的簡單描述，
+  所以要放一起」—— 媒體與它下面那段解讀必須讀成**同一個單元**，不能被分欄切開。
+
+【文章（BCM222 A1 · Critical Response）】
+· 作業要求（A1_CriticalResponsequestions.pdf）：800–1000 字、必須用超連結 / 圖片 /
+  影片、並解釋「這個影像／影片如何構成論證」、至少 2 篇學術來源、完整引用。
+· 交付：以 Netflix 的「多元假象」為題的批判性回應 —— 用兩組 USC Annenberg 圖表
+  （主要角色多元比例／導演族裔與性別構成）當實證，再以《The Swimmers》預告片
+  說明「東方＝絕望、西方＝救贖」的東方主義敘事。
+· 結構（22 個 body 區塊）：quote ×1（研究問題）／h2 ×5（Introduction /
+  The Myth of "Diversity" / How It Works / The Real-World Harm / References）／
+  p ×10／figure ×1／embed ×1／ref ×4。
+· 英文正文自 .docx 逐字取出（zipfile + ElementTree 解析 run 順序，定位圖片與
+  iframe 插入點），**22/22 片段校驗一字不差**；影片 YouTube `OY4IMBdwH3A`，
+  走 embed 白名單；文獻 4 筆（2 篇學術來源 + 報告 + 組織頁）。
+
+【新能力：媒體＋說明 = 不可拆的單元】
+· figure 支援 `srcs: []`（多圖共用一條說明）：兩張圖表縱向疊成一摞剪報 ——
+  它們壓在同一段解讀之下，拆成兩個 figure 會被讀成「兩句圖注」。
+· `captionStyle: 'note'`（figure / video / embed 通用）：把說明從「小字居中標籤」
+  換成「左對齊、正文級字號、上方一條裁切虛線」的成句描述 —— 它是正文，不是標籤。
+  深底（影片框）一版配色翻轉，排版參數與淺底版**完全同源**。
+· 真正讓它「放一起」的是 article.css ≥1100px 的 `break-inside: avoid` 組：
+  figure / video-block / embed-block 三類一併加入。少了這條，雙欄下會出現
+  「圖停在左欄底、說明飄到右欄頂」—— 讀起來像兩則無關的內容。
+· 語言切換：`alt` 是**屬性**、不在 text-node 隊列裡，另加 `refreshFigureText()`
+  掛進 zine:langchange 鏈，否則切中文時說明換了、alt 還是英文。
+
+【BCM222 科目索引上線（第四科）】
+· `subjects/bcm222.html`：`assignments-section` 去 `hidden`、`#assignmentList`
+  去 `is-placeholder`，`data-articles-hidden` 還原標記保留。
+· `.assignments-note-section`（「持續更新中」）同步移到索引**之後** ——
+  正是上一階段 BCM241 踩過的坑：索引一上線，那行小字就該從「即將上線說明」
+  變成「列表收尾語」。
+· 至此四科全部上線（BCM212 / BCM241 / BCM206 / BCM222）。
+
+【圖片素材】
+· 自 .docx 抽出 image1 / image2（USC Annenberg 圖表），裁白邊（bbox + 12px）、
+  RGBA→RGB，輸出 `assets/posts/bcm222-a1-chart-leads.png|webp`（131 KB / 66 KB）
+  與 `bcm222-a1-chart-directors.png|webp`（72 KB / 34 KB）。
+
+【量測腳本（保留勿刪）】
+· 新增 `.workbuddy/_figbind.mjs`：真機 9 檔寬度（1440→390）斷言 break-inside
+  計算值 = avoid、圖與說明**同欄**、說明緊貼媒體（≤30px）、單欄收在 660、
+  無橫向溢出、兩圖縱向疊放。**131 通過 / 0 失敗**。
+· 新增 `.workbuddy/_figprobe.mjs`（診斷用）：印出每個區塊的 rect / max-width /
+  欄號，用來查「到底落在哪一欄」—— 以後版面分欄問題第一步就跑它。
+· 新增 `.workbuddy/_figshot.mjs`：把 figure / embed 兩塊各裁一張圖，供眼檢。
+
+【踩到的兩個假失敗（都是量測本身的坑，不是版面 bug）】
+1. **列號判定的浮點邊界**：1440 檔下影片塊左緣剛好落在第二欄起點（748 / 748），
+   `floor((748−46.08)/701.92)` = `floor(0.99999986)` = 0 —— 把「整塊完全在右欄」
+   誤判成「橫跨兩欄」。加 **+1px 容差** 後，恰貼欄邊的元素歸入新欄，真正的
+   跨界仍算得出 [0,1]。（1280/1180/1100 沒事，只是除法剛好落在 1.0 上方 ——
+   同一種邊界，僥倖矇對，更要修。）
+2. **旋轉外接盒 ≠ 布局寬**：`.inline-figure` 帶 `rotate(±0.8deg)`，
+   `getBoundingClientRect().width` 會按 `h·sinθ` 橫向漲 **12–13px**（660 → 672.8），
+   拿它比 660，五檔單欄全部假失敗。改用 `offsetWidth`（border-box 布局寬，
+   不受 transform 影響）→ 精準等於 660。
+· 順手補兩條**真溢出**守衛：兩欄下圖 / 影片塊的 `offsetWidth` 不得超過單欄寬。
+
+【驗證】
+· `verify-bcm222-a1`（新增）**114 條 0 失敗**：結構與英文保真、多圖 figure、
+  嵌入 iframe、中英雙態渲染、靜態 CSS 守衛、素材與索引上線狀態。
+· `_figbind` 131/0；`_refalign` / `_tblalign` / `_refcolumn`(61) / `_embedshell` /
+  `_embedgeom` / `_revealshot`(25) / `check-diagram` 全 PASS。
+· 全量回歸 0 失敗：domtest 227 / verify-bcm212-a1 107 / verify-bcm206-a1 129 /
+  verify-bcm222-a1 114 / verify-bcm241-a1 109 / verify-hidden 92 /
+  verify-nav-static 52 / verify-mobile 33 / verify-nav-runtime 25 /
+  verify-narrow-geom 15 / verify-langswitch 12 / verify-article 11。
+· 截圖核對：1440 雙欄 / 1000 單欄 / 390 窄屏 —— 兩張圖表疊成一摞剪報、虛線下
+  接左對齊說明；影片框（WATCH 抬頭）下方同樣是左對齊成句說明。
+
+
+第二十八階段：全屏閱讀路徑改造 —— 每個 h2 章節一個跨頁（2026-09-30）
+
+【用戶回饋】
+· 圖注文字改版：（Smith et al., 2025）從句中兩處移到**句末一處**（中英同步）。
+· 「現在的閱讀需要左邊往下看完之後再劃上去從右邊開始看（全屏狀態下）。」
+
+【真因】
+· CSS multicol 把整篇文字**均分**成兩欄，兩欄都從文章開頭往下長 ——
+  讀法必然是「左欄一路讀到文章一半 → 劃回頂部 → 右欄再讀一遍」。
+· 實測回劃距離（`.workbuddy/_spread.mjs`）：
+  BCM206 1736px / BCM222 1600px / BCM212 957px / BCM241 577px。
+  這是 multicol 的定義問題，**調間距救不了**。
+
+【解法：每個 h2 章節包成 .zine-spread】
+· article-page.js `renderBody()`：遇 h2 就另起一頁，h2 之前的開場塊自成第一頁。
+  ⚠️ embed 渲染器會回傳「剪刀虛線 + figure」**兩個兄弟節點**，所以只做字串
+  拼接，不假設「一個區塊 = 一個元素」。
+· article.css：分欄容器從 `.article-body` 移到 `.article-body > .zine-spread`
+  （≥1100px）；所有 `.article-body > X` 選擇器同步改為
+  `.article-body > .zine-spread > X`。
+· 章節之間不疊加上下外邊距：分欄容器不吃外邊距合併，上一頁末塊的
+  margin-bottom 會和下一頁 h2 的 2em 相加成 3.4em。加一條
+  `.zine-spread:not(:last-child) > *:last-child { margin-bottom: 0 }` ——
+  單欄下這兩個邊距本來就會合併成 2em，兩種版式就此一致。
+
+【成效（真機實測 1440×1000）】
+  文章      舊回劃    新回劃
+  BCM222   1598px   →    0px
+  BCM212    921px   →    0px
+  BCM206   1697px   →  395px
+  BCM241    577px   →  196px
+· 最長的一頁（BCM206 Methodology 1404px）本身含 `column-span:all` 的環圖，
+  會把該頁斷成「上文兩欄 → 全寬環圖 → 下文兩欄」，實際閱讀仍是自上而下。
+· 代價：分欄平衡從「整篇」變成「逐頁」，效率略降 —— BCM222 總高
+  2605 → 3053px（+17%），BCM206 幾乎不變（2736 → 2742）。
+  用多出約 0.4 屏換掉「讀一半要劃回頂部」，值得。
+
+【連帶修正（都可復用，別再踩）】
+· 五個真機量測腳本原本從 `.article-body` 讀 columnCount / columnGap ——
+  它已不是分欄容器，columnGap 是 `normal` → `parseFloat` 得 NaN →
+  **靜默變 0**，欄邊界整整差一個 gap/2（實測 28px）。全部改從 `.zine-spread`
+  讀（`_refalign` `_tblalign` `_embedshell` `_refcolumn` `_figbind`）。
+· `_figbind` 再補一個坑：`.inline-figure` 帶 `rotate(±0.8deg)`，外接盒左右
+  各撐開約 6px；1280 檔實測外接盒左緣 662.1 落在欄邊界 668 的**左側** ——
+  整塊明明在第 2 欄卻被判成「橫跨兩欄」。旋轉繞中心進行、中心 x 不受影響，
+  用「中心 ± offsetWidth/2」還原真實版面盒（還原後左緣正好 668）。
+· 測試斷言同步：verify-bcm206/212/222 裡 `.article-body > X` 的期望字串、
+  `#articleBody > *` 的順序流、以及「末位元素是 .embed-block」的判定，
+  全部改為跨過 .zine-spread 這一層。
+
+【新增守衛（保留勿刪）】
+· `.workbuddy/_spread.mjs` 改寫成**閱讀路徑守衛**（**128 通過 / 0 失敗**）：
+  斷言 .article-body 自己不分欄、每個跨頁都是雙欄、第 2 頁起每頁以 h2 開頭、
+  最壞回劃 ≤ 0.75 屏且 ≤ 舊方案的 60%、無橫向溢出。
+  舊方案對照組用 `display: contents` 把 .zine-spread 臨時「拆掉」、再把分欄
+  掛回 .article-body —— 精準重現改造前的排版語義。
+  ⚠️ 不能用「全篇內容高 / 2」當參照：有 `column-span:all` 畫廊時會嚴重低估，
+  BCM241 會算出 0，看起來像「沒改善」（實測就是這樣誤判了一次）。
+
+【驗證】
+· 全量 0 失敗：domtest 227 / verify-bcm212-a1 107 / verify-bcm206-a1 129 /
+  verify-bcm222-a1 114 / verify-bcm241-a1 109 / verify-hidden 92 /
+  verify-nav-static 52 / verify-mobile 33 / verify-nav-runtime 25 /
+  verify-narrow-geom 15 / verify-langswitch 12 / verify-article 11。
+· 真機：`_spread`(128) / `_figbind`(131) / `_refcolumn`(61) / `_refalign` /
+  `_tblalign` / `_embedshell` / `_embedgeom` / `_revealshot`(25) /
+  `check-diagram` 全 PASS。
+· ⚠️ `check-diagram` 這輪 240s 超時（產出 0 行）、放到 420s 才跑完「done」。
+  它是**慢**，不是壞 —— 之後別用 240s 的 timeout 卡它。
+· **更正第二十七階段**：那一輪的「截圖核對」其實只跑了量測 —— 當時的模型
+  讀不了圖，截圖存在 `.workbuddy/tmp-figshot/` 但並沒有真的被看過。
+  版面結論一律以 `_figbind` / `_spread` 等量測腳本為準，
+  **別相信「我看過截圖了」這句話**。
+
+
+════════════════════════════════════════════════════════════════════
+【生圖規範】v1 · 第二十六階段定稿（現行版，違反即退）
+════════════════════════════════════════════════════════════════════
+適用範圍：assets/posts/ 下所有「文章封面圖 / 正文插圖」，一律由 AI 生成。
+定位：這是給**未來的自己**看的驗收標準。改圖前先讀這一節。
+
+一、風格定義 —— 平面絲網版拼貼（flat screen-print collage）
+   不是插畫、不是數位繪畫、不是 3D、不是攝影。
+   是「用色紙剪出來、再套印上去」的效果：平塗、硬邊、套印錯位、紙紋。
+
+二、用色（實測圖庫 10 張歸納出的家族，**不許出現第四個色系**）
+   松石青    主色    #5EA99E      深階 #39625B   淺階 #6FB9A9
+   奶油紙白  底色    #F7EFD3      暗階 #D9D3B4
+   暖調近黑  描邊/暗塊 #1F201D     可深至 #090A09
+   磚紅      唯一允許的點綴 #8F3E30，全圖面積 ≤ 10%（多數圖根本不用）
+   要「過渡 / 陰影」時用**網點（halftone dots）或條紋**，不許引入新的中間色。
+
+三、造型規則（全是踩過的雷）
+   · 每個形狀 = 單一平塗實色 + 硬邊。禁漸層、禁陰影、禁高光、禁柔光、禁 3D。
+   · 粗黑描邊（等效 2–4px），線寬均勻。
+   · 紙張質感＝可見紙紋 + 輕微套印錯位（risograph misregistration），不是雜訊。
+   · ❌ **禁畫五官 / 禁渲染人臉** —— 「AI 味」的頭號來源。要有人，一律用
+     無五官的平面剪影（範例：bcm241-a1-figures）。
+   · ❌ **禁細節密度**：不畫假文字、假 UI、假鍵盤、假儀表、假小字。
+     要暗示「一張紙 / 一個畫面」，用幾條粗橫線帶過就夠。
+   · 主體單一、居中或三分；四周留足空底（本站的底色是青，留白很貴）。
+
+四、規格
+   · 畫幅 3:2 → 生成 1536×1024 → 裁掉右下 AI 水印（右 8% / 下 7.5%）
+     → resize 1024×683。
+   · 落 assets/posts/<id>-cover.png + 同名 .webp（q=85）；PNG 留作回退鏈。
+   · 正文插圖同名規則同此，只是不叫 cover。
+
+五、風格錨（**每條生圖提示詞必須逐字帶上這段，勿改寫、勿精簡**）
+   "flat screen-print risograph collage, only three ink colours — teal #5EA99E,
+    warm cream paper #F7EFD3, near-black #1F201D; every shape filled with a
+    single flat solid colour, hard edges, no gradients, no shading, no
+    highlights, no airbrush, no 3D render, thick uniform dark outlines, visible
+    paper grain and slight ink misregistration, minimal detail density, no text,
+    no letters, no numbers, no user interface, no facial features, no rendered
+    faces"
+
+六、驗收三關
+   1. **硬規則眼檢**（最重要，逐項打勾）：有沒有臉？有沒有漸層？有沒有假字？
+      任何一項為「有」→ 直接退，不必再看。
+   2. 色卡比對：量化後只應落在上述家族（參考：合格圖 4bit 獨特色數 138–523）。
+   3. 縮圖測試：縮到 300px 寬，仍能一眼說出畫面在講什麼。
+
+七、反面教材（留檔警示）
+   bcm212-a1-cover.png 第一版（2026-09-29 生成、使用者退貨）。
+   用色、畫幅、構圖全部合格，唯獨**畫了帶五官的人臉 + 柔和的體積陰影 +
+   手機上的假 UI** —— 三處加起來就是所謂的「AI 味」。
+   教訓：**色卡對 ≠ 風格對**；統計量查不出 AI 味（實測區分不出來），
+   硬規則必須靠提示詞從源頭擋掉，驗收只能靠第一關的眼檢。

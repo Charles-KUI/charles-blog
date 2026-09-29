@@ -39,11 +39,7 @@
     note: function (b, root, util) { return '<p class="inline-note">' + util.tr(b.text) + '</p>'; },
     ref: function (b, root, util) { return renderRef(b, util); },
     gallery: function (b, root, util) { return renderGallery(b, root, util); },
-    figure: function (b, root, util) {
-      return '<figure class="inline-figure">'
-        + '<img src="' + util.imgSrc(root + b.src) + '" alt="' + util.tr(b.caption) + '" loading="lazy" decoding="async">'
-        + '<figcaption>' + util.tr(b.caption) + '</figcaption></figure>';
-    },
+    figure: function (b, root, util) { return renderFigure(b, root, util); },
     diagram: function (b, root, util) { return renderDiagram(b, util); },
     table: function (b, root, util) { return renderTable(b, util); },
     video: function (b, root, util) { return renderVideo(b, root, util); },
@@ -51,11 +47,33 @@
     embed: function (b, root, util) { return embedRule() + renderEmbed(b, util); },
   };
 
-  /** 渲染正文区块 */
+  /**
+   * 渲染正文区块 —— 每个 h2 章节包成一个 .zine-spread（跨页）
+   * ---------------------------------------------------------------
+   * 为什么不再整篇共用一个分栏容器：
+   *   CSS multicol 会把整篇文字**均分**成两栏，两栏都从文章开头往下长。
+   *   于是读法是「左栏一路读到文章一半 → 划回顶部 → 右栏再读一遍」——
+   *   实测 BCM206 要往回划 1736px、BCM222 1600px，读起来是折返跑。
+   *
+   *   改成每章节一个跨页后，每个 h2 章节自己分两栏、章节之间纵向堆叠。
+   *   实测最长的一个章节（BCM222 Introduction）双栏高 694px < 一屏，
+   *   左右两栏**同屏可见** —— 读完左栏不用划回去，往下一屏就是下一章节。
+   *
+   * 分组规则：遇到 h2 就另起一页；h2 之前的开场块（引言等）自成第一页。
+   * 注意 embed 渲染器会返回「剪刀虚线 + figure」两个兄弟节点，
+   * 所以这里只做字符串拼接，不假设「一个块 = 一个元素」。
+   */
   function renderBody(blocks, root, util) {
-    return blocks.map(function (block) {
+    const pages = [];
+    let cur = null;
+    blocks.forEach(function (block) {
       const fn = BLOCK_RENDERERS[block.type] || BLOCK_RENDERERS.p;
-      return fn(block, root, util);
+      const html = fn(block, root, util);
+      if (block.type === 'h2' || !cur) { cur = []; pages.push(cur); }
+      cur.push(html);
+    });
+    return pages.map(function (page) {
+      return '<div class="zine-spread">' + page.join('') + '</div>';
     }).join('');
   }
 
@@ -368,14 +386,48 @@
   }
 
   /**
+   * 正文插图（type: 'figure'）
+   * ---------------------------------------------------------------
+   * 一张或多张图 + 一条说明，装在同一个 <figure> 里。
+   *
+   * 为何多图要共用一条说明、而不是各自一个 figure：
+   *   作业原文里两组图表（Netflix 主要角色的多元比例 / 导演的族裔与性别
+   *   构成）压在同一段解读文字之上 —— 那段文字本身承担论证，拆开就会读成
+   *   「两句图注」。合成一个 figure 后，说明与两张图同属一个盒子，
+   *   双栏排版时不会被分栏切开（见 article.css ≥1100px 的 break-inside 组）。
+   *
+   * 说明文字两种排版：
+   *   · 默认（label）——小字居中，用于「FIG.02 — 觀看的眼睛」这类短标签；
+   *   · captionStyle: 'note' —— 左对齐正文级字号 + 上方裁切虚线，用于
+   *     图片下方那段成句的「这张图为什么在论证里」的描述。
+   *   两种都只占 <figcaption> 一个文本节点，语言切换队列不变（仍是一个位）。
+   */
+  function renderFigure(block, root, util) {
+    const srcs = (block.srcs && block.srcs.length) ? block.srcs : (block.src ? [block.src] : []);
+    const alt = esc(util.tr(block.alt || block.caption || ''));
+    const plates = srcs.map(function (src) {
+      return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '" loading="lazy" decoding="async">';
+    }).join('');
+    const cls = 'inline-figure' + (srcs.length > 1 ? ' inline-figure--plates' : '');
+    const capCls = block.captionStyle === 'note' ? ' class="is-note"' : '';
+    return '<figure class="' + cls + '">' + plates
+      + '<figcaption' + capCls + '>' + util.tr(block.caption) + '</figcaption></figure>';
+  }
+
+  /**
    * 电视机画框：本地影片与外部嵌入共用同一副外壳，只换内层。
    * head 是画框之上的抬头标签（只有嵌入影片用得到）。
+   * captionStyle 与 figure 同义：'note' 让说明排成左对齐正文级文字
+   * （影片下方的成句描述），默认仍是小字居中的标签式图注。
    */
-  function mediaFrame(cls, inner, caption, util, head) {
+  function mediaFrame(cls, inner, caption, util, head, captionStyle) {
     return '<figure class="' + cls + '">'
       + (head || '')
       + '  <div class="video-frame">' + inner + '</div>'
-      + (caption ? '<figcaption class="video-caption">' + util.tr(caption) + '</figcaption>' : '')
+      + (caption
+        ? '<figcaption class="video-caption' + (captionStyle === 'note' ? ' is-note' : '') + '">'
+          + util.tr(caption) + '</figcaption>'
+        : '')
       + '</figure>';
   }
 
@@ -388,7 +440,7 @@
         + '  <div class="ph-text"><strong>' + util.t('video.placeholderTitle') + '</strong><br>'
         + util.t('video.placeholderHint') + '</div>'
         + '</div>';
-    return mediaFrame('video-block', inner, block.caption, util);
+    return mediaFrame('video-block', inner, block.caption, util, '', block.captionStyle);
   }
 
   /* ── 外部视频嵌入（type: 'embed'） ────────────────────────────────
@@ -427,7 +479,7 @@
       : '<div class="embed-placeholder" role="note">' + util.t('embed.invalid') + '</div>';
 
     return mediaFrame('embed-block video-block', inner, block.caption, util,
-      '<span class="embed-head">' + util.t('embed.head') + '</span>');
+      '<span class="embed-head">' + util.t('embed.head') + '</span>', block.captionStyle);
   }
 
   /* 嵌入区块上方的剪刀虚线：作为 figure 之前的独立流内块返回。
@@ -793,6 +845,7 @@
       refreshGalleryText(body, a, util);
       refreshDiagramText(body, a, util);
       refreshRefText(body, a, util);
+      refreshFigureText(body, a, util);
       refreshEmbedText(body, a, util);
       refreshTableText(body, a, util);
     }
@@ -843,7 +896,25 @@
     });
   }
 
-    /**
+  /**
+   * 语言切换时刷新插图的 alt。
+   * alt 是**属性**、不是文本节点，进不了主文本队列（队列只走
+   * p / h2 / h3 / blockquote / figcaption），所以必须单独写 ——
+   * 与 iframe 的 title 同一个道理。图片 src 与语言无关，
+   * 这里只改无障碍描述，不会触发任何重新下载。
+   */
+  function refreshFigureText(body, assignment, util) {
+    pairBlocks(assignment, body, 'figure', '.inline-figure').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
+      const alt = util.tr(data.alt || data.caption || '');
+      fig.querySelectorAll('img').forEach(function (img) {
+        img.setAttribute('alt', alt);
+      });
+    });
+  }
+
+  /**
    * 语言切换时刷新文献条目的注解与链接文本。
    * 文献书目本身中英一致（学术规范不翻译），只有「为什么引用」的注解随语言变化。
    * 链接现在独占一行（.ref-link-row），但 aria-label 仍需按当前语言更新。

@@ -62,13 +62,6 @@
             </svg>
         </div>
 
-        <!-- 「持續更新中」小字（文章索引暫時隱藏時顯示） -->
-        <section class="assignments-note-section">
-            <div class="zine-container">
-                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
-            </div>
-        </section>
-
         <!-- 作業索引（BCM241 已上線第一份真實作業，依「還原方式 A」取消隱藏）
              其餘三科仍維持 hidden + data-articles-hidden 的隱藏狀態 -->
         <section class="assignments-section" data-articles-hidden>
@@ -79,6 +72,17 @@
                     <span class="section-note" data-i18n="subject.sectionNote">click a piece to read →</span>
                 </div>
                 <div id="assignmentList"></div>
+            </div>
+        </section>
+
+        <!-- 索引上線後，這行小字降級為列表**收尾語**（文案由 subject-page.js 換掉）。
+             ⚠️ 必須排在 .assignments-section **之後** —— 排在前面會卡在 hero 與索引
+             之間、把「作業索引」整塊往下推（第二十六階段修正；BCM206/212 本來就是
+             這個順序，BCM241 漏改）。只有索引仍 hidden 的科目（BCM222）才把這行
+             留在原位當「即將上線」的說明。 -->
+        <section class="assignments-note-section">
+            <div class="zine-container">
+                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
             </div>
         </section>
 
