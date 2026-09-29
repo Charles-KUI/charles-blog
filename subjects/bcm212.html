@@ -62,23 +62,25 @@
             </svg>
         </div>
 
-        <!-- 「持續更新中」小字（文章索引暫時隱藏時顯示） -->
-        <section class="assignments-note-section">
-            <div class="zine-container">
-                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
-            </div>
-        </section>
-
-        <!-- 作業索引（暫時隱藏，資料與標記完整保留；還原方式見 更新日志.txt 第九階段）
-             隱藏：把 hidden 換成 data-articles-hidden 即可 -->
-        <section class="assignments-section" hidden data-articles-hidden>
+        <!-- 作業索引（BCM212 A1 已上線，依「還原方式 A」取消隱藏）
+             重新隱藏：把 data-articles-hidden 換回 hidden、【並】給 #assignmentList
+             加回 is-placeholder —— 兩處缺一不可（動作與還原步驟見 更新日志.txt 第九階段） -->
+        <section class="assignments-section" data-articles-hidden>
             <div class="zine-container">
                 <div class="section-head">
                     <h2 class="section-title" data-i18n="subject.sectionTitle">ASSIGNMENTS</h2>
                     <span class="section-count" id="assignmentCount"></span>
                     <span class="section-note" data-i18n="subject.sectionNote">click a piece to read →</span>
                 </div>
-                <div id="assignmentList" class="is-placeholder"></div>
+                <div id="assignmentList"></div>
+            </div>
+        </section>
+
+        <!-- 索引上線後，這行小字降級為列表收尾語（間距由 .is-after-list 收緊，
+             文案改由 subject-page.js 設定） -->
+        <section class="assignments-note-section">
+            <div class="zine-container">
+                <p class="assignments-note" data-i18n="subject.updating">持續更新中 — 更多作品即將上線</p>
             </div>
         </section>
 

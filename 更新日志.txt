@@ -2570,3 +2570,117 @@ break-inside: avoid 觸發的整欄搬運會遺留 stale 繪製。
 · **裝飾性行內塊（::before 短橫）會偷偷佔走左軌**：它把後續文字推開
   27px，讓「標題」與「正文」不共軌。撤掉裝飾等於把標題歸位 ——
   版面反而更整齊。凡在標題前加行內記號，都要重新量一次左軌。
+
+═══════════════════════════════════════════════════════════════
+第二十四階段：新增 BCM212 A1 研究提案（含新增 table 剪報表格區塊）（2026-09-29）
+═══════════════════════════════════════════════════════════════
+
+【用戶需求】
+· 附上 BCM212_A1_WangWingShing_1723674.docx，要求「更新並上傳這篇新文章」。
+· 動手前確認三件事：封面圖＝生成一張拼貼風封面；實驗變項表＝剪報風表格
+  （需新增 table 區塊，而非拆成文字）；發佈日期＝2026-09-29。
+
+【新增第 12 類 body 區塊：table】
+· 資料形狀：{ type:'table', tag, title, columns[3],
+  groups:[{ label, rows:[[{en,zh},{en,zh}], …] }], caption }
+· article-page.js：BLOCK_RENDERERS 加 table 分支 + renderTable()
+  + refreshTableText() + 語言切換 texts.push(null) 佔位 + 刷新調用點。
+· **首列是分組軸**：只在該組第一行輸出
+  `<th class="tbl-axis" scope="rowgroup" rowspan="N">`，縱向跨滿整組，
+  像給整組釘一條書脊。
+· 表格單元不是 <p>/<figcaption>，進不了語言切換的主文字隊列 → 單獨
+  refreshTableText() 用游標同步推進 tbody 行，只改 textContent，
+  **不重建 DOM**（保住橫向滾動位置）。
+· article.css：.tbl-block 奶油白剪報（粗黑邊 + 硬陰影）、.tbl-head 抬頭標籤條、
+  .tbl-wrap overflow-x:auto、表頭深色墨條、.tbl-axis 松石青底 + 粗黑右邊框、
+  .tbl-caption。進「660px 居中組」；≥1100px 另寫 column-span:all 跨欄鋪滿
+  （同畫廊 / 環形圖）；≤700px 藏表頭改「堆疊卡片」，分組軸變成組首深色小簽，
+  不必橫向滾動。
+  ⚠️ .tbl-block 自身用 margin-top/bottom 拆寫 —— 簡寫 margin 會覆蓋居中組的 auto。
+
+【文章】
+· BCM212 A1 研究提案：4 章 + References + AI 聲明，共 27 個區塊
+  （5 h2 / 10 p / 7 h3 / 1 table / 3 ref / 1 note）。
+· 標籤 3 枚：BCM212 A1 / 研究提案 / 實驗設計（只放交付關鍵詞，跨境電商等留正文）。
+· 參考文獻 3 條，URL 經核准修正：McKinsey 去掉文檔裡多餘的 `?`；
+  MDPI 被換行截斷的 `/21/5/14` 修正為 `/21/5/141`（JTAER 21(5) 141）。
+· 封面：ImageGen 生成拼貼風 → 裁掉右下 AI 水印 → 縮到 1024×683，WebP q=85
+  （PNG 1254 KB → WebP 146 KB，PSNR 33.4 dB）。
+
+【BCM212 科目索引上線】
+· subjects/bcm212.html：assignments-section 去 hidden、#assignmentList 去
+  is-placeholder，保留 data-articles-hidden 還原標記；小字 section 移到列表
+  之後當收尾語（同 BCM241 / BCM206 寫法）。
+· placeholder 機制生效：bcm212-a2 / bcm212-t1 仍是佔位，不上架。
+
+【驗證】
+· 新增 verify-bcm212-a1.mjs **95/0**（結構忠實度 / 表格渲染與雙語刷新 /
+  文獻三層 / 元資訊 / 封面 / 排版組靜態守衛）。
+· 新增 _tblalign.mjs **11 檔全過**（1920 / 1440 / 1280 / 1100 / 1080 / 1000 /
+  900 / 760 / 500 / 390 / 320）：左軌與正文一致、雙欄跨欄鋪滿、單欄收在 660、
+  無橫向溢出、≤700px 藏表頭。
+· 全量回歸 0 失敗：domtest 225 / verify-bcm241-a1 106 / verify-bcm206-a1 129 /
+  verify-hidden 64 / verify-nav-static 51 / verify-article 11 /
+  verify-langswitch 12 / verify-nav-runtime 25 / verify-narrow-geom 15 /
+  verify-mobile 33；_refcolumn 61 / _refalign / _embedshell / _embedgeom /
+  check-diagram 全 PASS。
+
+【經驗教訓】
+· **語言切換的文字刷新隊列是按「節點位」對齊的** —— 表格單元不在主隊列裡，
+  必須 push 一個 null 佔住圖注的位子，否則後續區塊的文字會整體錯位一格。
+· **新區塊「進兩個排版組」永遠是漏得最多的一步**：橫向區塊（表格 / 畫廊 /
+  環形圖）還不走公共重置組，得各自在 ≥1100 寫 column-span:all + max-width 覆寫。
+· jsdom 裡嵌 YouTube iframe 會掛住 pending 網路任務，進程不自行退出 ——
+  量測腳本收尾要 `setTimeout(()=>process.exit(...),250)` 兜底，否則整批
+  for 迴圈卡死在第一個測試上。headless Chrome 的 verify-mobile 同理
+  （kill 後殘留句柄），一併加兜底退出。
+
+────────────────────────────────────────────────────────
+第二十四階段（續）· 表格分隔線修復（使用者回饋）
+────────────────────────────────────────────────────────
+
+【問題】實驗變項表「分隔不清晰」—— 變項組與常數（控制變項）組之間看不出分界。
+
+【真因（兩個疊在一起）】
+· 組間線原本只掛在分組軸那一格上，而那格只佔 22% 寬 —— 右邊 78% 寬仍是
+  一條與組內行間等粗等淡的虛線，整張表讀起來是一坨。
+· **更關鍵：那條線從頭到尾就沒畫出來過。** `--border-medium` 本身是完整
+  簡寫（`2px solid #262320`），寫成 `border-top: var(--border-medium) solid
+  var(--dark-frame)` 會展開為 `2px solid #262320 solid #262320` —— 非法值，
+  整條宣告被靜默丟棄。分組軸右側的豎線（border-right）是同一個寫法，
+  也一直是死的。瀏覽器不報錯、CSS 文本看著完全正常，只有 computed 值
+  露出馬腳：`0px none`。
+
+【修法】
+· 全站 `var(--border-thick/medium) + solid/顏色` 的拼寫一律改為直接引用
+  令牌（共 3 處，已 grep 全站確認無遺漏）。
+· 組間線改畫在**組首行的三格**上（`> *`）：三格各帶 2px 實線，collapse 下
+  合併成一條橫貫三列的線。渲染器給每組首行打 `.tbl-group-start` 標記；
+  第一組用 `:not(:first-child)` 排除（緊貼表頭墨條，再加線會成雙線）。
+· 分組軸底色 0.22 → 0.30，軸右側豎線復活，「標籤帶 / 內容區」一眼分欄。
+· 窄屏堆疊態用同特異性覆寫：把格上的線清掉、改畫在整張卡片（`<tr>`）上，
+  組首行再向上多留 18px，靠留白 + 實線雙重斷組。
+
+【三級分隔層級（定稿）】
+  表頭墨條（3px 粗邊）＞ 組與組之間（2px 實線，橫貫三列）＞ 組內相鄰行（1px 虛線）
+
+【驗證】
+· 像素掃描實測：1440 檔在組間位置找到 **y=448/449 連續 1400px** 的暗行
+  （＝2px 實線貫穿整寬）；窄屏 390 在同一斷組處也檢出貫穿線。
+· `_tblalign.mjs` 新增「實際渲染值」斷言（組間 2px/2px/2px、軸豎線 2px、
+  組內 1px 虛線、≤700px 卡片線 2px），**11 檔全過**。
+· `verify-bcm212-a1` 由 95 增至 **105 條**（新增 10 條：組首行標記 +
+  三級分隔靜態斷言 + 全站「完整邊框令牌不得再拼樣式」守衛）。
+· domtest 225 / verify-article 11 / _refalign 全 0 失敗。
+
+【經驗教訓】
+· **先確認 CSS 令牌是不是「完整簡寫」**：`--border-thick: 3px solid #262320`
+  用在 `border:` / `border-top:` 時必須**單獨引用**；再拼 `solid #xxx` 就是
+  非法值、整條宣告作廢。這類 bug 完全靜默、無任何報錯，讀 CSS 文本看不出
+  來 —— 只有量 computed 值（或看渲染結果）才抓得到。
+· **靜態 CSS 斷言有盲區**：它只能證明「寫法符合約定」，證明不了「瀏覽器
+  接受了這個值」。凡是靠自訂屬性拼出來的分隔線 / 邊框 / 陰影，都要在真機
+  量測腳本裡補一條 computed 值斷言。
+· 像素掃描找分隔線，判據要用「**橫向最長連續暗段**」而不是「暗像素佔比」：
+  文字成簇、虛線短段、實線長段三者能一次分開；佔比法會把大片色底誤判成
+  暗區（本站松石青底灰階 149，低於常用閾值 165）。

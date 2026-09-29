@@ -45,6 +45,7 @@
         + '<figcaption>' + util.tr(b.caption) + '</figcaption></figure>';
     },
     diagram: function (b, root, util) { return renderDiagram(b, util); },
+    table: function (b, root, util) { return renderTable(b, util); },
     video: function (b, root, util) { return renderVideo(b, root, util); },
     // 剪刀虚线必须是 figure 之前的独立流内块，不能做成伪元素（CSS 陷阱 2）
     embed: function (b, root, util) { return embedRule() + renderEmbed(b, util); },
@@ -307,6 +308,64 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  /**
+   * 剪报表格（type: 'table'）
+   * ---------------------------------------------------------------
+   * 作业里那种「三列对照表」（如实验变项表）。首列是**分组轴** ——
+   * Variables / Constants 这类标签用 rowspan 纵向跨完一组，
+   * 所以数据里 columns 是三格表头，而每行只写 2 格（元素名 + 说明），
+   * 轴标签由 group.label 提供。看 data 时先认清这一点。
+   *
+   *   数据形状（写法见 content.js）：
+   *     { type: 'table', tag: {en,zh}, title: {en,zh},
+   *       columns: [ {en,zh}, {en,zh}, {en,zh} ],        // 表头 3 格
+   *       groups: [ { label: {en,zh},                     // 分组轴标签
+   *                   rows: [ [{en,zh}, {en,zh}], ... ] } ]  // 每行 2 格
+   *       caption: {en,zh} }
+   *
+   * 全部文字由 refreshTableText() 单独刷新（表格单元不是 <p>/<figcaption>，
+   * 进不了语言切换的主文本队列），所以这里 push 一个 null 占住图注的节点位。
+   * 不做 DOM 重建 —— 重建会丢掉表格的横向滚动位置。
+   */
+  function renderTable(block, util) {
+    const head = block.columns.map(function (c) {
+      return '<th scope="col">' + esc(util.tr(c)) + '</th>';
+    }).join('');
+
+    const groups = block.groups.map(function (g) {
+      return g.rows.map(function (row, ri) {
+        const cells = row.map(function (cell, ci) {
+          return '<td' + (ci === 0 ? ' class="tbl-key"' : '') + '>'
+            + esc(util.tr(cell)) + '</td>';
+        }).join('');
+        // 轴标签只在每组第一行出现，用 rowspan 纵向跨满整组
+        const axis = ri === 0
+          ? '<th class="tbl-axis" scope="rowgroup" rowspan="' + g.rows.length + '">'
+            + esc(util.tr(g.label)) + '</th>'
+          : '';
+        // 组首行打标记：样式要靠它画「组与组之间的贯穿实线」。
+        // 只让轴格带线是不够的 —— 轴格只占 22% 宽，右边 78% 依旧是和行间
+        // 虚线等粗等淡的一条，两组在视觉上分不开。
+        return '<tr' + (ri === 0 ? ' class="tbl-group-start"' : '') + '>'
+          + axis + cells + '</tr>';
+      }).join('');
+    }).join('');
+
+    return '<figure class="tbl-block">'
+      + '<div class="tbl-head">'
+      + '<span class="tbl-tag">' + esc(util.tr(block.tag)) + '</span>'
+      + '<span class="tbl-title">' + esc(util.tr(block.title)) + '</span>'
+      + '</div>'
+      + '<div class="tbl-wrap">'
+      + '<table class="tbl">'
+      + '<thead><tr>' + head + '</tr></thead>'
+      + '<tbody>' + groups + '</tbody>'
+      + '</table>'
+      + '</div>'
+      + '<figcaption class="tbl-caption">' + esc(util.tr(block.caption)) + '</figcaption>'
+      + '</figure>';
   }
 
   /**
@@ -713,6 +772,9 @@
         else if (b.type === 'gallery') texts.push(null); // 画廊文字单独刷新
         else if (b.type === 'diagram') texts.push(null); // 环形图文字单独刷新
         else if (b.type === 'ref') texts.push(null, null); // 文献引用 + 注解，节点数固定为 2
+        // 表格：单元格不是 <p>/<figcaption>，整块（含图注）都单独刷新；
+        // 这里只占住 figcaption 那一个节点位，不然后面的文字会整体错位。
+        else if (b.type === 'table') texts.push(null);
         // 嵌入影片：字幕 + iframe 的无障碍标题（不是文本节点，单独刷新）
         else if (b.type === 'embed') { texts.push(b.caption || null); }
         else texts.push(b.text);
@@ -733,6 +795,7 @@
       refreshDiagramText(body, a, util);
       refreshRefText(body, a, util);
       refreshEmbedText(body, a, util);
+      refreshTableText(body, a, util);
     }
 
     paintArticleText();
@@ -816,6 +879,47 @@
       if (head) head.textContent = util.t('embed.head'); // span 不在主文本队列里
       const ph = fig.querySelector('.embed-placeholder');
       if (ph) ph.textContent = util.t('embed.invalid');
+    });
+  }
+
+  /**
+   * 语言切换时刷新表格里的文字：抬头标签 / 标题 / 表头 / 分组轴 / 单元格 / 图注。
+   * 整块重绘最省事，但重建 <table> 会丢掉横向滚动位置与文本选区，
+   * 所以仍然只写 textContent。行的顺序是「组 → 组内行」，
+   * 用一个游标同步推进，不必给每个 <tr> 挂 data 属性。
+   */
+  function refreshTableText(body, assignment, util) {
+    pairBlocks(assignment, body, 'table', '.tbl-block').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
+
+      const tag = fig.querySelector('.tbl-tag');
+      if (tag) tag.textContent = util.tr(data.tag);
+      const title = fig.querySelector('.tbl-title');
+      if (title) title.textContent = util.tr(data.title);
+
+      fig.querySelectorAll('thead th').forEach(function (th, i) {
+        if (data.columns[i]) th.textContent = util.tr(data.columns[i]);
+      });
+
+      const trs = fig.querySelectorAll('tbody > tr');
+      let cursor = 0;
+      data.groups.forEach(function (g) {
+        g.rows.forEach(function (row, ri) {
+          const tr = trs[cursor++];
+          if (!tr) return;
+          if (ri === 0) {
+            const axis = tr.querySelector('.tbl-axis');
+            if (axis) axis.textContent = util.tr(g.label);
+          }
+          tr.querySelectorAll('td').forEach(function (td, ci) {
+            if (row[ci]) td.textContent = util.tr(row[ci]);
+          });
+        });
+      });
+
+      const cap = fig.querySelector('.tbl-caption');
+      if (cap) cap.textContent = util.tr(data.caption);
     });
   }
 

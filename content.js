@@ -51,58 +51,201 @@ const SUBJECTS = {
       {
         id: 'bcm212-a1',
         no: 'No.01',
-        // placeholder: 交付內容尚未到位（示範文案），科目索引不對外展示
-        placeholder: true,
+        studentId: '1723674',
         title: {
-          en: 'The Curiosity Project: Research Proposal',
-          zh: '好奇心計畫：研究提案',
+          en: 'Cross-Border E-Commerce of Fast Fashion: Gen Z Shoppers’ Acceptance and Trust Towards AI-Generated Imagery',
+          zh: '快時尚跨境電商：Z 世代消費者對 AI 生成影像的接受度與信任',
         },
         excerpt: {
-          en: 'What keeps international students up at night? A survey-driven proposal on first-year belonging, sampling 40 peers across three faculties.',
-          zh: '是什麼讓國際學生徹夜難眠？一份以問卷驅動的一年級歸屬感研究提案，橫跨三個學院、取樣 40 位同儕。',
+          en: 'A research proposal on the trust gap behind AI-generated fashion imagery — why fast fashion gets away with it, and how shoppers across cultures spot the machine, say so, or forgive it.',
+          zh: '一份關於 AI 生成時尚影像「信任落差」的研究提案——快時尚為何能全身而退，以及不同文化背景的消費者如何辨識出機器、如何被影響，又如何原諒它。',
         },
-        date: '2026-09-04',
+        date: '2026-09-29',
         tags: [
-          { en: 'Survey', zh: '問卷' },
-          { en: 'Proposal', zh: '提案' },
+          { en: 'BCM212 A1', zh: 'BCM212 A1' },
+          { en: 'Research Proposal', zh: '研究提案' },
+          { en: 'Experimental Design', zh: '實驗設計' },
         ],
-        image: 'assets/posts/bcm212-a1-survey.png',
-        figLabel: { en: 'FIG.02 — Survey stack', zh: 'FIG.02 — 問卷堆疊' },
+        image: 'assets/posts/bcm212-a1-cover.png',
+        figLabel: { en: 'FIG.02 — Fast fashion under the magnifying glass', zh: 'FIG.02 — 放大鏡下的快時尚' },
         body: [
+          { type: 'h2', text: { en: '1. Intended Topic', zh: '1. 研究主題' } },
           {
             type: 'p',
             text: {
-              en: 'Every research project starts with an itch you cannot scratch. Mine was a conversation overheard in the library: two first-years comparing how lonely their first month had been — and how nobody had ever asked them about it. So I asked.',
-              zh: '每個研究都始於一個搔不到的癢處。我的來自圖書館裡偶然聽見的一段對話：兩個一年級學生比較著彼此第一個月有多孤單——以及從來沒有人問過他們這件事。於是我問了。',
+              en: 'This project looks at how different types of consumers accept and trust AI-generated clothing images in cross-border e-commerce. It focuses on fast fashion, where sellers use AI models to cut photography costs. Research shows that consumers accept AI models much more easily in fast fashion than in luxury fashion, meaning they are less likely to reduce how much they are willing to pay (Srinivas et al., 2026). This makes fast fashion the best area for this study.',
+              zh: '本計畫探討不同類型的消費者在跨境電商中，如何接受並信任 AI 生成的服飾影像。研究聚焦於快時尚——賣家在這裡用 AI 模特兒壓低攝影成本。既有研究顯示，消費者對快時尚 AI 模特兒的接受度遠高於精品時尚，也就是說，他們因此削減付費意願的程度較低（Srinivas et al., 2026）。這使快時尚成為本研究最合適的場域。',
             },
           },
-          { type: 'h2', text: { en: 'Why belonging?', zh: '為什麼談歸屬感？' } },
+          { type: 'h2', text: { en: '2. Timely, Relevant, and Achievable', zh: '2. 時效性、相關性與可行性' } },
+          { type: 'h3', text: { en: 'Timely', zh: '時效性' } },
           {
             type: 'p',
             text: {
-              en: 'Belonging is the quiet variable behind every retention statistic. The university measures grades and attendance, but almost nobody measures whether students feel like they are allowed to be here. My proposal puts that question at the centre.',
-              zh: '歸屬感是藏在每一個續讀率數字背後的沉默變項。學校衡量成績與出席，卻幾乎沒有人衡量學生是否覺得自己「被允許在這裡」。我的提案把這個問題放在正中央。',
+              en: 'Generative AI is quickly changing the fashion industry and could add $150 billion to $275 billion in profits (Harreis et al., 2023). Sellers now use AI widely to launch products faster and cut design costs (Harreis et al., 2023).',
+              zh: '生成式 AI 正快速改寫時尚產業，可能帶來 1,500 億至 2,750 億美元的利潤（Harreis et al., 2023）。賣家如今廣泛使用 AI，以更快推出商品並降低設計成本（Harreis et al., 2023）。',
             },
           },
+          { type: 'h3', text: { en: 'Relevant', zh: '相關性' } },
           {
-            type: 'quote',
+            type: 'p',
             text: {
-              en: 'A good research question is a door left deliberately ajar.',
-              zh: '好的研究問題，是一道刻意留了縫的門。',
+              en: 'This study looks at the trade-off sellers face: saving money with AI versus losing consumer trust and sales (Srinivas et al., 2026). It also tests if telling buyers upfront that an image is AI-generated helps rebuild that trust (Srinivas et al., 2026).',
+              zh: '本研究直視賣家面對的取捨：用 AI 省錢，還是冒著流失消費者信任與銷售額的風險（Srinivas et al., 2026）。研究也測試「事先告知買家影像是 AI 生成」是否有助於重建這份信任（Srinivas et al., 2026）。',
+            },
+          },
+          { type: 'h3', text: { en: 'Achievable', zh: '可行性' } },
+          {
+            type: 'p',
+            text: {
+              en: 'We will use an online and in-person campus survey. This gives us quick access to local Hong Kong, Mainland Chinese, and international students. The data will help us investigate how real the images look to them and whether they still want to buy the clothes.',
+              zh: '我們將採用線上與校園實地並行的問卷調查，這讓我們能快速接觸本地香港、中國內地與國際學生。這些資料將幫助我們了解：在他們眼中這些影像有多真實，以及他們是否仍願意購買這些衣服。',
+            },
+          },
+          { type: 'h2', text: { en: '3. Research Questions and Epistemological Stance', zh: '3. 研究問題與認識論立場' } },
+          { type: 'h3', text: { en: 'Primary Question', zh: '主要研究問題' } },
+          {
+            type: 'p',
+            text: {
+              en: 'How do AI-generated images in cross-border e-commerce affect brand trust and buying choices among consumers from different cultures?',
+              zh: '跨境電商中的 AI 生成影像，如何影響不同文化背景消費者對品牌的信任與購買選擇？',
+            },
+          },
+          { type: 'h3', text: { en: 'Sub-Questions', zh: '子問題' } },
+          {
+            type: 'p',
+            text: {
+              en: 'How well can consumers spot AI models based on visual details like skin texture or face symmetry, and how does the “eerie” feeling they get reduce their trust in the brand and the product’s quality? (Xiong et al., 2026)',
+              zh: '消費者能多準確地從肌膚紋理、臉部對稱性等視覺細節辨識出 AI 模特兒？而隨之而來的「詭異感」又如何削弱他們對品牌與產品品質的信任？（Xiong et al., 2026）',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'The survey walks respondents through their first six weeks: where they ate, who they sat with, which Discord server they lurked in. Mixed with eight semi-structured interviews, the design triangulates the numbers with the stories behind them.',
-              zh: '問卷帶著受訪者回顧最初的六週：在哪裡吃飯、和誰同桌、潛伏在哪個 Discord 群組。搭配八場半結構式訪談，這個設計用故事為數字做三角驗證。',
+              en: 'How does clearly stating that an image is AI-generated affect trust and buying intent, and do these reactions differ across cultural groups? (Srinivas et al., 2026)',
+              zh: '明確標示影像是 AI 生成，會如何影響信任與購買意願？這些反應在不同文化群體之間是否存在差異？（Srinivas et al., 2026）',
             },
           },
+          { type: 'h3', text: { en: 'Epistemological Stance', zh: '認識論立場' } },
           {
             type: 'p',
             text: {
-              en: 'The full proposal — literature map, sampling frame, pilot questionnaire — is attached in the submission PDF. Next update: pilot results and the messy art of cleaning survey data.',
-              zh: '完整提案——文獻地圖、抽樣架構、前測問卷——附在繳交的 PDF 中。下次更新：前測結果，以及清理問卷數據這門混亂的藝術。',
+              en: 'This is an epistemological question. It asks how consumers gain knowledge and decide what is real. Specifically, it looks at how fake digital images shape real beliefs about clothing quality, and how trust is built or lost in the mind.',
+              zh: '這是一個認識論的問題：它追問消費者如何獲取知識、如何判定什麼是真的。具體來說，它關注虛假的數位影像如何形塑人們對服飾品質的真實信念，以及信任如何在人心裡建立或流失。',
+            },
+          },
+          { type: 'h3', text: { en: 'Experimental Control', zh: '實驗控制' } },
+          {
+            type: 'p',
+            text: {
+              en: 'The study isolates the effect of AI by changing the model types and whether AI use is disclosed. We will keep the product types and basic image styles the same to ensure fair testing.',
+              zh: '本研究透過操弄模特兒類型與是否揭露 AI 使用，來隔離 AI 的效果。我們會讓產品類型與基本影像風格保持一致，以確保測試公平。',
+            },
+          },
+          {
+            type: 'table',
+            tag: { en: 'TABLE 01', zh: '表格 01' },
+            title: { en: 'Experimental design: variables & controls', zh: '實驗設計：變項與控制變項' },
+            columns: [
+              { en: 'Factor Type', zh: '因素類型' },
+              { en: 'Specific Element', zh: '具體要素' },
+              { en: 'Description / Levels', zh: '說明／水準' },
+            ],
+            groups: [
+              {
+                label: { en: 'Variables', zh: '變項' },
+                rows: [
+                  [
+                    { en: 'Model Image Type', zh: '模特兒影像類型' },
+                    { en: 'AI-generated vs. Human photography', zh: 'AI 生成 vs. 真人攝影' },
+                  ],
+                  [
+                    { en: 'AI Disclosure', zh: 'AI 揭露' },
+                    { en: 'Explicitly disclosed vs. Undisclosed', zh: '明確揭露 vs. 未揭露' },
+                  ],
+                  [
+                    { en: 'Demographics', zh: '人口變項' },
+                    { en: 'Cultural background, online shopping experience', zh: '文化背景、線上購物經驗' },
+                  ],
+                  [
+                    { en: 'Dependent Variables', zh: '依變項' },
+                    { en: 'Perceived eeriness, trustworthiness, purchase intention', zh: '感知詭異感、可信度、購買意願' },
+                  ],
+                ],
+              },
+              {
+                label: { en: 'Constants (Controls)', zh: '常數（控制變項）' },
+                rows: [
+                  [
+                    { en: 'Product Category', zh: '產品類別' },
+                    { en: 'Fast-fashion apparel', zh: '快時尚服飾' },
+                  ],
+                  [
+                    { en: 'Visual Baselines', zh: '視覺基準' },
+                    { en: 'Uniform layout, background, lighting, and garment style', zh: '一致的版面、背景、光線與服裝風格' },
+                  ],
+                  [
+                    { en: 'Measurement Tools', zh: '測量工具' },
+                    { en: 'Standardized psychological scales', zh: '標準化心理量表' },
+                  ],
+                ],
+              },
+            ],
+            caption: {
+              en: 'FIG.03 — What the study varies, and what it holds still',
+              zh: 'FIG.03 — 研究操弄什麼，又固定什麼',
+            },
+          },
+          { type: 'h2', text: { en: '4. Reflexivity Statement', zh: '4. 反身性陳述' } },
+          {
+            type: 'p',
+            text: {
+              en: 'As an active online shopper who creates content about cross-border trade, I see why sellers use AI to cut costs. I personally doubt that AI images accurately show how a real piece of clothing fits or feels. I also assume younger people can spot AI images more easily. To avoid letting my personal views affect the research, the survey will use neutral language and standard psychological questions. This ensures the data collected about consumer preferences remains objective.',
+              zh: '作為一個長期網購、也持續製作跨境貿易內容的創作者，我理解賣家為什麼要用 AI 來降低成本。但我個人懷疑，AI 影像能否準確呈現一件真實衣服的合身程度與觸感。我也預設年輕人比較容易辨識出 AI 影像。為了不讓個人觀點影響研究，問卷將採用中性的措辭與標準化的心理學題項，以確保所蒐集到的消費者偏好資料保持客觀。',
+            },
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19-31.',
+              zh: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19-31.',
+            },
+            url: 'https://www.iosrjournals.org/iosr-jbm/papers/Vol28-issue7/Ser-2/B2807021931.pdf',
+            note: {
+              en: 'Establishes the premise: the same AI model image costs a fast-fashion brand far less trust than a luxury one — which is exactly why this study sits in fast fashion.',
+              zh: '確立了本研究的前提：同一張 AI 模特兒影像，對快時尚品牌造成的信任損失遠低於精品品牌——這正是本研究選擇以快時尚為場域的原因。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+              zh: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+            },
+            url: 'https://www.mckinsey.com/industries/retail/our-insights/generative-ai-unlocking-the-future-of-fashion',
+            note: {
+              en: 'Sizes the commercial stake — the $150–275 billion profit window that makes AI imagery worth studying in the first place.',
+              zh: '量出這件事的商業規模——1,500 億至 2,750 億美元的利潤空間，正是 AI 影像值得被研究的理由。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Xiong, L., Wei, D., & Long, X. (2026). Real vs. virtual: How the uncanny valley weakens the persuasive power of celebrity AI avatar presenters. Journal of Theoretical and Applied Electronic Commerce Research, 21(5), 141.',
+              zh: 'Xiong, L., Wei, D., & Long, X. (2026). Real vs. virtual: How the uncanny valley weakens the persuasive power of celebrity AI avatar presenters. Journal of Theoretical and Applied Electronic Commerce Research, 21(5), 141.',
+            },
+            url: 'https://www.mdpi.com/0718-1876/21/5/141',
+            note: {
+              en: 'Supplies the mechanism behind the sub-question: uncanny-valley discomfort is what turns “this looks fake” into “I trust this brand less”.',
+              zh: '為子問題提供機制解釋：恐怖谷帶來的不適感，正是把「這看起來很假」轉譯成「我比較不信任這個品牌」的關鍵。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
             },
           },
         ],

@@ -198,7 +198,9 @@
    .ref-item 也在组里（第十八阶段补）：漏了它会导致窄屏下文献块贴满
    版心、文字悬在居中标题左侧约 120px（用户截图实锤的错位）。
    .embed-block 同样在组里（第十九阶段）：嵌入影片盒必须和正文共用
-   这条居中基线，否则窄屏下会贴满版心、比标题宽出一大截。 */
+   这条居中基线，否则窄屏下会贴满版心、比标题宽出一大截。
+   .tbl-block 也在组里（第二十四阶段）：三列表格在窄屏同样要收在
+   阅读宽度里居中，不能贴满版心。 */
 .article-body > p,
 .article-body > h2,
 .article-body > h3,
@@ -207,7 +209,8 @@
 .article-body > .inline-figure,
 .article-body > .video-block,
 .article-body > .embed-block,
-.article-body > .dg-block {
+.article-body > .dg-block,
+.article-body > .tbl-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
@@ -475,6 +478,201 @@
 /* 大屏双栏下，环形图跨栏铺满（横向示意图不该被压在窄栏里） */
 @media (min-width: 1100px) {
     .article-body > .dg-block { column-span: all; max-width: 100%; margin-left: 0; margin-right: 0; }
+}
+
+/* ===== 剪报表格（type: 'table'） =====
+   作业里的「三列对照表」（如实验变项表）。首列是**分组轴**：Variables /
+   Constants 这类标签用 rowspan 纵向跨满一组，像给整组钉了一条书脊。
+   表体做成一张奶油白剪报 —— 粗黑边 + 硬阴影，与引用块、拍立得相框同源。
+
+   外层 .tbl-block 负责「进 660px 居中组」与纸张外观，内层的 .tbl-wrap
+   才是横向滚动容器（窄屏兜底，免得三列被压成窄条、字挤成竖线）。 */
+.tbl-block {
+    /* 用 margin-top/bottom 而不是简写 margin —— 简写会把「660px 居中组」
+       给过来的 margin-left/right:auto 一起覆盖掉，窄屏就贴到左边缘去
+       （CSS 陷阱 1，同 .dg-block 的位置关系）。 */
+    margin-top: 2.2em;
+    margin-bottom: 2.2em;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+}
+
+/* 抬头：贴在剪报上沿的标签条 + 衬线标题 */
+.tbl-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    padding: 13px 16px 11px;
+}
+
+.tbl-tag {
+    font-family: var(--font-round);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--cream-white);
+    background: var(--dark-frame);
+    padding: 4px 9px;
+    white-space: nowrap;
+}
+
+.tbl-title {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.tbl-wrap { overflow-x: auto; }
+
+.tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+    line-height: 1.5;
+}
+
+/* 表头：一条深色墨条，沿用站点的粗黑边框语言 */
+.tbl thead th {
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 9px 12px;
+    border-left: 1px solid rgba(230, 227, 211, 0.3);
+}
+
+.tbl thead th:first-child {
+    border-left: 0;
+    width: 22%;
+}
+
+.tbl thead th:nth-child(2) { width: 30%; }
+
+.tbl tbody th,
+.tbl tbody td {
+    text-align: left;
+    vertical-align: top;
+    padding: 10px 12px;
+    border-top: 1px dashed rgba(38, 35, 32, 0.3);
+}
+
+/* 三级分隔层级：表头墨条（3px 粗边）＞ 组与组之间（2px 实线）＞ 组内相邻行
+   （1px 虚线）。原来的组间线只挂在轴格上，而轴格只占 22% 宽 —— 右边 78%
+   依旧是和行间虚线等粗等淡的一条，两组读不出分界（用户截图实锤）。
+   现在用 `> *` 让组首行的三格各带一条 2px 实线，相邻边框在 collapse 下
+   合并成一条贯穿三列的线。落点选单元格而不是 <tr>：行边框在 collapse
+   模型里的参与规则绕，单元格边框是确定的。 */
+.tbl tbody tr.tbl-group-start:not(:first-child) > * {
+    border-top: var(--border-medium);
+}
+
+/* 首行不留上边框（紧贴表头墨条，再加一道会成双线） */
+.tbl tbody tr:first-child > * { border-top: 0; }
+
+.tbl tbody .tbl-axis {
+    font-family: var(--font-round);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    /* 底色比纸面深一档，让「标签带 / 内容区」的分栏一眼可见 */
+    background: rgba(94, 179, 174, 0.3);
+    /* ⚠️ --border-medium 本身就是完整简写（2px solid #262320），
+       引用时不能再拼 `solid var(--dark-frame)` —— 那样会展开成
+       `2px solid #262320 solid #262320`，非法值整条声明作废，
+       边框静默消失（探针实测 0px none）。 */
+    border-right: var(--border-medium);
+    /* 组间横线统一由 .tbl-group-start 那条规则画（贯穿三列），这里不再
+       单独给 border-top，免得将来调分隔线要动两处。 */
+}
+
+.tbl-key { font-weight: 600; }
+
+.tbl-caption {
+    padding: 9px 16px 12px;
+    border-top: 1px dashed rgba(38, 35, 32, 0.3);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    opacity: 0.82;
+}
+
+/* 大屏双栏：整块跨栏铺满（同画廊 / 环形图）——三列表格压在 630px 的单栏里
+   必然憋屈，跨栏之后台面才够宽敞。 */
+@media (min-width: 1100px) {
+    .article-body > .tbl-block {
+        column-span: all;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* 窄屏（≤700px）：三列在手机上只能压成窄条，改成**堆叠卡片** ——
+   表头藏起，每行自成一格（元素名 + 说明），分组轴变成组首的一枚深色小签。
+   这样不必横向滚动就能读全，也不会有内容被滑出视野。 */
+@media (max-width: 700px) {
+    .tbl thead { display: none; }
+
+    .tbl,
+    .tbl tbody,
+    .tbl tr,
+    .tbl th,
+    .tbl td { display: block; width: auto; }
+
+    .tbl tbody tr {
+        padding: 10px 0 12px;
+        border-top: 1px dashed rgba(38, 35, 32, 0.3);
+    }
+
+    .tbl tbody tr:first-child {
+        border-top: 0;
+        padding-top: 4px;
+    }
+
+    /* 大屏的组间线挂在单元格上；堆叠态单元格已改成 block，三段线会显得零碎，
+       所以按同特异性把单元格的线清掉，改画在整张卡片（<tr>）上 —— 此时
+       <tr> 是普通块级盒，边框照常渲染。组首行再向上多留一点空，靠留白 +
+       实线双重断组。 */
+    .tbl tbody tr.tbl-group-start:not(:first-child) > * {
+        border-top: 0;
+    }
+
+    .tbl tbody tr.tbl-group-start:not(:first-child) {
+        border-top: var(--border-medium);
+        padding-top: 18px;
+    }
+
+    .tbl tbody th,
+    .tbl tbody td {
+        border-top: 0;
+        border-right: 0;
+        padding: 0 14px;
+    }
+
+    .tbl tbody .tbl-axis {
+        display: inline-block;
+        background: var(--dark-frame);
+        color: var(--cream-white);
+        font-size: 0.68rem;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        padding: 4px 9px;
+        margin: 0 14px 8px;
+    }
+
+    .tbl tbody td.tbl-key {
+        font-family: var(--font-round);
+        font-weight: 700;
+        padding-bottom: 3px;
+    }
 }
 
 /* ===== 参考文献条目（type: 'ref'） =====
