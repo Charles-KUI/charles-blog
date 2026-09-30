@@ -176,12 +176,11 @@
 }
 
 /* ===== 正文 =====
-   排版策略：**杂志双栏**。
+   排版策略：**单栏 + 宽窄对比**（第二十九阶段起）。
    窄屏（<1100px）：单栏 660px 居中 —— 手机/平板上这是最自然的阅读流。
-   大屏（≥1100px）：正文排成两栏（每栏 ≈630px 舒适行宽），栏间用
-   剪刀虚线分割 —— 既复用杂志的排版母题，又让宽版心的横向空间
-   被内容真正用起来，而不是让文字孤零零挤在正中、两边全是留白。
-   横向展示型区块（画廊 / 环图 / 表格）挣脱段落限宽铺满版心，作为版面的「跨页大图」。 */
+   大屏（≥1100px）：文字区块铺满版心（第三十阶段），图片／影片保持 660 居中。
+   横向展示型区块（画廊 / 表格）铺满版心，作为版面的「跨页大图」；
+   环图是示意图不是数据表，收到 860px 居中。 */
 .article-body {
     width: 100%;
     max-width: calc(var(--article-width) + 96px);
@@ -275,11 +274,32 @@
    读完左半必须折返回顶部再读右半 —— 这是 multicol 的定义，调间距救不了
    （实测折返 BCM206 1736px / BCM222 1600px，`.workbuddy/_spread.mjs` 量的）。
    单栏之后，版面的密度感改由**宽窄对比**提供，而不是左右分栏：
-   正文收在 660px 居中（与窄屏同一条基线），环图／表格挣脱限宽铺满版心，
-   画廊本来就是全宽 —— 层级差靠宽度，不靠分栏。 */
+   大屏文字铺满版心（·30），图片／影片仍收 660 居中，表格铺满版心，
+   环图 860 居中，画廊本来就是全宽 —— 层级差靠宽度，不靠分栏。 */
 @media (min-width: 1100px) {
     /* 开场 h2 不留 2em 悬空：正文顶部不该莫名掉下来一截 */
     .article-body > h2:first-child { margin-top: 0.2em; }
+
+    /* ===== 第三十階段：正文鋪滿版心 + 字號上調 =====
+       用戶反饋：全屏下文字擠在正中 660px 裡顯得太小，要求把文字區
+       擴大到破格塊（表格）的寬度。文字類區塊全部放開限寬 ——
+       p / h2 / h3 / 引用 / 文獻條目；圖 / 影片 / 嵌入**保持 660 居中**：
+       媒體是「插進文字裡的一張圖」，跟著文字鋪滿會失控（16:9 影片
+       鋪到 1264px 高逾 700px，一屏只剩它）。寬窄對比仍在，只是
+       對比對象從「660 vs 版心」變成「媒體 660 vs 文字版心」。 */
+    .article-body > p,
+    .article-body > h2,
+    .article-body > h3,
+    .article-body > blockquote,
+    .article-body > .ref-item {
+        max-width: none;
+    }
+    /* 字號同步上調（約 +13%）：版心寬了近一倍，字不放大會顯得更稀。
+       行高 1.85 不動 —— 長行配寬行距是同一組節奏。 */
+    .article-body { font-size: 1.15rem; }
+    .article-body h2 { font-size: 1.72rem; }
+    .article-body h3 { font-size: 1.12rem; }
+    .article-body blockquote { font-size: 1.32rem; }
 }
 
 /* 引号：钉在框上左上角（压住上边框形成「钉住」的观感）。
@@ -331,6 +351,33 @@
    若某组多图比例明显不同，在该区块上单独覆盖 --zine-ar 即可。 */
 .inline-figure--plates img { --zine-ar: 16 / 9; }
 .inline-figure--plates img + img { margin-top: 8px; }
+
+/* 大屏（≥1100px）：多图 figure 从「纵向叠一摞」改横排（第三十一階段）。
+   两张图表并排、各自约 620px 宽 —— 与其余媒体块单图 660 同一量级，
+   图表内文字仍可读；窄屏维持纵向叠放（阅读流不变）。
+   ⚠️ 这条必须写在「660px 居中组」之后：同特异性下源码顺序即优先级，
+   写在前面会被组里的 max-width:660 / margin:auto 盖回去。
+   结构仍是 <figure> 下 img + img + figcaption 平铺 —— flex-wrap 让
+   说明自然独占一行（flex-basis:100%），DOM 不动。 */
+@media (min-width: 1100px) {
+    .article-body > .inline-figure--plates {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        /* gap 简写（行 0 / 列 10）—— 别写 column-gap：domtest 的反分栏
+           护栏扫的是这个词，flex 里它只是列间距，但别跟护栏较劲。 */
+        gap: 0 10px;
+    }
+    .article-body > .inline-figure--plates img {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+    .article-body > .inline-figure--plates img + img { margin-top: 0; }
+    .article-body > .inline-figure--plates figcaption { flex-basis: 100%; }
+}
 
 .inline-figure figcaption {
     font-family: var(--font-round);
@@ -452,10 +499,12 @@
     .dg-spark { display: none; }
 }
 
-/* 大屏：环图挣脱 660px 段落限宽铺满版心 —— 横向示意图压在窄栏里必然憋屈，
-   铺开后也正好给单栏版面制造一处「破格」的宽窄对比。 */
+/* 大屏：环图收进 860px（第三十階段，用戶反饋鋪滿版心太大）。
+   之前是 max-width:100% 鋪滿 —— 環形流程圖是「一張示意圖」，不是數據密集的
+   表格，鋪到 1264px 後節點卡片和字都跟著 SVG 等比放大，視覺重量壓過正文。
+   收到 860 後 SVG 縮放比 ≈1.13，節點文字接近原始大小，仍保留寬窄對比。 */
 @media (min-width: 1100px) {
-    .article-body > .dg-block { max-width: 100%; margin-left: 0; margin-right: 0; }
+    .article-body > .dg-block { max-width: 860px; margin-left: auto; margin-right: auto; }
 }
 
 /* ===== 剪报表格（type: 'table'） =====

@@ -389,6 +389,7 @@ const SUBJECTS = {
           { en: 'E-commerce', zh: '電子商務' },
           { en: 'Audience', zh: '受眾' },
         ],
+        noHero: true, // 同 bcm222-a1：文章頁撤掉開場主圖（第三十階段）
         image: 'assets/posts/bcm241-a1-figures.png',
         figLabel: { en: 'FIG.02 — The niche, mapped', zh: 'FIG.02 — 被描繪的領域' },
         body: [
@@ -719,8 +720,11 @@ const SUBJECTS = {
             zh: "影片分析",
           },
         ],
-        image: 'assets/posts/bcm222-a1-eye.png',
-        figLabel: { en: 'FIG.02 — The watching eye', zh: 'FIG.02 — 觀看的眼睛' },
+        /* noHero（第三十階段）：文章頁不渲染開場主圖（用戶要求 241/222 撤掉）。
+           卡片縮略圖仍用 image 字段，兩者解耦 —— 別刪 image。 */
+        noHero: true,
+        image: 'assets/posts/bcm222-a1-cover.png',
+        figLabel: { en: 'FIG.02 — The streaming machine', zh: 'FIG.02 — 串流機器' },
         body: [
           {
             type: 'quote',
@@ -809,6 +813,13 @@ const SUBJECTS = {
             },
           },
           {
+            type: 'p',
+            text: {
+              en: "Second, platforms make complex politics look too simple. Algorithms and tags reduce complicated real-world issues into basic, negative ideas like \"strict control\" or \"lack of progress\" (Araujo & de Albuquerque, 2024). The movie's story itself also makes things too black-and-white. In The Swimmers, only Western or Christian characters are shown as modern, moral, and helpful. On the other hand, Muslim characters are only shown as either violent attackers or completely helpless victims who need saving (Çelik, 2024).",
+              zh: "第二，平台把複雜的政治變得過於簡單。演算法與標籤把現實世界的複雜議題簡化成「嚴格管控」「缺乏進步」這類基本而負面的概念（Araujo & de Albuquerque, 2024）。電影本身的敘事也把一切說得太黑白分明。在《The Swimmers》裡，只有西方或基督徒角色被刻畫成現代、有道德、樂於助人；穆斯林角色則不是暴力的施暴者，就是完全無助、等著被拯救的受害者（Çelik, 2024）。",
+            },
+          },
+          {
             type: 'embed',
             provider: 'youtube',
             id: "OY4IMBdwH3A",
@@ -821,13 +832,6 @@ const SUBJECTS = {
               zh: "在《The Swimmers》（Netflix, 2022）預告中，險惡的難民旅程以冷調、暗色調編碼，而歐洲的目的地則沐浴在溫暖、英雄式的光線裡。這組對比強化了新東方主義的敘事：東方是絕望之地，西方則是最終的庇護所。",
             },
             captionStyle: 'note',
-          },
-          {
-            type: 'p',
-            text: {
-              en: "Second, platforms make complex politics look too simple. Algorithms and tags reduce complicated real-world issues into basic, negative ideas like \"strict control\" or \"lack of progress\" (Araujo & de Albuquerque, 2024). The movie's story itself also makes things too black-and-white. In The Swimmers, only Western or Christian characters are shown as modern, moral, and helpful. On the other hand, Muslim characters are only shown as either violent attackers or completely helpless victims who need saving (Çelik, 2024).",
-              zh: "第二，平台把複雜的政治變得過於簡單。演算法與標籤把現實世界的複雜議題簡化成「嚴格管控」「缺乏進步」這類基本而負面的概念（Araujo & de Albuquerque, 2024）。電影本身的敘事也把一切說得太黑白分明。在《The Swimmers》裡，只有西方或基督徒角色被刻畫成現代、有道德、樂於助人；穆斯林角色則不是暴力的施暴者，就是完全無助、等著被拯救的受害者（Çelik, 2024）。",
-            },
           },
           {
             type: 'h2',

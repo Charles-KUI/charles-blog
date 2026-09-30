@@ -3078,3 +3078,104 @@ multicol 的兩欄**永遠從容器頂部往下長**：整篇一個容器 → �
    手機上的假 UI** —— 三處加起來就是所謂的「AI 味」。
    教訓：**色卡對 ≠ 風格對**；統計量查不出 AI 味（實測區分不出來），
    硬規則必須靠提示詞從源頭擋掉，驗收只能靠第一關的眼檢。
+
+第三十階段 · 四項用戶反饋：換封面 / 撤開場主圖 / 全屏文字鋪滿版心 / 縮環圖
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（四項）】
+1. BCM222 文章開頭那張「恐怖眼睛」圖換掉 —— 庫裡找主題圖，沒有就按網站
+   風格生成一張。
+2. BCM241 / BCM222 文章頁開頭那張開場主圖（hero）刪掉。
+3. 全屏（≥1100px）正文**字號太小**：把文字限定區域從 660px 擴大到
+   破格塊（表格）的滿版心寬度。
+4. BCM206 的環圖組件太大，縮小一些。
+
+【1 · BCM222 換封面】
+· 生成新封面 `assets/posts/bcm222-a1-cover.png/.webp`：復古陰極射線電視
+  + 屏幕裡被紙條撕裂劃過的地球 —— 呼應「串流平台撕裂東西方敘事」的主題，
+  絲網拼貼風格（逐字帶生圖規範第五節風格錨），無臉 / 無漸層 / 無假字。
+· content.js 的 image 字段從 bcm222-a1-eye.png 換成新封面；figLabel 改
+  「FIG.02 — The streaming machine / 串流機器」。
+· 舊圖 bcm222-a1-eye.png 檔案保留在 assets/posts/（不刪素材）。
+
+【2 · 撤開場主圖（noHero 機制）】
+· content.js：bcm241-a1 / bcm222-a1 兩條記錄加 `noHero: true`。
+· article-page.js：`heroFigure.hidden = !!a.noHero`；noHero 時**不給
+  heroImg 賦 src**（圖不發請求）。⚠️ image 字段**不能清空** —— 它還
+  供科目頁卡片縮略圖用，兩者解耦。
+· BCM206 / BCM212 的 hero 不動（用戶只點名 241 / 222）。
+
+【3 · ≥1100px 文字鋪滿版心 + 字號上調】
+· article.css ≥1100 檔：p / h2 / h3 / blockquote / .ref-item 五類**文字
+  區塊** `max-width:none` —— 文字鋪滿版心（1440 下約 1348px）。
+  圖 / 影片 / 嵌入**保持 660 居中**：媒體是「插進文字裡的一張圖」，
+  16:9 影片鋪到 1264px 高逾 700px，一屏只剩它。寬窄對比仍在，只是
+  對比對象從「660 vs 版心」變成「媒體 660 vs 文字版心」。
+· 字號同步上調（約 +13%）：正文 1.02→1.15rem、h2 1.55→1.72rem、
+  h3 1.02→1.12rem、引用 1.2→1.32rem。行高 1.85 不動。
+· .ref-item 必須跟正文一起進鋪滿組：文獻若留在 660 而段落鋪滿，
+  公共左軌直接錯開（verify-bcm206-a1 的左軌斷言已改寫盯住）。
+
+【4 · 環圖收到 860px】
+· ≥1100 檔 `.dg-block` 從 max-width:100% 改 `max-width:860px; margin:auto`。
+  環形流程圖是示意圖不是數據表，鋪到 1264px 後節點卡片和字跟著 SVG
+  等比放大，視覺重量壓過正文；收到 860 後縮放比 ≈1.13，節點文字接近
+  原始大小，仍保留寬窄對比。
+
+【測試同步（·29 的三條反回退斷言按 ·30 新約定改寫）】
+· verify-bcm222-a1 / verify-bcm206-a1：原「≥1100 不得存在 max-width:none
+  重置組」→ 改為「重置組**存在**且只含文字類區塊；figure / video /
+  embed 不得混入」。
+· verify-bcm241-a1：加 noHero 斷言（heroFigure.hidden 且無 src，中英雙態）。
+· _spread.mjs 環圖斷言修假失敗：`Math.min(860, contentW)` 在 1000px
+  視窗得 860，但窄屏根本沒進 860 規則（實為 660）—— 改為
+  `s.w >= 1100 ? Math.min(860, contentW) : expect`。
+
+【驗證】
+· jsdom 全量 0 失敗：domtest 229 / bcm212 108 / bcm206 129 / bcm222 122 /
+  bcm241 111 / hidden 92 / langswitch 12 / nav-static 52 / nav-runtime 25 /
+  narrow-geom 15 / mobile 33 / article 11。
+· 真機量測全 PASS：_spread 155 / _figbind 123 / _refcolumn 88 /
+  _refalign / _tblalign。
+· 眼檢六圖（.workbuddy/_shot30.mjs，1440）：222 卡片新封面、241/222
+  文章頁開頭無 hero 直接進正文、206/222 文字鋪滿版心且字號變大、
+  環圖 860 居中節點文字清晰。
+
+第三十一階段 · bcm222 兩處版面微調：圖表橫排 / 影片塊挪位
+════════════════════════════════════════════════════════════════════
+
+【使用者要求】
+1. 正文那組兩張數據圖表（USC Annenberg 主角比例 / 導演構成）在全屏
+   狀態下改成**橫著排版**；窄屏不變。
+2. 影片組件（The Swimmers 預告）挪到「Second, platforms make complex
+   politics look too simple… (Çelik, 2024)」那段**下面**。
+
+【1 · 多圖 figure ≥1100 橫排】
+· article.css 新增 ≥1100 規則：`.article-body > .inline-figure--plates`
+  `max-width:100%` 鋪滿版心 + `display:flex; flex-wrap:wrap`，兩張圖
+  `flex:1 1 0` 並排（各約 620px 寬，與單圖 660 同一量級，圖表文字可讀），
+  figcaption `flex-basis:100%` 獨佔一行。窄屏（<1100）維持縱向疊放。
+· ⚠️ 規則必須寫在「660px 居中組」**之後**：同特異性下源碼順序即優先級，
+  寫在前面會被組裡的 max-width:660 / margin:auto 蓋回去。
+· ⚠️ 列間距用 `gap: 0 10px`，**別寫 column-gap** —— domtest 的反分欄
+  護欄掃這個詞（flex 裡它只是列間距，但別跟護欄較勁）。
+· DOM 結構不變（figure 下 img + img + figcaption），flex-wrap 讓說明
+  自然換行，·27 的「圖與說明同體」結構保證仍然成立。
+
+【2 · 影片塊挪位】
+· content.js：embed 區塊從「First…」段後移到「Second…」段後。
+  剪刀虛線 .embed-rule 是渲染時拼在影片塊前面的（embedRule() +
+  renderEmbed()），跟著一起走，不用單獨處理。
+
+【測試同步】
+· verify-bcm222-a1：加「影片塊緊跟 Second 段之後」的 DOM 順序斷言；
+  加 ≥1100 橫排的靜態 CSS 守衛（flex + max-width:100% + 說明
+  flex-basis:100% + 取消縱疊 margin-top）。
+· _spread.mjs：多圖 figure 從「永遠 660」媒體組拆出，單獨斷言
+  ≥1100 鋪滿版心 / 窄屏 660。
+
+【驗證】
+· jsdom：domtest 229 / bcm222 126 / bcm206 129 / bcm241 111，全 0 失敗。
+· 真機 `_spread` 160 通過 / 0 失敗。
+· 眼檢三圖（.workbuddy/_shot31.mjs）：1440 兩圖並排鋪滿版心、說明獨佔
+  一行；1440 影片塊在 Second 段之後（剪刀虛線跟著走）；390 窄屏仍縱疊。

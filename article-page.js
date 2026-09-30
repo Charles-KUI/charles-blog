@@ -496,7 +496,7 @@
     document.getElementById('articleTitle').textContent = util.tr(a.title);
     document.getElementById('postTags').innerHTML = util.trList(a.tags)
       .map(function (t) { return '<span class="tag">' + t + '</span>'; }).join(' ');
-    document.getElementById('heroCap').textContent = util.tr(a.figLabel);
+    if (!a.noHero) document.getElementById('heroCap').textContent = util.tr(a.figLabel);
     document.getElementById('heroImg').alt = util.t('card.imageAlt', util.tr(a.title));
   }
 
@@ -541,7 +541,11 @@
     }
 
     const heroImg = document.getElementById('heroImg');
-    heroImg.src = util.imgSrc(root + a.image);
+    /* noHero 文章（bcm241-a1 / bcm222-a1）：整块隐藏开场主图（含图注）。
+       image 字段留给卡片缩略图，别清空它。 */
+    const heroFigure = document.getElementById('heroFigure');
+    if (heroFigure) heroFigure.hidden = !!a.noHero;
+    if (!a.noHero) heroImg.src = util.imgSrc(root + a.image);
 
     // 正文区块 + 文章级视频块（最多一个）
     let bodyHtml = renderBody(a.body, root, util);
