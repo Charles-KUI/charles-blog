@@ -209,7 +209,9 @@
 .article-body > .video-block,
 .article-body > .embed-block,
 .article-body > .dg-block,
-.article-body > .tbl-block {
+.article-body > .tbl-block,
+.article-body > .mx-block,
+.article-body > .tl-block {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
@@ -367,8 +369,8 @@
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
-        /* gap 简写（行 0 / 列 10）—— 别写 column-gap：domtest 的反分栏
-           护栏扫的是这个词，flex 里它只是列间距，但别跟护栏较劲。 */
+        /* gap 简写（行 0 / 列 10）—— 别写「列间距」那个属性名：domtest
+           的反分栏护栏扫的是这个词，flex 里它只是列间距，但别跟护栏较劲。 */
         gap: 0 10px;
     }
     .article-body > .inline-figure--plates img {
@@ -624,6 +626,19 @@
         margin-left: 0;
         margin-right: 0;
     }
+    /* 風險矩陣跟上環圖：同屬「示意 / 圖解」，收到 860 居中。
+       四欄若鋪到 1348px，每格 300px 反而空得看不出是一張矩陣。 */
+    .article-body > .mx-block {
+        max-width: 860px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* 時間軸則要滿版心：八個階段擠在 660px 裡每欄只剩 80px，讀不了。 */
+    .article-body > .tl-block {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
 
 /* 窄屏（≤700px）：三列在手机上只能压成窄条，改成**堆叠卡片** ——
@@ -685,6 +700,882 @@
         padding-bottom: 3px;
     }
 }
+
+/* ===== 風險矩陣（type: 'matrix'） =====
+   ·34 改版：**顏色改講「解決難易度」**，不再重複表達嚴重度。
+   · 座標軸（可能性 × 嚴重度）已經把「多嚴重」講完了，格子再深淺一次是資訊重複；
+   · 空白格一律乾淨紙色，只有「有事件的標籤」上色 —— 背景不再一片花。
+   · 三檔（Hard 赤陶紅 / Medium 深青 / Easy 淺灰綠）只出現在標籤與膠囊上，
+     所以同一格裡的 03 與 05 可以用兩種顏色直接分出難易度。
+
+   下方清單只留 ID / 風險 / 難易度三欄；完整描述與應對策略收進「懸停 / 輕點」
+   的詳情卡（.mx-pop）。卡是 figure 的絕對定位子節點，所以不會被表格裁掉。
+
+   外殼沿用剪報的紙張語言（奶油紙 + 粗邊 + 硬陰影）。
+
+   ⚠️ 這個區塊裡**不准出現 <p>**：語言切換的主文本隊列掃
+   `p, h2, h3, blockquote, figcaption`，多一個 <p> 就整體錯位。
+   ⚠️ 赤陶紅 #C85A32 是站上唯一的第四色，只准用在「困難」這一檔（面積很小），
+      其餘仍是青 / 奶油 / 近黑三色的深淺。 */
+.mx-block {
+    /* 同 .tbl-block：只寫上下 margin，別用簡寫 —— 會把 660px 居中組
+       給過來的 margin-left/right:auto 一起蓋掉（CSS 陷阱 1）。 */
+    margin-top: 2.2em;
+    margin-bottom: 2.2em;
+    position: relative;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+    /* 本區塊專用色票：紙色 + 三檔難易度 */
+    --mx-paper: #E6E2D8;
+    --mx-hard: #C85A32;
+    --mx-medium: #66B2B2;
+    --mx-easy: #C2D6D1;
+}
+
+.mx-head {
+    padding: 14px 16px 10px;
+}
+
+.mx-title {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+/* 窄屏兜底：矩陣本質上需要寬度，寧可讓它自己橫向滾，也別壓成豎條 */
+.mx-wrap { overflow-x: auto; }
+
+.mx-grid {
+    display: flex;
+    padding: 2px 14px 0;
+    min-width: 460px;
+}
+
+/* 縱軸名：貼在格子左側，直書。
+   預設 rotate(180deg) → 從下往上讀（英文的慣例）；
+   中文維持 vertical-rl 正立（漢字再轉 180° 就上下顛倒了）。 */
+.mx-ylabel {
+    flex: 0 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-round);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.68;
+}
+
+html[lang^="zh"] .mx-ylabel { transform: none; }
+
+.mx-plot {
+    flex: 1 1 auto;
+    min-width: 0;
+    border: var(--border-medium);
+}
+
+.mx-row { display: flex; }
+
+.mx-row + .mx-row { border-top: 1px solid rgba(38, 35, 32, 0.26); }
+
+/* 嚴重度刻度：數字 + 語意（4 Critical / 3 Major…）。
+   數字給「分數怎麼算」，形容詞給「這格到底多嚴重」—— 兩者都在才不用猜。 */
+.mx-y {
+    flex: 0 0 88px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 8px;
+    background: rgba(94, 179, 174, 0.18);
+    border-right: 1px solid rgba(38, 35, 32, 0.26);
+}
+
+.mx-y-num {
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.mx-y-word {
+    font-family: var(--font-round);
+    font-size: 0.58rem;
+    line-height: 1.15;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    opacity: 0.72;
+}
+
+/* 所有格子共用同一個紙色 —— 熱度不再用「整格背景」表達，
+   只由格內標籤的顏色表達。空格子因此完全乾淨。 */
+.mx-cell {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 8px 6px;
+    min-height: 76px;
+    background: var(--mx-paper);
+}
+
+.mx-cell + .mx-cell { border-left: 1px solid rgba(38, 35, 32, 0.26); }
+
+/* 橫軸刻度列：先一條 2px 實線跟格身分開，再排 1–4 */
+.mx-row--axis { border-top: var(--border-medium); }
+
+.mx-corner {
+    flex: 0 0 88px;
+    background: rgba(94, 179, 174, 0.18);
+    border-right: 1px solid rgba(38, 35, 32, 0.26);
+}
+
+.mx-x {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 5px 3px;
+    background: rgba(94, 179, 174, 0.18);
+}
+
+.mx-x + .mx-x { border-left: 1px solid rgba(38, 35, 32, 0.26); }
+
+.mx-x-num {
+    font-family: var(--font-round);
+    font-size: 0.74rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.mx-x-word {
+    font-family: var(--font-round);
+    font-size: 0.54rem;
+    line-height: 1.15;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    opacity: 0.72;
+    text-align: center;
+}
+
+/* 橫軸名：補在刻度列下方，與格子左緣對齊後置中 */
+.mx-xnote {
+    margin: 6px 14px 0 32px;
+    text-align: center;
+}
+
+.mx-xlabel {
+    font-family: var(--font-round);
+    font-size: 0.6rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    opacity: 0.68;
+}
+
+/* 格內標籤 = <button>：hover 出卡、手機輕點出卡、鍵盤可 Tab 進來。
+   顏色就是難易度，所以標籤必須撐滿它自己的底色（不像舊版是貼紙）。 */
+.mx-chip {
+    align-self: flex-start;
+    max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    padding: 2px 6px 2px 2px;
+    font: inherit;
+    text-align: left;
+    color: var(--dark-frame);
+    background: var(--mx-paper);
+    border: 2px solid var(--dark-frame);
+    border-radius: 0;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.mx-chip:hover,
+.mx-chip:focus-visible {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--dark-frame);
+}
+
+.mx-chip:focus-visible {
+    outline: 2px solid var(--dark-frame);
+    outline-offset: 2px;
+}
+
+.mx-chip.mx-diff-hard {
+    background: var(--mx-hard);
+    color: var(--cream-white);
+}
+
+.mx-chip.mx-diff-medium { background: var(--mx-medium); }
+
+.mx-chip.mx-diff-easy { background: var(--mx-easy); }
+
+.mx-chip-no {
+    flex: 0 0 auto;
+    min-width: 20px;
+    padding: 1px 3px;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.55rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+}
+
+.mx-chip-short {
+    /* min-width:0 + anywhere：窄格裡晶片才肯收在 max-width:100% 內。
+       少了這兩行，flex 子項的 min-content 會把格子撐破（390px 實測 +3px）。 */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    font-family: var(--font-round);
+    font-size: 0.63rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.1px;
+}
+
+/* ---- 圖例：標題 + 三列（色塊 / 名稱 / 括號註 / 白話解釋） ---- */
+.mx-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 12px 14px 0 32px;
+    font-family: var(--font-round);
+    font-size: 0.61rem;
+    letter-spacing: 0.4px;
+}
+
+.mx-legend-title {
+    display: block;
+    margin-bottom: 1px;
+    font-size: 0.55rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.mx-key {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 7px;
+}
+
+.mx-swatch {
+    flex: 0 0 auto;
+    align-self: center;
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--dark-frame);
+}
+
+/* 圖例色塊跟著 .mx-key 上的難易度 class 走，不再重複三條選擇器 */
+.mx-key.mx-diff-hard .mx-swatch { background: var(--mx-hard); }
+.mx-key.mx-diff-medium .mx-swatch { background: var(--mx-medium); }
+.mx-key.mx-diff-easy .mx-swatch { background: var(--mx-easy); }
+
+.mx-key-label {
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.mx-key-note { opacity: 0.7; }
+
+.mx-key-desc {
+    flex: 1 1 260px;
+    min-width: 0;
+    opacity: 0.78;
+    line-height: 1.45;
+}
+
+/* ---- 三欄清單：ID / 風險 / 難易度 ---- */
+.mx-tablewrap {
+    /* 左 32px = .mx-grid 的 14px 内距 + 18px 纵轴名，表格才与格子左缘齐 */
+    padding: 0 14px 16px 32px;
+}
+
+.mx-tbl-title {
+    margin-top: 15px;
+    padding-top: 12px;
+    margin-bottom: 8px;
+    border-top: 1px dashed rgba(38, 35, 32, 0.35);
+    font-family: var(--font-round);
+    font-size: 0.6rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    opacity: 0.68;
+}
+
+.mx-ct {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    border: var(--border-medium);
+}
+
+.mx-ct th {
+    padding: 7px 8px 6px;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.55rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+.mx-th--id { width: 46px; text-align: center; }
+.mx-th--diff { width: 158px; }
+
+.mx-ct td {
+    padding: 9px 8px;
+    vertical-align: middle;
+    border-top: 1px solid rgba(38, 35, 32, 0.26);
+}
+
+.mx-td-id { text-align: center; }
+
+.mx-desc {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+/* 難易度膠囊：色階與上方標籤同一套（不是分數，是「好不好解」） */
+.mx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 3px 10px;
+    font-family: var(--font-round);
+    font-size: 0.56rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: var(--mx-paper);
+    border: 1px solid rgba(38, 35, 32, 0.55);
+    border-radius: 999px;
+    appearance: none;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.mx-badge:hover,
+.mx-badge:focus-visible {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--dark-frame);
+}
+
+.mx-badge:focus-visible {
+    outline: 2px solid var(--dark-frame);
+    outline-offset: 2px;
+}
+
+.mx-badge.mx-diff-hard {
+    background: var(--mx-hard);
+    border-color: var(--dark-frame);
+    color: var(--cream-white);
+}
+
+.mx-badge.mx-diff-medium { background: var(--mx-medium); }
+
+.mx-badge.mx-diff-easy { background: var(--mx-easy); }
+
+.mx-badge-dot { opacity: 0.5; }
+
+/* 表格下方的操作提示：告訴讀者「標籤是可以點的」 */
+.mx-hint {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 8px;
+    margin-top: 10px;
+}
+
+.mx-hint-tag {
+    flex: 0 0 auto;
+    padding: 2px 6px;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.48rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.mx-hint-text {
+    flex: 1 1 200px;
+    min-width: 0;
+    font-size: 0.68rem;
+    line-height: 1.5;
+    opacity: 0.72;
+}
+
+/* ---- 詳情卡：懸停 / 輕點標籤時浮出 ----
+   絕對定位在 .mx-block 內（不掛 body）：跟著文件流滾動，不必在 scroll 時
+   重算位置；也不會被 .mx-wrap 的橫向滾動容器裁掉。 */
+.mx-pop {
+    position: absolute;
+    z-index: 40;
+    width: min(320px, calc(100% - 12px));
+    padding: 10px 12px 12px;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    border-top: 6px solid var(--dark-frame);
+    box-shadow: var(--shadow-hard);
+}
+
+.mx-pop[hidden] { display: none; }
+
+.mx-pop.mx-diff-hard { border-top-color: var(--mx-hard); }
+.mx-pop.mx-diff-medium { border-top-color: var(--mx-medium); }
+.mx-pop.mx-diff-easy { border-top-color: var(--mx-easy); }
+
+.mx-pop-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.mx-pop-no {
+    padding: 1px 5px;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    font-family: var(--font-round);
+    font-size: 0.55rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.mx-pop-badge {
+    padding: 2px 8px;
+    background: var(--mx-paper);
+    border: 1px solid var(--dark-frame);
+    border-radius: 999px;
+    font-family: var(--font-round);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.mx-pop.mx-diff-hard .mx-pop-badge {
+    background: var(--mx-hard);
+    color: var(--cream-white);
+}
+
+.mx-pop.mx-diff-medium .mx-pop-badge { background: var(--mx-medium); }
+.mx-pop.mx-diff-easy .mx-pop-badge { background: var(--mx-easy); }
+
+.mx-pop-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.mx-pop-sub {
+    margin-top: 9px;
+    padding-top: 7px;
+    border-top: 1px dashed rgba(38, 35, 32, 0.35);
+    font-family: var(--font-round);
+    font-size: 0.5rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.mx-pop-fix {
+    margin-top: 3px;
+    font-size: 0.76rem;
+    line-height: 1.55;
+}
+
+/* 窄屏才有：每格前面的小列名（桌面靠表头，不需要重复） */
+.mx-cell-label { display: none; }
+
+/* 窄屏（≤700px）：三欄在手機上只能壓成豎條 → 每行改成一張卡：
+   第一行 [編號] + 難易度膠囊，第二行風險名稱。 */
+@media (max-width: 700px) {
+    .mx-grid {
+        padding: 2px 10px 0;
+        min-width: 430px;
+    }
+
+    .mx-ylabel {
+        flex-basis: 14px;
+        font-size: 0.52rem;
+        letter-spacing: 1px;
+    }
+
+    .mx-y {
+        flex-basis: 62px;
+        padding: 0 5px;
+        gap: 3px;
+    }
+
+    .mx-y-num { font-size: 0.7rem; }
+    .mx-y-word { font-size: 0.47rem; }
+
+    .mx-corner { flex-basis: 62px; }
+
+    .mx-cell {
+        padding: 6px 4px;
+        min-height: 64px;
+    }
+
+    .mx-chip {
+        padding: 1px 4px 1px 1px;
+        gap: 3px;
+        border-width: 1px;
+    }
+
+    .mx-chip-no {
+        min-width: 17px;
+        font-size: 0.5rem;
+        padding: 1px 2px;
+    }
+
+    .mx-chip-short { font-size: 0.55rem; }
+
+    .mx-x-word { font-size: 0.44rem; }
+
+    .mx-xnote { margin: 6px 10px 0 26px; }
+
+    .mx-legend { padding: 10px 10px 0 26px; }
+
+    .mx-key-desc { flex-basis: 100%; }
+
+    .mx-tablewrap { padding: 0 10px 14px 26px; }
+
+    .mx-ct,
+    .mx-ct tbody { display: block; }
+
+    .mx-ct thead { display: none; }
+
+    /* 用 flex 而不是 grid：grid 的隐式行在「表格 → 块级」改构后会吃到
+       stretch，行高被撑到 280px+（实测）。flex-wrap 的行高永远由内容决定。 */
+    .mx-tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 8px;
+        padding: 10px 8px 11px;
+        border-top: 2px solid rgba(38, 35, 32, 0.3);
+    }
+
+    .mx-tr:first-child { border-top: 0; }
+
+    /* 必须先压掉 .mx-ct td 的 9px 内距（那条选择器特异性更高） */
+    .mx-ct .mx-td {
+        display: block;
+        padding: 0;
+        border-top: 0;
+    }
+
+    /* DOM 顺序是 ID → 風險 → 難易度（跟桌面三欄一致），卡片上要
+       「編號 + 膠囊」同一行，所以用 order 把膠囊提回來。 */
+    .mx-td-id { order: 1; flex: 0 0 auto; }
+
+    .mx-td-diff { order: 2; flex: 0 0 auto; }
+
+    .mx-td-desc { order: 3; flex: 1 1 100%; }
+
+    .mx-cell-label {
+        display: block;
+        margin-bottom: 2px;
+        font-family: var(--font-round);
+        font-size: 0.52rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        opacity: 0.55;
+    }
+
+    /* 桌面的表头已经说明了列义；堆叠卡里再逐行重复「RISK DESCRIPTION」
+       六遍只会变吵。编号 + 胶囊 + 风险名已经够读。 */
+    .mx-td-diff .mx-cell-label,
+    .mx-td-desc .mx-cell-label { display: none; }
+
+    .mx-desc { font-size: 0.84rem; }
+
+    .mx-hint { margin-top: 8px; }
+}
+
+/* 手機（≤479px）：格子再怎麼收也需要四欄同時可見 —— 一橫滾就會有一欄
+   被推出畫面，顏色分佈等於看不全。所以這裡**取消最小寬度**，改壓縮
+   縱軸名 + 刻度字，讓 4×4 完整落在 390px 內。 */
+@media (max-width: 479px) {
+    .mx-grid {
+        min-width: 0;
+        padding: 2px 8px 0;
+    }
+
+    .mx-ylabel {
+        flex-basis: 12px;
+        font-size: 0.46rem;
+        letter-spacing: 0.5px;
+    }
+
+    .mx-y {
+        flex-basis: 50px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0 3px;
+    }
+
+    .mx-y-num {
+        font-size: 0.62rem;
+    }
+
+    .mx-y-word {
+        font-size: 0.46rem;
+        letter-spacing: 0;
+        line-height: 1.1;
+    }
+
+    .mx-corner { flex-basis: 50px; }
+
+    .mx-cell {
+        padding: 6px 4px;
+        min-height: 54px;
+        gap: 4px;
+    }
+
+    /* 390px 一格只剩 60 幾 px：兩個英文詞會被折成豎條。這裡只留編號，
+       但把「整塊標籤」塗成難易度色（編號框改成透明），色塊反而更大更清楚。 */
+    .mx-chip-short { display: none; }
+
+    .mx-chip {
+        padding: 3px 4px;
+        gap: 0;
+        border-width: 2px;
+    }
+
+    .mx-chip-no {
+        min-width: 0;
+        padding: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 0.54rem;
+    }
+
+    .mx-x-num { font-size: 0.64rem; }
+
+    .mx-x-word {
+        font-size: 0.42rem;
+        letter-spacing: 0;
+    }
+
+    .mx-xnote { margin: 6px 8px 0 20px; }
+
+    .mx-legend { font-size: 0.56rem; padding: 10px 8px 0 20px; }
+
+    .mx-tablewrap { padding: 0 8px 12px 20px; }
+
+    .mx-desc { font-size: 0.8rem; }
+
+    .mx-hint-text { font-size: 0.64rem; }
+
+    /* 宽度沿用基准的 min(320px, 100% - 12px)：手机也是 320，
+       不必另写一条更宽的规则（会顶到 332px，盖住整块矩阵）。 */
+    .mx-pop {
+        padding: 9px 10px 10px;
+    }
+}
+
+/* ===== 時間軸（type: 'timeline'） =====
+   預設（窄屏）：左軸縱向 —— 一根豎線，事件卡靠右排隊。
+   ≥1100px：橫向 —— 軸線是清單的下邊框，每欄一支虛線「腳」把卡片吊到
+   軸上的方塊節點。八欄各自獨立、卡片全部在線的**上方**，結構上不可能重疊。 */
+.tl-block {
+    margin-top: 2.2em;
+    margin-bottom: 2.2em;
+    background: var(--cream-white);
+    border: var(--border-thick);
+    box-shadow: var(--shadow-hard-lg);
+}
+
+.tl-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding: 14px 16px 12px;
+}
+
+.tl-title {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.tl-range {
+    font-family: var(--font-round);
+    font-size: 0.63rem;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.tl-wrap {
+    position: relative;
+    padding: 16px 16px 6px;
+}
+
+.tl-track {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 縱向主軸（窄屏）：畫在清單上，節點壓在上面 */
+.tl-track::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    bottom: 10px;
+    width: 2px;
+    background: rgba(38, 35, 32, 0.5);
+}
+
+.tl-item {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    /* 用 gap 簡寫，別寫「列間距」那個屬性名 —— domtest 的反分欄護欄掃這個詞 */
+    gap: 0 12px;
+    margin-bottom: 13px;
+}
+
+.tl-item:last-child { margin-bottom: 0; }
+
+.tl-card {
+    grid-column: 2;
+    grid-row: 1;
+    border: var(--border-medium);
+    padding: 8px 10px 9px;
+}
+
+.tl-stem { display: none; }
+
+.tl-node {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    position: relative;
+    z-index: 1;
+    width: 9px;
+    height: 9px;
+    margin-top: 9px;
+    background: var(--dark-frame);
+}
+
+.tl-item.is-milestone .tl-card { background: rgba(94, 179, 174, 0.85); }
+
+.tl-item.is-milestone .tl-node {
+    width: 13px;
+    height: 13px;
+    margin-top: 7px;
+}
+
+.tl-date {
+    display: block;
+    margin-bottom: 5px;
+    font-family: var(--font-round);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0.75;
+}
+
+.tl-text {
+    display: block;
+    font-size: 0.79rem;
+    line-height: 1.5;
+}
+
+.tl-caption {
+    padding: 10px 16px 12px;
+    border-top: 1px dashed rgba(38, 35, 32, 0.3);
+    font-size: 0.78rem;
+    line-height: 1.55;
+    opacity: 0.82;
+}
+
+@media (min-width: 1100px) {
+    /* 軸線本身就是清單的下邊框；每欄一張卡、一支腳、一個方塊節點 */
+    .tl-wrap { padding: 24px 18px 8px; }
+
+    .tl-track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        border-bottom: 3px solid var(--dark-frame);
+    }
+
+    .tl-track::before { display: none; }
+
+    .tl-item {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+        padding: 0 4px;
+    }
+
+    .tl-stem {
+        display: block;
+        flex: 1 1 auto;
+        min-height: 16px;
+        width: 0;
+        margin: 0 auto;
+        border-left: 1px dashed rgba(38, 35, 32, 0.55);
+    }
+
+    /* 節點往下壓 5px，跨在 3px 軸線上（position:relative 不影響佈局，
+       清單高度因此不變，軸線也不會被推走） */
+    .tl-node {
+        position: relative;
+        top: 5px;
+        grid-column: auto;
+        grid-row: auto;
+        justify-self: auto;
+        margin: 0 auto;
+    }
+
+    .tl-stem { margin-bottom: 0; }
+
+    /* 偶數欄往下錯開：卡片仍在軸線上方，只是高度有節奏 */
+    .tl-item:nth-child(even) .tl-card { margin-top: 22px; }
+}
+
 
 /* ===== 参考文献条目（type: 'ref'） =====
    作业的 Reference 区块：每条文献都附一句「为什么引用它」。

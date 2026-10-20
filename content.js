@@ -34,6 +34,14 @@
  *   { type: 'diagram', ... }  内联 SVG 环形流程图
  *   { type: 'table', tag?, title, columns, groups, caption }  剪报风分组表格
  *     （tag 已于第二十五階段撤除，不要再写；分组轴由 groups[].label 提供）
+ *   { type: 'matrix', title, xLabel, yLabel, legend, risks, fixLabel, caption }
+ *     風險矩陣：risks 每項 { no, l, s, desc, fix }（l / s 各 1–4），
+ *     依「可能性 × 嚴重度」落格，格子深淺由 l*s 分數決定；矩陣下方
+ *     自動附一張編號對應的應對策略清單。代替原本的五列風險表。
+ *   { type: 'timeline', title, range, items, caption }
+ *     時間軸：items 每項 { date, text, milestone? }。≥1100px 橫向 ——
+ *     事件小卡全部排在軸線**上方**（等寬欄位，永不重疊），
+ *     milestone: true 的卡片填青；窄屏自動轉成左軸縱向時間軸。
  *   { type: 'gallery', title: '簡報標題', file: 'assets/pdfs/xxx.pdf',
  *     hint: '點擊提示', items: [ { src: 'assets/slides/xxx/p1.png', label: '頁面標籤' }, ... ] }
  *     （簡報幻燈片畫廊：每頁一張高清圖，依序由左至右排列、可箭頭翻頁、
@@ -269,54 +277,365 @@ const SUBJECTS = {
       {
         id: 'bcm212-a2',
         no: 'No.02',
-        placeholder: true,
-        title: { en: 'Ethics in Focus: Interviewing Peers', zh: '倫理聚焦：訪談同儕' },
-        excerpt: {
-          en: 'A camera, a heart, and everything in between — what my pilot interviews taught me about consent, power and the weight of being quoted.',
-          zh: '一台相機、一顆心，以及其間的一切——前測訪談教會我關於知情同意、權力，以及「被引用」的重量。',
+        studentId: '1723674',
+        title: {
+          en: "Cross-Border E-Commerce of Fast Fashion: Gen Z Shoppers' Acceptance and Trust Towards AI-Generated Imagery (Project - Project Design and Management Plan)",
+          zh: '快時尚跨境電商：Z 世代消費者對 AI 生成影像的接受度與信任（專案設計與管理計畫）',
         },
-        date: '2026-09-16',
+        excerpt: {
+          en: 'The working plan behind the study: a bilingual visual survey, an ethics protocol built on anonymity, a five-risk matrix, and a timeline that lands exactly on submission day.',
+          zh: '研究背後的執行計畫：雙語視覺問卷、以匿名為底的倫理程序、五項風險的評估矩陣，以及一路排到繳交日的時間軸。',
+        },
+        date: '2026-10-18',
         tags: [
-          { en: 'Ethics', zh: '倫理' },
-          { en: 'Interview', zh: '訪談' },
+          { en: 'BCM212 A2', zh: 'BCM212 A2' },
+          { en: 'Project Plan', zh: '專案計畫' },
+          { en: 'Risk Matrix', zh: '風險矩陣' },
         ],
-        image: 'assets/posts/bcm212-a2-ethics.png',
-        figLabel: { en: 'FIG.03 — Consent on the scale', zh: 'FIG.03 — 天平上的同意' },
+        image: 'assets/posts/bcm212-a2-cover.png',
+        figLabel: { en: 'FIG.03 — Survey first, then the plan', zh: 'FIG.03 — 先問卷，再談規劃' },
         body: [
+          { type: 'h2', text: { en: '1. Aims and Significance', zh: '1. 研究目的與意義' } },
           {
             type: 'p',
             text: {
-              en: 'The ethics form looked like paperwork until my first interviewee paused mid-sentence and asked: “If I say this, will my tutor read it?” Suddenly every checkbox on that form had a face.',
-              zh: '那張倫理審查表原本看起來只是紙上作業，直到第一位受訪者在句子中途停下來問：「如果我說出這個，我的導師會讀到嗎？」突然間，表上每一個欄位都有了一張臉。',
-            },
-          },
-          { type: 'h2', text: { en: 'Consent is a process, not a signature', zh: '同意是一個過程，不是一個簽名' } },
-          {
-            type: 'p',
-            text: {
-              en: 'I rebuilt my consent script around three honest sentences: what I am writing, who will read it, and how you take it back. Two of my four pilot interviewees used that right — one withdrew a quote about family pressure a day after recording. The article survived. The trust mattered more.',
-              zh: '我把知情同意腳本重寫成三句誠實的話：我在寫什麼、誰會讀到、以及你如何收回。四位前測受訪者中有兩位行使了這個權利——其中一位在錄音隔天撤回了關於家庭壓力的一段引述。文章還是完成了。但信任更重要。',
-            },
-          },
-          {
-            type: 'quote',
-            text: {
-              en: 'Interviewing peers means they can read your final draft. Write like they will.',
-              zh: '訪談同儕意味著他們會讀到你的定稿。就照著「他們會讀」的方式寫。',
+              en: "This project investigates how Gen Z shoppers in the cross-border e-commerce market accept and trust AI-generated apparel imagery. While fast-fashion brands are rapidly adopting AI-generated models to cut creative costs and speed up product launches, this strategy introduces a major commercial risk: it can severely damage consumer trust and directly lower the willingness to pay. My research aims to measure exactly how consumers react to these artificial images, what visual cues make them feel \"uncanny,\" and whether a brand can successfully rebuild that trust by being transparent and explicitly disclosing their use of AI.",
+              zh: '本專案探討跨境電商市場中的 Z 世代消費者，如何接受並信任 AI 生成的服飾影像。快時尚品牌正快速採用 AI 模特兒以壓低創意成本、加快商品上市，但這個策略也帶來一項重大的商業風險：它可能嚴重損害消費者信任，並直接拉低付費意願。我的研究旨在精確測量消費者對這些人工影像的反應、哪些視覺線索讓他們感到「詭異」，以及品牌能否透過透明揭露 AI 的使用，成功重建這份信任。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'Anonymisation turned out to be a design problem, not a legal one. Pseudonyms were easy; stripping identifying detail from stories made them feel less true. The compromise: aggregate the risky specifics, keep the emotional texture.',
-              zh: '匿名化最後證明是個設計問題，而不是法律問題。化名很容易；把辨識性細節從故事裡剝掉，卻讓它們顯得不那麼真實。折衷做法是：把有風險的具體資訊聚合起來，保留情感的質地。',
+              en: 'This project delivers highly actionable insights. The key stakeholders are cross-border e-commerce merchants, fast-fashion marketing teams, and everyday e-commerce consumers. By identifying the exact balance between visual production costs and consumer purchase intention, this research provides the fashion industry with a concrete roadmap for deploying AI effectively and ethically.',
+              zh: '本專案產出的是高度可執行的洞察。關鍵利害關係人包括跨境電商賣家、快時尚行銷團隊，以及日常的電商消費者。透過找出視覺製作成本與消費者購買意願之間的精確平衡點，本研究為時尚產業提供一份具體可行的藍圖，讓 AI 能被有效且合乎倫理地部署。',
+            },
+          },
+          { type: 'h2', text: { en: '2. Method and Justification', zh: '2. 研究方法與其理據' } },
+          {
+            type: 'p',
+            text: {
+              en: 'This project uses a quantitative survey built around a visual experiment. Participants will view a series of fast-fashion advertisements—some featuring human models and others featuring AI-generated models—and then answer structured questions about their perceptions.',
+              zh: '本專案採用一套以視覺實驗為核心的量化問卷。參與者將觀看一系列快時尚廣告——部分使用真人模特兒，部分使用 AI 生成的模特兒——隨後針對自己的感知回答結構化問題。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'Next step: transcribing the remaining interviews and coding themes with a highlighter and zero digital tools. Old school on purpose.',
-              zh: '下一步：謄寫剩下的訪談，用螢光筆、零數位工具來編碼主題。刻意老派。',
+              en: 'This method is the most effective way to answer the research question. Measuring abstract concepts like "brand trust" and "perceived realism" requires structured psychological tools. By adapting established quantitative scales used in recent fast-fashion research (Bhanver et al., 2023) and AI-perception studies (Veiga & Haslbeck, 2026), this survey ensures highly accurate and reliable data.',
+              zh: '這個方法是最能回答研究問題的途徑。要測量「品牌信任」與「感知真實性」這類抽象概念，需要結構化的心理計量工具。本研究沿用近期快時尚研究（Bhanver et al., 2023）與 AI 感知研究（Veiga & Haslbeck, 2026）中既有的量化量表，以確保資料高度準確且可靠。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'The project targets a focused sample size of 30 to 50 university students, specifically aiming for a diverse mix of cultural backgrounds, including local Hong Kong, Mainland Chinese, and international students. Participants will be recruited through two primary agile channels: in-person iPad intercepts across the university campus to capture immediate, spontaneous visual reactions, and targeted online survey distribution through established personal and academic networks (to efficiently reach Mainland Chinese students). This convenience sampling approach is highly effective for capturing the exact demographic that drives global fast-fashion sales—digitally native Gen Z shoppers.',
+              zh: '本專案的目標樣本量聚焦在 30 至 50 位大學生，並刻意追求文化背景的多元組成，包含本地香港、中國內地與國際學生。參與者將透過兩條機動管道招募：一是在校園各處以 iPad 進行面訪攔截，捕捉立即、自發的視覺反應；二是透過既有的人際與學術網絡定向發放線上問卷（以有效觸及中國內地學生）。這種便利抽樣方式，對於捕捉真正驅動全球快時尚銷售的那個族群——數位原生的 Z 世代消費者——極為有效。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'The survey will feature core questions such as:',
+              zh: '問卷將包含以下核心問題：',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '"Can you identify if the model in this image is AI-generated, and what specific visual cues helped you make that decision?"',
+              zh: '「你能判斷這張圖裡的模特兒是否為 AI 生成嗎？是哪些具體的視覺線索幫助你做出判斷？」',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '"If the brand explicitly states this image is AI-generated, how does that affect your trust in the brand?"',
+              zh: '「如果品牌明確標示這張圖是 AI 生成，這會如何影響你對該品牌的信任？」',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: "\"Based on your perception of the image and the brand's transparency, how likely are you to purchase this clothing item?\"",
+              zh: '「綜合你對這張圖的感知與品牌的透明程度，你購買這件衣服的可能性有多高？」',
+            },
+          },
+          { type: 'h2', text: { en: '3. Ethical Research Practice', zh: '3. 倫理研究實踐' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Conducting ethical research is a primary obligation. This project strictly adheres to academic integrity and participant safety guidelines, ensuring that all data collection is transparent, secure, and respectful.',
+              zh: '進行合乎倫理的研究是首要義務。本專案嚴格遵守學術誠信與參與者安全規範，確保所有資料蒐集過程透明、安全且尊重參與者。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'The primary obligation to the participants is to protect their privacy and ensure they are fully informed. While evaluating fashion advertisements poses no physical or psychological harm, there is a standard data privacy risk associated with online surveys. To completely eliminate this risk, the survey will be 100% anonymous. It will not collect names, student IDs, exact birth dates, or any identifiable personal tracking data.',
+              zh: '對參與者的首要義務，是保護其隱私並確保他們充分知情。評估時尚廣告並不會造成生理或心理傷害，但線上問卷本身存在既定的資料隱私風險。為了完全消除這項風險，本問卷將採 100% 匿名：不蒐集姓名、學號、確切出生日期，或任何可辨識身分的個人追蹤資料。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Before starting the survey, participants will encounter a clear Informed Consent Form. This form will explicitly state the purpose of the project, explain how their anonymous data will be used, and emphasize that their participation is completely voluntary. They can exit the survey at any point without any consequences.',
+              zh: '在開始填答前，參與者會先看到一份清楚的知情同意書。這份文件會明確說明專案目的、解釋其匿名資料將如何被使用，並強調參與完全出於自願。他們可以在任何時間點退出，不會有任何後果。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'When approaching participants on campus with an iPad or reaching out via online networks, the communication will be professional, friendly, and non-coercive. Furthermore, when the final results are published or presented in class, the data will only be discussed in broad, aggregated trends. No individual responses will ever be isolated or exposed. This strategy guarantees that the university, the researcher, and most importantly, the participants, remain completely protected.',
+              zh: '無論是在校園以 iPad 接觸參與者，或透過線上網絡聯繫，溝通方式都會保持專業、友善且不具強迫性。此外，當最終結果發表或在課堂上呈現時，資料只會以整體的匯總趨勢討論，任何個別作答都不會被單獨挑出或曝光。這套策略確保了學校、研究者，以及最重要的——參與者——都受到完整保護。',
+            },
+          },
+          { type: 'h2', text: { en: '4. Risk and Time Management Planning', zh: '4. 風險與時間管理規劃' } },
+          { type: 'h3', text: { en: 'Risk Matrix', zh: '風險矩陣' } },
+          {
+            type: 'p',
+            text: {
+              en: 'To ensure the project stays on track, potential risks have been evaluated based on their Likelihood (1-4) and Severity (1-4). Proactive solutions are already in place for high-priority risks.',
+              zh: '為確保專案如期推進，潛在風險已依「可能性（1–4）」與「嚴重度（1–4）」逐一評估。針對高優先度的風險，預防性的應對方案均已就位。',
+            },
+          },
+          {
+            type: 'matrix',
+            title: { en: 'Likelihood × severity', zh: '可能性 × 嚴重度' },
+            xLabel: { en: 'Likelihood', zh: '可能性' },
+            yLabel: { en: 'Severity', zh: '嚴重度' },
+            xTicks: [
+              { n: 1, label: { en: 'Rare', zh: '罕見' } },
+              { n: 2, label: { en: 'Possible', zh: '可能' } },
+              { n: 3, label: { en: 'Likely', zh: '很可能' } },
+              { n: 4, label: { en: 'Almost certain', zh: '幾乎必然' } },
+            ],
+            yTicks: [
+              { n: 1, label: { en: 'Minor', zh: '輕微' } },
+              { n: 2, label: { en: 'Moderate', zh: '中等' } },
+              { n: 3, label: { en: 'Major', zh: '重大' } },
+              { n: 4, label: { en: 'Critical', zh: '嚴重' } },
+            ],
+            /* 顏色不再重複表達「嚴重度」（座標軸已經講了），改講「解決難易度」 */
+            legendTitle: { en: 'Mitigation difficulty', zh: '解決難易度' },
+            legend: [
+              {
+                key: 'hard',
+                label: { en: 'Hard', zh: '困難' },
+                note: { en: 'Ongoing field effort', zh: '持續線下跑動' },
+                desc: {
+                  en: 'Needs continuous offline outreach and cooperation from external respondents.',
+                  zh: '需要持續的線下跑動，以及外部受訪者的配合。',
+                },
+              },
+              {
+                key: 'medium',
+                label: { en: 'Medium', zh: '中等' },
+                note: { en: 'Design & screening', zh: '設計與篩檢' },
+                desc: {
+                  en: 'Needs questionnaire design and hands-on screening during collection.',
+                  zh: '需要問卷機制設計，並在收集期間人工篩檢。',
+                },
+              },
+              {
+                key: 'easy',
+                label: { en: 'Easy', zh: '容易' },
+                note: { en: 'One-off tech setup', zh: '一次性技術設定' },
+                desc: {
+                  en: 'Solved once with a single technical setup.',
+                  zh: '只需一次性的技術設定即可完全規避。',
+                },
+              },
+            ],
+            tableTitle: { en: 'Risk register', zh: '風險清單' },
+            cols: {
+              id: { en: 'ID', zh: '編號' },
+              desc: { en: 'Risk Description', zh: '風險描述' },
+              diff: { en: 'Difficulty (L×S)', zh: '難易度（L×S）' },
+            },
+            fixLabel: { en: 'Mitigation strategy', zh: '應對策略' },
+            hintTag: { en: 'Hover · Tap', zh: '懸停 · 輕點' },
+            hint: {
+              en: 'Move the cursor over any tag — or tap it on a phone — to read the full risk and its mitigation strategy.',
+              zh: '把游標移到任一標籤上——手機則輕點一下——即可查看該風險的完整說明與應對策略。',
+            },
+            risks: [
+              {
+                no: '01',
+                short: { en: 'Low Response', zh: '回覆率低' },
+                l: 3,
+                s: 4,
+                diff: 'hard',
+                desc: { en: 'Low overall response rate (struggling to reach 30–50 participants)', zh: '整體回覆率偏低（難以觸及 30–50 位參與者）' },
+                fix: {
+                  en: 'Leverage personal networks for online sharing and conduct campus iPad intercepts during peak lunch hours.',
+                  zh: '透過個人網絡協助線上分享，並在午休高峰時段於校園進行 iPad 面訪。',
+                },
+              },
+              {
+                no: '02',
+                short: { en: 'Rushed Answers', zh: '草率作答' },
+                l: 3,
+                s: 3,
+                diff: 'medium',
+                desc: { en: 'Rushed / careless survey answers', zh: '問卷作答草率、不專心' },
+                fix: {
+                  en: 'Keep survey under 3 minutes and include one "attention-check" question to filter out invalid clicks.',
+                  zh: '將問卷控制在 3 分鐘內，並加入一道「注意力檢查」題，過濾無效的亂點。',
+                },
+              },
+              {
+                no: '03',
+                short: { en: 'Unbalanced Sample', zh: '樣本失衡' },
+                l: 2,
+                s: 3,
+                diff: 'hard',
+                desc: { en: 'Unbalanced regional sample (too few international students)', zh: '各地區樣本失衡（國際學生過少）' },
+                fix: {
+                  en: 'Prioritize approaching international students during campus iPad intercepts once enough local and Mainland responses are collected.',
+                  zh: '待本地與內地樣本累積足夠後，於校園 iPad 面訪時優先接觸國際學生。',
+                },
+              },
+              {
+                no: '04',
+                short: { en: 'Loading Issues', zh: '載入失敗' },
+                l: 3,
+                s: 2,
+                diff: 'easy',
+                desc: { en: 'Campus Wi-Fi / iPad loading issues', zh: '校園 Wi-Fi 或 iPad 載入問題' },
+                fix: {
+                  en: 'Pre-load and cache high-res AI images on the iPad beforehand, keeping a personal mobile hotspot ready as backup.',
+                  zh: '事先在 iPad 上預載並快取高解析度 AI 影像，同時準備個人手機熱點作為備援。',
+                },
+              },
+              {
+                no: '05',
+                short: { en: 'Language Barrier', zh: '語言誤解' },
+                l: 2,
+                s: 3,
+                diff: 'medium',
+                desc: { en: 'Survey language misunderstanding', zh: '問卷語言理解落差' },
+                fix: {
+                  en: 'Provide side-by-side bilingual text (English and Traditional/Simplified Chinese) in the questionnaire.',
+                  zh: '問卷提供英文與繁／簡中文並排的雙語文字。',
+                },
+              },
+              {
+                no: '06',
+                short: { en: 'Data Loss', zh: '資料遺失' },
+                l: 1,
+                s: 4,
+                diff: 'easy',
+                desc: { en: 'Data loss or device crash', zh: '資料遺失或裝置當機' },
+                fix: {
+                  en: 'Use cloud survey platforms with auto-save and back up report drafts to Google Drive daily.',
+                  zh: '使用具備自動儲存的雲端問卷平台，並每天將報告草稿備份到 Google Drive。',
+                },
+              },
+            ],
+          },
+          { type: 'h3', text: { en: 'Gantt Chart', zh: '甘特圖' } },
+          {
+            type: 'p',
+            text: {
+              en: 'The following timeline maps out the execution phases leading up to the final submission.',
+              zh: '以下時間軸列出通往最終繳交的各個執行階段。',
+            },
+          },
+          {
+            type: 'timeline',
+            title: { en: 'Execution timeline', zh: '執行時間軸' },
+            range: { en: '19 Oct — 18 Nov 2026', zh: '2026.10.19 — 11.18' },
+            items: [
+              {
+                date: { en: '19–21 Oct', zh: '10/19–10/21' },
+                text: { en: 'Finalize Project Management Plan & Submit Assessment 2 (21 Oct)', zh: '定稿專案管理計畫，繳交作業二（10/21）' },
+              },
+              {
+                date: { en: '22–25 Oct', zh: '10/22–10/25' },
+                text: { en: 'Prepare AI/Human fashion image stimuli & build bilingual online survey', zh: '製作 AI／真人時尚影像素材，建置雙語線上問卷' },
+              },
+              {
+                date: { en: '26–27 Oct', zh: '10/26–10/27' },
+                text: { en: 'Pre-test survey on iPad & mobile to check image loading and clarity', zh: '在 iPad 與手機上進行問卷前測，檢查圖片載入與清晰度' },
+              },
+              {
+                date: { en: '28 Oct – 06 Nov', zh: '10/28–11/06' },
+                text: { en: 'Milestone (Data Collection): Conduct campus iPad intercepts & share online links to reach 30–50 responses', zh: '里程碑（資料蒐集）：在校園進行 iPad 面訪，並分享線上連結，以取得 30–50 份回覆' },
+                milestone: true,
+              },
+              {
+                date: { en: '07–09 Nov', zh: '11/07–11/09' },
+                text: { en: 'Milestone: Close survey, clean data, and remove rushed/invalid responses', zh: '里程碑：關閉問卷、清理資料，剔除草率或無效的作答' },
+                milestone: true,
+              },
+              {
+                date: { en: '10–13 Nov', zh: '11/10–11/13' },
+                text: { en: 'Analyze data (compare detection rates & trust scores across regional groups) & create visual charts', zh: '分析資料（比較各地區組別的辨識率與信任分數），製作視覺化圖表' },
+              },
+              {
+                date: { en: '14–16 Nov', zh: '11/14–11/16' },
+                text: { en: 'Draft Assessment 3 Portfolio (Report findings + Personal Reflection)', zh: '撰寫作業三作品集（研究發現報告 + 個人反思）' },
+              },
+              {
+                date: { en: '17–18 Nov', zh: '11/17–11/18' },
+                text: { en: 'Final proofreading, formatting check & Submit Assessment 3 (18 Nov by 23:00)', zh: '最終校對、格式檢查，繳交作業三（11/18 23:00 前）' },
+              },
+            ],
+          },
+          { type: 'h2', text: { en: '5. Reference List', zh: '5. 參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: 'Bhanver, B., Bansal, E., Arya, J., Puri, N., & Pareek, R. (2023). Factors affecting purchase of fast fashion products. International Research Journal of Modernization in Engineering Technology and Science, 5(4), 4226-4232.',
+              zh: 'Bhanver, B., Bansal, E., Arya, J., Puri, N., & Pareek, R. (2023). Factors affecting purchase of fast fashion products. International Research Journal of Modernization in Engineering Technology and Science, 5(4), 4226-4232.',
+            },
+            url: 'https://doi.org/10.56726/IRJMETS36771',
+            note: {
+              en: 'Supplies the purchase-intention scale the questionnaire is built on — the dependent variable this whole plan is designed to measure.',
+              zh: '提供問卷所依據的購買意願量表——整份計畫要測量的，正是這個依變項。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+              zh: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+            },
+            url: 'https://www.mckinsey.com/industries/retail/our-insights/generative-ai-unlocking-the-future-of-fashion',
+            note: {
+              en: 'Sizes the commercial stake and justifies why the stimuli must be fast-fashion ads rather than any other category.',
+              zh: '量出這件事的商業規模，也說明為什麼視覺素材必須是快時尚廣告，而不是其他品類。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19-31.',
+              zh: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19-31.',
+            },
+            url: 'https://www.iosrjournals.org/iosr-jbm/papers/Vol28-issue7/Ser-2/B2807021931.pdf',
+            note: {
+              en: 'Explains the disclosure variable: telling shoppers an image is AI-generated is a credibility move, and its effect differs by category.',
+              zh: '解釋了「揭露」這個變項：告知消費者影像是 AI 生成，是一種可信度操作，而效果會隨品類而異。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: "Veiga, F., & Haslbeck, L. (2026). Decoding AI ads: How consumers perceive and make sense of AI-generated advertising [Master's thesis, Lund University]. LUP Student Papers.",
+              zh: "Veiga, F., & Haslbeck, L. (2026). Decoding AI ads: How consumers perceive and make sense of AI-generated advertising [Master's thesis, Lund University]. LUP Student Papers.",
+            },
+            url: 'https://lup.lub.lu.se/student-papers/record/9246322/file/9246323.pdf',
+            note: {
+              en: 'Provides the perception and sense-making items — the questions that ask shoppers what visual cue gave the machine away.',
+              zh: '提供「感知」與「理解」的題項——也就是追問消費者「是哪裡看出破綻」的那組問題。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
             },
           },
         ],

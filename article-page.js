@@ -42,6 +42,8 @@
     figure: function (b, root, util) { return renderFigure(b, root, util); },
     diagram: function (b, root, util) { return renderDiagram(b, util); },
     table: function (b, root, util) { return renderTable(b, util); },
+    matrix: function (b, root, util) { return renderMatrix(b, util); },
+    timeline: function (b, root, util) { return renderTimeline(b, util); },
     video: function (b, root, util) { return renderVideo(b, root, util); },
     // 剪刀虚线必须是 figure 之前的独立流内块，不能做成伪元素（CSS 陷阱 2）
     embed: function (b, root, util) { return embedRule() + renderEmbed(b, util); },
@@ -377,6 +379,333 @@
   }
 
   /**
+   * 風險矩陣（type: 'matrix'）
+   * ---------------------------------------------------------------
+   * ·34 改版：顏色不再重複表達「嚴重度」—— 座標軸（L×S）已經說了 --
+   * 顏色改講「解決難易度（Mitigation Difficulty）」，空白格一律乾淨紙色，
+   * 只給有事件的標籤上色。這樣格子的深淺不會跟軸的語意打架。
+   *
+   * 資料形狀：
+   *   { type: 'matrix', title, xLabel, yLabel, xTicks, yTicks,
+   *     legendTitle,
+   *     legend: [ { key: 'hard'|'medium'|'easy', label, note, desc } ],
+   *     tableTitle, cols: { id, desc, diff }, fixLabel, hintTag, hint,
+   *     risks:  [ { no, short, l, s, diff: 'hard'|'medium'|'easy',
+   *                 desc, fix } ] }
+   *
+   * 完整描述與應對策略只出現在「懸停 / 輕點」的詳情卡裡（.mx-pop），
+   * 下方表格只留 ID / 風險 / 難易度三欄 —— 一屏掃完六條，細節點開再讀。
+   *
+   * 為什麼格子不用 <table>：格子裡要放按鈕而不是文字單元。為了不讓閱讀器
+   * 讀成一團，每個格子帶 aria-label（可能性 n · 嚴重度 m），按鈕自己帶
+   * 「編號 + 完整風險」的 aria-label。
+   * 區塊內**不得出現 <p>** —— 語言切換的主文本隊列會把它算進去，導致索引錯位；
+   * 這裡的文字全部由 refreshMatrixText() 單獨刷新。
+   */
+
+  /**
+   * 依格子分桶，並回傳「與 DOM 同序」的扁平清單。
+   * DOM 順序 = 嚴重度 4→1、可能性 1→4；語言切換時靠這份清單對位，
+   * 所以掃描順序必須和 renderMatrix 的迴圈**完全一致**。
+   */
+  function mxOrder(block) {
+    const buckets = {};
+    (block.risks || []).forEach(function (r) {
+      const k = r.l + '-' + r.s;
+      (buckets[k] = buckets[k] || []).push(r);
+    });
+    const flat = [];
+    for (let s = 4; s >= 1; s--) {
+      for (let l = 1; l <= 4; l++) {
+        (buckets[l + '-' + s] || []).forEach(function (r) { flat.push(r); });
+      }
+    }
+    return { buckets: buckets, flat: flat };
+  }
+
+  /** 解決難易度：三檔，顏色定義在 CSS（.mx-diff-*）。
+      顏色講「好不好解決」，不再重複講嚴重度 —— 座標軸已經把 L×S 講完了。 */
+  const MX_DIFFS = ['hard', 'medium', 'easy'];
+
+  function mxDiff(r) {
+    return MX_DIFFS.indexOf(r.diff) >= 0 ? r.diff : 'medium';
+  }
+
+  /** 難易度標籤（Hard / 困難…）由 legend 的 key 反查，渲染與刷新共用 */
+  function mxDiffLabel(block, util, key) {
+    const hit = (block.legend || []).filter(function (g) { return g.key === key; })[0];
+    return hit ? util.tr(hit.label) : key;
+  }
+
+  /** 分數寫法：L3×S4 */
+  function mxPos(r) {
+    return 'L' + r.l + '\u00d7S' + r.s;
+  }
+
+  /** 标签的无障碍名：编号 + 完整风险 + 应对策略。
+      卡片只是「视觉上的」补充，键盘与读屏用户不该因此少一段信息。 */
+  function mxAria(block, util, r) {
+    return r.no + '. ' + util.tr(r.desc) + ' '
+      + util.tr(block.fixLabel) + ': ' + util.tr(r.fix);
+  }
+
+  function renderMatrix(block, util) {
+    const split = mxOrder(block);
+    const buckets = split.buckets;
+    const xLabel = util.tr(block.xLabel);
+    const yLabel = util.tr(block.yLabel);
+    const xTicks = block.xTicks || [];
+    const yTicks = block.yTicks || [];
+    const cols = block.cols || {};
+    const risks = block.risks || [];
+
+    let rows = '';
+    for (let s = 4; s >= 1; s--) {
+      const yt = yTicks[s - 1] || { label: '' };
+      rows += '<div class="mx-row">'
+        + '<div class="mx-y">'
+        + '<span class="mx-y-num">' + s + '</span>'
+        + '<span class="mx-y-word">' + esc(util.tr(yt.label)) + '</span>'
+        + '</div>';
+      for (let l = 1; l <= 4; l++) {
+        const here = buckets[l + '-' + s] || [];
+        rows += '<div class="mx-cell"'
+          + ' data-l="' + l + '" data-s="' + s + '"'
+          + ' aria-label="' + esc(xLabel + ' ' + l + ' · ' + yLabel + ' ' + s) + '">'
+          // 空格子保持乾淨的紙色；顏色只塗在「有事件的標籤」上。
+          // 標籤是 <button>：hover 出卡、手機輕點出卡、鍵盤可聚焦。
+          + here.map(function (r) {
+            return '<button type="button" class="mx-chip mx-diff-' + mxDiff(r) + '"'
+              + ' data-risk="' + esc(r.no) + '" aria-expanded="false"'
+              + ' aria-label="' + esc(mxAria(block, util, r)) + '">'
+              + '<span class="mx-chip-no">' + esc(r.no) + '</span>'
+              + '<span class="mx-chip-short">' + esc(util.tr(r.short)) + '</span>'
+              + '</button>';
+          }).join('')
+          + '</div>';
+      }
+      rows += '</div>';
+    }
+    rows += '<div class="mx-row mx-row--axis"><div class="mx-corner" aria-hidden="true"></div>';
+    for (let l = 1; l <= 4; l++) {
+      const xt = xTicks[l - 1] || { label: '' };
+      rows += '<div class="mx-x">'
+        + '<span class="mx-x-num">' + l + '</span>'
+        + '<span class="mx-x-word">' + esc(util.tr(xt.label)) + '</span>'
+        + '</div>';
+    }
+    rows += '</div>';
+
+    const legend = (block.legend || []).map(function (lg) {
+      return '<div class="mx-key mx-diff-' + esc(lg.key) + '">'
+        + '<span class="mx-swatch" aria-hidden="true"></span>'
+        + '<b class="mx-key-label">' + esc(util.tr(lg.label)) + '</b>'
+        + '<span class="mx-key-note">(' + esc(util.tr(lg.note)) + ')</span>'
+        + '<span class="mx-key-desc">' + esc(util.tr(lg.desc)) + '</span>'
+        + '</div>';
+    }).join('');
+
+    // 三栏清单：ID / 风险 / 难易度。完整描述与应对策略只在悬停卡里出现，
+    // 表格保持在「一屏扫完六条」的密度。
+    const th = [
+      '<th scope="col" class="mx-th mx-th--id">' + esc(util.tr(cols.id)) + '</th>',
+      '<th scope="col" class="mx-th mx-th--desc">' + esc(util.tr(cols.desc)) + '</th>',
+      '<th scope="col" class="mx-th mx-th--diff">' + esc(util.tr(cols.diff)) + '</th>',
+    ].join('');
+
+    const trs = risks.map(function (r) {
+      return '<tr class="mx-tr">'
+        + '<td class="mx-td mx-td-id"><span class="mx-chip-no">' + esc(r.no) + '</span></td>'
+        + '<td class="mx-td mx-td-desc">'
+        + '<span class="mx-cell-label">' + esc(util.tr(cols.desc)) + '</span>'
+        + '<span class="mx-desc">' + esc(util.tr(r.short)) + '</span>'
+        + '</td>'
+        + '<td class="mx-td mx-td-diff">'
+        + '<span class="mx-cell-label">' + esc(util.tr(cols.diff)) + '</span>'
+        + '<button type="button" class="mx-badge mx-diff-' + mxDiff(r) + '"'
+        + ' data-risk="' + esc(r.no) + '" aria-expanded="false"'
+        + ' aria-label="' + esc(mxAria(block, util, r)) + '">'
+        + '<span class="mx-badge-lv">' + esc(mxDiffLabel(block, util, mxDiff(r))) + '</span>'
+        // 两侧留空白文本节点：flex 不会渲染纯空白，但复制 / 朗读会读成
+        // 「Hard · L3×S4」而不是黏在一起的「Hard·L3×S4」。
+        + ' <span class="mx-badge-dot" aria-hidden="true">\u00b7</span> '
+        + '<span class="mx-badge-pos">' + mxPos(r) + '</span>'
+        + '</button>'
+        + '</td>'
+        + '</tr>';
+    }).join('');
+
+    return '<figure class="mx-block">'
+      + '<div class="mx-head"><span class="mx-title">' + esc(util.tr(block.title)) + '</span></div>'
+      + '<div class="mx-wrap">'
+      + '<div class="mx-grid">'
+      + '<div class="mx-ylabel" aria-hidden="true">' + esc(yLabel) + '</div>'
+      + '<div class="mx-plot">' + rows + '</div>'
+      + '</div>'
+      + '<div class="mx-xnote"><span class="mx-xlabel">' + esc(xLabel) + ' \u2192</span></div>'
+      + '</div>'
+      + '<div class="mx-legend">'
+      + '<span class="mx-legend-title">' + esc(util.tr(block.legendTitle)) + '</span>'
+      + legend
+      + '</div>'
+      + '<div class="mx-tablewrap">'
+      + '<div class="mx-tbl-title">' + esc(util.tr(block.tableTitle)) + '</div>'
+      + '<table class="mx-ct"><thead><tr>' + th + '</tr></thead><tbody>' + trs + '</tbody></table>'
+      + '<div class="mx-hint">'
+      + '<span class="mx-hint-tag">' + esc(util.tr(block.hintTag)) + '</span>'
+      // 空白文本节点：flex 不渲染，但复制 / 朗读时会有一个词间距
+      + ' <span class="mx-hint-text">' + esc(util.tr(block.hint)) + '</span>'
+      + '</div>'
+      + '</div>'
+      + '<div class="mx-pop" role="tooltip" hidden></div>'
+      + '</figure>';
+  }
+
+  /**
+   * 悬停 / 轻点出的详情卡（每张矩阵一个，绝对定位在 figure 内）。
+   * 内容全部来自数据，不新增 <p>；语言切换时 refreshMatrixText 会把它关掉，
+   * 免得留下上一个语言的残影。
+   */
+  function buildMatrixPopover(fig, block, util) {
+    const pop = fig.querySelector('.mx-pop');
+    if (!pop) return;
+    const byNo = {};
+    (block.risks || []).forEach(function (r) { byNo[r.no] = r; });
+    let active = null;
+    let timer = 0;
+
+    function hide() {
+      pop.hidden = true;
+      if (active) active.setAttribute('aria-expanded', 'false');
+      active = null;
+    }
+
+    function place(btn) {
+      const fr = fig.getBoundingClientRect();
+      const ar = btn.getBoundingClientRect();
+      const pw = pop.offsetWidth;
+      const ph = pop.offsetHeight;
+      const minL = 6;
+      const maxL = Math.max(minL, fr.width - pw - 6);
+      let left = ar.left - fr.left + ar.width / 2 - pw / 2;
+      left = Math.max(minL, Math.min(left, maxL));
+      let top = ar.top - fr.top - ph - 12;
+      if (top < 6) top = ar.bottom - fr.top + 12;
+      pop.style.left = Math.round(left) + 'px';
+      pop.style.top = Math.round(top) + 'px';
+    }
+
+    function show(btn) {
+      const r = byNo[btn.dataset.risk];
+      if (!r) return;
+      const d = mxDiff(r);
+      pop.className = 'mx-pop mx-diff-' + d;
+      pop.innerHTML = '<div class="mx-pop-head">'
+        + '<span class="mx-pop-no">' + esc(r.no) + '</span>'
+        + '<span class="mx-pop-badge">' + esc(mxDiffLabel(block, util, d))
+        + ' \u00b7 ' + mxPos(r) + '</span>'
+        + '</div>'
+        + '<div class="mx-pop-title">' + esc(util.tr(r.desc)) + '</div>'
+        + '<div class="mx-pop-sub">' + esc(util.tr(block.fixLabel)) + '</div>'
+        + '<div class="mx-pop-fix">' + esc(util.tr(r.fix)) + '</div>';
+      pop.hidden = false;
+      if (active && active !== btn) active.setAttribute('aria-expanded', 'false');
+      active = btn;
+      btn.setAttribute('aria-expanded', 'true');
+      place(btn);
+    }
+
+    fig.querySelectorAll('.mx-chip, .mx-badge').forEach(function (btn) {
+      btn.addEventListener('mouseenter', function () {
+        clearTimeout(timer);
+        show(btn);
+      });
+      btn.addEventListener('mouseleave', function () {
+        timer = setTimeout(hide, 160);
+      });
+      btn.addEventListener('focus', function () { show(btn); });
+      btn.addEventListener('blur', function () { timer = setTimeout(hide, 120); });
+      // 手機：click 一定會到，所以「點一下就開」不必判斷 pointerType；
+      // 桌面滑過已經開了，click 只是再確認一次，不會把卡關掉。
+      btn.addEventListener('click', function () { show(btn); });
+    });
+
+    pop.addEventListener('mouseenter', function () { clearTimeout(timer); });
+    pop.addEventListener('mouseleave', function () { timer = setTimeout(hide, 160); });
+    fig._mxHide = hide;
+  }
+
+  /** 挂上详情卡：渲染后调用一次（DOM 已就位才量得到位置） */
+  function setupMatrixPopovers(assignment, util) {
+    const figs = document.querySelectorAll('#articleBody .mx-block');
+    let i = 0;
+    (assignment.body || []).forEach(function (b) {
+      if (b.type !== 'matrix') return;
+      const fig = figs[i++];
+      if (!fig || fig.dataset.popReady === '1') return;
+      fig.dataset.popReady = '1';
+      buildMatrixPopover(fig, b, util);
+    });
+  }
+
+  /** 点空白处 / 按 Esc 关掉所有详情卡（全局只挂一次） */
+  let mxDocBound = false;
+  function bindMatrixDismiss() {
+    if (mxDocBound) return;
+    mxDocBound = true;
+    document.addEventListener('pointerdown', function (e) {
+      document.querySelectorAll('.mx-block').forEach(function (fig) {
+        if (fig.contains(e.target)) return;
+        if (fig._mxHide) fig._mxHide();
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.mx-block').forEach(function (fig) {
+        if (fig._mxHide) fig._mxHide();
+      });
+    });
+  }
+
+  /**
+   * 時間軸（type: 'timeline'）
+   * ---------------------------------------------------------------
+   * 大屏是**橫向軸線 + 事件卡全部排在線上方**：軸線是 <ol> 的下邊框，
+   * 每欄一支虛線「腳」把卡片吊到軸上的方形節點。八欄各自獨立、
+   * 互不重疊 —— 這是「方塊壓在線上」那種設計最容易出錯的地方，
+   * 這裡靠「一欄一事件 + flex 撐高」從結構上排除重疊的可能。
+   * 里程碑（milestone: true）的卡片填青，軸上節點也更大。
+   * 窄屏（<1100px）改成左軸縱向時間軸：一根豎線，卡片靠右排隊。
+   *
+   * 同樣不得出現 <p>（主文本隊列索引），文字由 refreshTimelineText() 刷新。
+   */
+  function renderTimeline(block, util) {
+    const items = (block.items || []).map(function (it) {
+      return '<li class="tl-item' + (it.milestone ? ' is-milestone' : '') + '">'
+        + '<div class="tl-card">'
+        + '<span class="tl-date">' + esc(util.tr(it.date)) + '</span>'
+        + '<span class="tl-text">' + esc(util.tr(it.text)) + '</span>'
+        + '</div>'
+        + '<span class="tl-stem" aria-hidden="true"></span>'
+        + '<span class="tl-node" aria-hidden="true"></span>'
+        + '</li>';
+    }).join('');
+
+    return '<figure class="tl-block">'
+      + '<div class="tl-head">'
+      + '<span class="tl-title">' + esc(util.tr(block.title)) + '</span>'
+      + '<span class="tl-range">' + esc(util.tr(block.range)) + '</span>'
+      + '</div>'
+      + '<div class="tl-wrap"><ol class="tl-track">' + items + '</ol></div>'
+      // 图注可选（·33 起本页不再带 FIG.05）。⚠️ 有没有这一步直接决定主文本
+      // 队列的长度 —— 渲染与 texts.push 必须用同一个条件（见语言切换段）。
+      + (block.caption
+        ? '<figcaption class="tl-caption">' + esc(util.tr(block.caption)) + '</figcaption>'
+        : '')
+      + '</figure>';
+  }
+
+  /**
    * 正文插图（type: 'figure'）
    * ---------------------------------------------------------------
    * 一张或多张图 + 一条说明，装在同一个 <figure> 里。
@@ -553,6 +882,11 @@
     document.getElementById('articleBody').innerHTML = bodyHtml;
 
     paintArticleText();
+
+    /* 矩阵的悬停卡要等 DOM 就位才量得到位置，所以放在 innerHTML 之后；
+       bindMatrixDismiss 全局只挂一次（点空白 / Esc 关闭）。 */
+    setupMatrixPopovers(a, util);
+    bindMatrixDismiss();
 
     /* 正文里的图（inline-figure / 画廊页）是刚插进来的，补挂显影动画。
        封面 heroImg 是页面自带的静态节点，shared.js 启动时就挂过了，
@@ -821,6 +1155,12 @@
         // 表格：单元格不是 <p>/<figcaption>，整块（含图注）都单独刷新；
         // 这里只占住 figcaption 那一个节点位，不然后面的文字会整体错位。
         else if (b.type === 'table') texts.push(null);
+        // 矩阵 / 时间轴：内部文字（格内风险、轴刻度、事件卡）全是 span / td，
+        // 队列里只可能出现一条 figcaption。两块的图注已撤（·33）→
+        // **没有图注就不占位**，否则后面的文字整体前移一格。
+        else if (b.type === 'matrix' || b.type === 'timeline') {
+          if (b.caption) texts.push(null);
+        }
         // 嵌入影片：字幕 + iframe 的无障碍标题（不是文本节点，单独刷新）
         else if (b.type === 'embed') { texts.push(b.caption || null); }
         else texts.push(b.text);
@@ -843,6 +1183,8 @@
       refreshFigureText(body, a, util);
       refreshEmbedText(body, a, util);
       refreshTableText(body, a, util);
+      refreshMatrixText(body, a, util);
+      refreshTimelineText(body, a, util);
     }
 
     paintArticleText();
@@ -983,6 +1325,123 @@
 
       const cap = fig.querySelector('.tbl-caption');
       if (cap) cap.textContent = util.tr(data.caption);
+    });
+  }
+
+  /**
+   * 语言切换时刷新风险矩阵：标题 / 轴名 / 图例 / 格内标签 / 三栏表 / 提示语，
+   * 并关掉可能开着的详情卡（卡里是上一语言的文案）。
+   * 不重建 DOM —— 格子里的风险按「与渲染同序」的扁平清单对位（mxOrder），
+   * 索引对不上就跳过，绝不会把文字写到别的格子去。
+   */
+  function refreshMatrixText(body, assignment, util) {
+    pairBlocks(assignment, body, 'matrix', '.mx-block').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
+      const cols = data.cols || {};
+
+      const title = fig.querySelector('.mx-title');
+      if (title) title.textContent = util.tr(data.title);
+      const yl = fig.querySelector('.mx-ylabel');
+      if (yl) yl.textContent = util.tr(data.yLabel);
+      const xl = fig.querySelector('.mx-xlabel');
+      if (xl) xl.textContent = util.tr(data.xLabel) + ' \u2192';
+
+      // 格子的无障碍名称带轴名，跟着语言走
+      fig.querySelectorAll('.mx-cell').forEach(function (cell) {
+        cell.setAttribute('aria-label',
+          util.tr(data.xLabel) + ' ' + cell.dataset.l + ' · '
+          + util.tr(data.yLabel) + ' ' + cell.dataset.s);
+      });
+
+      // 刻度：数字与语言无关，只换后面的形容词。DOM 顺序 y 是 4→1，x 是 1→4。
+      fig.querySelectorAll('.mx-y-word').forEach(function (n, i) {
+        const t = (data.yTicks || [])[3 - i];
+        if (t) n.textContent = util.tr(t.label);
+      });
+      fig.querySelectorAll('.mx-x-word').forEach(function (n, i) {
+        const t = (data.xTicks || [])[i];
+        if (t) n.textContent = util.tr(t.label);
+      });
+
+      const lt = fig.querySelector('.mx-legend-title');
+      if (lt) lt.textContent = util.tr(data.legendTitle);
+
+      fig.querySelectorAll('.mx-key').forEach(function (key, i) {
+        const g = (data.legend || [])[i];
+        if (!g) return;
+        const lb = key.querySelector('.mx-key-label');
+        const nt = key.querySelector('.mx-key-note');
+        const ds = key.querySelector('.mx-key-desc');
+        if (lb) lb.textContent = util.tr(g.label);
+        if (nt) nt.textContent = '(' + util.tr(g.note) + ')';
+        if (ds) ds.textContent = util.tr(g.desc);
+      });
+
+      // 格内标签：按「与渲染同序」的扁平清单对位
+      const flat = mxOrder(data).flat;
+      fig.querySelectorAll('.mx-chip').forEach(function (node, i) {
+        const r = flat[i];
+        if (!r) return;
+        const d = node.querySelector('.mx-chip-short');
+        if (d) d.textContent = util.tr(r.short);
+        node.setAttribute('aria-label', mxAria(data, util, r));
+      });
+
+      const tt = fig.querySelector('.mx-tbl-title');
+      if (tt && data.tableTitle) tt.textContent = util.tr(data.tableTitle);
+
+      fig.querySelectorAll('.mx-th').forEach(function (cell, i) {
+        const key = ['id', 'desc', 'diff'][i];
+        if (cols[key]) cell.textContent = util.tr(cols[key]);
+      });
+
+      fig.querySelectorAll('.mx-tr').forEach(function (tr, i) {
+        const r = (data.risks || [])[i];
+        if (!r) return;
+        // 窄屏才出现的小标签（桌面 display:none），顺序与列一致
+        tr.querySelectorAll('.mx-cell-label').forEach(function (cell, j) {
+          const key = ['desc', 'diff'][j];
+          if (cols[key]) cell.textContent = util.tr(cols[key]);
+        });
+        const d = tr.querySelector('.mx-desc');
+        if (d) d.textContent = util.tr(r.short);
+        const lv = tr.querySelector('.mx-badge-lv');
+        if (lv) lv.textContent = mxDiffLabel(data, util, mxDiff(r));
+        const badge = tr.querySelector('.mx-badge');
+        if (badge) badge.setAttribute('aria-label', mxAria(data, util, r));
+      });
+
+      const ht = fig.querySelector('.mx-hint-tag');
+      if (ht && data.hintTag) ht.textContent = util.tr(data.hintTag);
+      const hx = fig.querySelector('.mx-hint-text');
+      if (hx && data.hint) hx.textContent = util.tr(data.hint);
+
+      // 语言切换时顺手关掉详情卡：卡里还是上一语言的文案，留着会串味
+      if (fig._mxHide) fig._mxHide();
+    });
+  }
+
+  /** 语言切换时刷新时间轴：标题 / 日期区间 / 每张事件卡 / 图注 */
+  function refreshTimelineText(body, assignment, util) {
+    pairBlocks(assignment, body, 'timeline', '.tl-block').forEach(function (pair) {
+      const fig = pair.node;
+      const data = pair.data;
+
+      const title = fig.querySelector('.tl-title');
+      if (title) title.textContent = util.tr(data.title);
+      const range = fig.querySelector('.tl-range');
+      if (range) range.textContent = util.tr(data.range);
+
+      const dates = fig.querySelectorAll('.tl-date');
+      const texts = fig.querySelectorAll('.tl-text');
+      (data.items || []).forEach(function (it, i) {
+        if (dates[i]) dates[i].textContent = util.tr(it.date);
+        if (texts[i]) texts[i].textContent = util.tr(it.text);
+      });
+
+      const cap = fig.querySelector('.tl-caption');
+      if (cap && data.caption) cap.textContent = util.tr(data.caption);
     });
   }
 

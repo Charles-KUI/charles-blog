@@ -3179,3 +3179,282 @@ multicol 的兩欄**永遠從容器頂部往下長**：整篇一個容器 → �
 · 真機 `_spread` 160 通過 / 0 失敗。
 · 眼檢三圖（.workbuddy/_shot31.mjs）：1440 兩圖並排鋪滿版心、說明獨佔
   一行；1440 影片塊在 Second 段之後（剪刀虛線跟著走）；390 窄屏仍縱疊。
+
+第三十二階段 · BCM212 A2 上線：風險矩陣 + 橫向時間軸（兩個新區塊）
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（四項）】
+1. 把 BCM212_A2_WangWingShing_1723674.docx 的內容更新進網站，維持既有 zine 風格。
+2. 英文內容**一個字都不能改**。
+3. 風險管理那節 → 做成矩陣（matrix）。
+4. 時間管理那節 → 做成時間軸；事件方格放在軸線**上方**（不可壓在線上），
+   資訊要看得清楚。
+
+【1 · 內容搬運（英文逐字保留）】
+· 直接解 docx 的 XML 取全文（zipfile + ElementTree）—— 文件結構工具只回
+  200 字預覽，不夠逐段校對。
+· content.js 原位換掉 bcm212-a2 的佔位文章（原本是一篇倫理主題的測試短文），
+  改為正式作業：5 個 h2（Aims / Method / Ethics / Risk & Time / References）、
+  15 段正文、兩張視覺化、4 條文獻。英文全部照抄（含三條問卷問題原本的引號，
+  以及 "uncanny" 的引號），中文為新譯（繁中）。
+· date 2026-10-18、no No.02、tags 三枚（BCM212 A2 / Project Plan / Risk Matrix）、
+  studentId 1723674。
+
+【2 · matrix 區塊】
+· 資料形狀：`{type:'matrix', title, xLabel, yLabel, legend[4],
+  risks[{no,l,s,desc,fix}], fixLabel, caption}`。
+· 4×4 格：y 由上而下 severity 4→1、x 由左而右 likelihood 1→4；分數 l×s 切四檔
+  （關鍵 12–16 / 高 8–11 / 中 4–7 / 低 1–3），只用三色的深淺表現，不引入第四色系。
+· 風險不畫成格子裡的「點」—— 每格直接列出編號 + 描述，5 項風險各自落格
+  （3×4、3×3、2×3、2×4、1×4），一眼看得出誰最該先處理。下方接「應對策略」
+  清單，編號對位。
+· 軸標籤 `.mx-ylabel` 用 vertical-rl 直排；**不可再加 rotate(180deg)** ——
+  直排本身已讓 CJK 正立，再轉一次「嚴重度」會上下顛倒（·32 踩過）。
+· 每格帶 aria-label（可能性 n · 嚴重度 m），螢幕閱讀器不會只讀到一串編號。
+
+【3 · timeline 區塊】
+· 資料形狀：`{type:'timeline', title, range, items[{date,text,milestone?}],
+  caption}`。
+· 桌面：`<ol class="tl-track">` 用 grid-auto-flow:column 排成八欄，
+  **軸線就是 ol 的下邊框**；每欄 = 卡片 + 虛線「腳」+ 軸上的方形節點。
+  卡片永遠在軸線上方，靠 flex 撐高把腳拉長，**不是**用絕對定位疊上去 ——
+  所以「八格擠在一起 / 壓到線」從結構上就不可能發生。
+· 節點 top:5px 跨在軸上（視覺上「釘」在線），奇偶欄錯開 22px 讓節奏不呆板。
+· 里程碑（`milestone:true`：資料蒐集 10/28–11/06 與關卷 11/07–11/09）
+  卡片填青、節點放大。
+· 窄屏 <1100：改成左軸縱向（一根豎線、卡片靠右排隊），不硬塞八欄。
+
+【4 · 兩個新區塊的管線（照既有五步）】
+· article-page.js：MX_LEVELS / mxLevel / mxOrder + renderMatrix()、
+  renderTimeline()；BLOCK_RENDERERS 加兩個 case；語言切換 `texts.push(null)`
+  （兩塊都補位）；refreshMatrixText() / refreshTimelineText() 並接上
+  zine:langchange。
+· ⚠️ 兩塊內**一律不用 `<p>`**：主文本隊列的索引是按 `<p>` 數的，插一個 `<p>`
+  進去，後面所有段落全部錯位（英文切中文會整段亂掉）。矩陣用 span，
+  時間軸用 ol/li。
+· mxOrder() 回傳「與 DOM 同序」的扁平清單，刷新時靠它對位 —— 掃描順序必須
+  跟 renderMatrix 的迴圈逐字一致（severity 4→1、likelihood 1→4），
+  改一邊就要改另一邊。
+· article.css：兩塊都進「660px 居中組」；≥1100 矩陣 860 居中（同環圖，
+  示意圖鋪滿會壓過正文）、時間軸鋪滿版心（八欄需要橫向空間）。
+  margin 一律拆寫 top/bottom，別用簡寫蓋掉居中組的 auto。
+
+【5 · 封面】
+· 新生成 assets/posts/bcm212-a2-cover.png/.webp：青底上一張奶油紙，紙上
+  4×4 方格（三格填青）+ 撕紙條 —— 直接對應「風險矩陣」這個視覺母題。
+· 第一版背景是牛皮紙棕（第四色系）→ 退，重生成時明寫 no wood / no brown /
+  no kraft。
+· 收尾 `cover-recolor.py --crop 1414,948 --size 1024x683 --webp --sat 0.58
+  --val 1.21` 把青拉到 #5EA99E。
+
+【測試同步】
+· 新增 verify-bcm212-a2.mjs（92 條）：28 個區塊結構、英文逐字保留（含引號與
+  連字號）、矩陣 16 格 / 5 風險 / 4 圖例 / 5 應對、時間軸 8 項 / 2 里程碑、
+  兩塊內無 `<p>`、語言切換節點數不變、CSS 靜態守衛（660 組 / ≥1100 破格 /
+  無 margin 簡寫 / 無反分欄殘留 / 只有三色）、封面 png + webp。
+· domtest / verify-hidden：bcm212 從 1 篇變 2 篇 → 卡片數斷言 1→2、
+  LIVE_SUBJECTS.bcm212 改為 ['bcm212-a1','bcm212-a2']（hidden 92→93）。
+· _figbind：·31 多圖橫排後，≥1100 的「縱疊」斷言改分支；又因 rotate(±0.8deg)
+  讓兩張圖頂端差 9–10px，**取消頂端比較**（只比左右並排），否則永遠假失敗。
+· _spread 加入 bcm212-a2；新增 _shot32.mjs（截圖 + 時間軸幾何探針）。
+· _shot32 幾何結果：cards 8 / above true / overlap 0 / minGap 39
+  （1440 與 390 都過）—— 「方格在線上方且互不重疊」是量出來的，不是看出來的。
+
+【驗證】
+· jsdom 全量 0 失敗：domtest 229 / bcm212-a1 108 / bcm206 129 / bcm222 126 /
+  bcm241 111 / hidden 93 / langswitch 12 / nav-static 52 / nav-runtime 25 /
+  narrow-geom 15 / mobile 33 / article 11 / bcm212-a2 92。
+· 真機：_spread 185 / _figbind 123 / _refcolumn 88 / _refalign / _tblalign
+  全 PASS，console 無錯誤。
+
+第三十三階段 · 風險矩陣重構（格內減負 + 四欄對照表）／撤兩條圖注／補 AI 聲明
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（四項）】
+1. 文章末端補上 Generative AI（Google Gemini）的使用聲明。
+2. 兩個表格（矩陣 / 時間軸）下面不要 FIG.04、FIG.05。
+3. 風險矩陣徹底重構：座標軸加語意、格內只放編號 + 兩三個字、
+   下方改成四欄結構化對照表、分數用與矩陣同色的膠囊。
+4. 風險改為最新六條（含新的 L/S 與應對策略）。
+
+【1 · AI 聲明】
+· 末尾加 `note` 區塊（沿用 bcm212-a1 的做法），英文原文照抄（含全形括號
+  「（Google Gemini）」），中文為繁中翻譯。
+· note 渲染成 `<p class="inline-note">`，正好佔主文本隊列一個位，索引不錯位。
+
+【2 · 撤圖注 —— 隊列必須跟著改】
+· 兩塊不再輸出 figcaption。⚠️ 這裡有個隱形地雷：語言切換的隊列是
+  「每塊佔幾個 p / figcaption」推算出來的，**渲染少了節點、隊列還在 push**，
+  後面所有文字會整體前移一格（英文切中文整段錯位，而且完全不報錯）。
+· 改法：`if (b.caption) texts.push(null)`，renderTimeline 也改成
+  「有 caption 才輸出 figcaption」。渲染與隊列的條件必須是同一個判斷 ——
+  這次兩邊不同步，第一次跑測試就是「時間軸還剩一個 figcaption」+
+  「AI 聲明沒切中文」兩條同時紅，正是錯位一格造成的。
+
+【3 · 矩陣重構】
+· 資料模型新增 `xTicks` / `yTicks` / `cols` / `tableTitle`，
+  每條風險多了 `short`（2–3 字標題）。
+· 軸：數字 + 語意（y 4 Critical / 3 Major / 2 Moderate / 1 Minor；
+  x 1 Rare / 2 Possible / 3 Likely / 4 Almost certain）。
+  中文：嚴重 / 重大 / 中等 / 輕微、罕見 / 可能 / 很可能 / 幾乎必然。
+· 格內：奶油紙小方框（編號深底反白 + 短標題），四種深淺底色上都讀得清；
+  空格不畫任何東西。同一格有兩項時垂直堆疊（03 與 05 都在 2×3）。
+· 對照表：真 `<table>` + `scope="col"`，深色四欄表頭
+  （ID / Risk Description / Score (L×S) / Actionable Mitigation Strategy）；
+  分數欄是膠囊，色階與矩陣同一套（關鍵深底反白 / 高實青 / 中淡青 / 低近黑 6%）。
+· 表格左緣對齊格子左緣：左內距 32px = `.mx-grid` 的 14px 內距 + 18px 縱軸名。
+  1440 實測 dLeft = dRight = 0。
+
+【4 · 六條新風險】
+01 3×4=12 關鍵 / 02 3×3=9 高 / 03 2×3=6 中 / 04 3×2=6 中 /
+05 2×3=6 中 / 06 1×4=4 中。
+
+【踩到的四個坑】
+1. **關鍵格的字色**：關鍵格整格 `color: 奶油白`，而晶片底色也是奶油白 →
+   01 的標題變成「白字貼白紙」，整條消失。DOM 斷言全過，只有截圖看得出來。
+   修法：`.mx-chip` 顯式 `color: var(--dark-frame)`。
+2. **窄屏堆疊卡別用 grid**：`tr` 從 table-row 改 grid 後，隱式行吃到
+   stretch，行高被撐到 282–301px（內容只有 218px）。改 flex-wrap，
+   行高立刻回到內容高度（218 上下）。
+3. **`.mx-ct td` 比特異性**：那條（0,1,1）壓過 `.mx-td`（0,1,0），
+   手機端的 9px 內距壓不掉，卡片間距莫名變大。改寫成 `.mx-ct .mx-td`。
+4. **390px 一格只有 65px**：英文短標題會被 `overflow-wrap: anywhere`
+   折成豎條，比不顯示更難讀。最後定案 **≤479px 只留編號方框**
+   （對照表就在下面，01–06 一一對應），並取消 min-width，
+   四欄不必橫向滾動就能完整看到熱度分佈。
+
+【測試同步】
+· verify-bcm212-a2：92 → 130 條。新增 6 枚牌的極簡標題（≤3 詞）、
+  軸語意順序、四欄表頭逐字、膠囊總分與色階、兩塊 figcaption = 0、
+  「有 caption 才佔位」的隊列斷言、FIG.04 / FIG.05 不得出現、
+  AI 聲明在最後一塊且能切中文。
+· 新增 `_shot33.mjs`：1440 / 1000 / 390 三檔量「表格與格子左右緣是否對齊」
+  「格子 / 單元 / 膠囊是否溢出」「行高」「堆疊卡 display」「頁面橫向滾動」。
+
+【驗證】
+· jsdom 全量 0 失敗：a2 130 / domtest 229 / bcm212-a1 108 / bcm206 129 /
+  bcm222 126 / bcm241 111 / hidden 93 / langswitch 12 / nav-static 52 /
+  nav-runtime 25 / narrow-geom 15 / mobile 33 / article 11。
+· 真機：`_shot33` 全通過（1440 blockW 860、左右緣 0、行高 75；
+  1000 行高 94；390 無橫向滾動、堆疊卡 flex、膠囊不被裁）；
+  `_spread` 185 / `_figbind` 123 / `_refcolumn` 88 / `_refalign` /
+  `_tblalign` PASS；console 無錯誤。
+· 眼檢：1440 矩陣 + 對照表、390 矩陣（只留編號）、390 卡片、中文態。
+
+第三十四階段 · 風險矩陣改成「解決難易度」著色 + 懸停詳情卡
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（三項）】
+1. 縱軸的「Severity」要由下往上讀（原本是往下）。
+2. 顏色不要再表達嚴重度（座標軸已經講了），改成「解決難易度」：
+   空白格全部恢復乾淨紙色，只給有事件的標籤上色；
+   03 與 05 同格，要各自上色以區分難度。
+3. 表格第三欄 Score (L×S) → DIFFICULTY (L×S)；完整描述與應對策略
+   改由「懸停 / 輕點標籤」的卡片呈現，表格下方加一行操作提示。
+
+【1 · 縱軸方向】
+· `.mx-ylabel` 預設 `transform: rotate(180deg)`（writing-mode: vertical-rl
+  再轉 180°，英文就變成由下往上）。
+· ⚠️ 中文不能跟著轉：`vertical-rl` 的漢字本來正立，再轉 180° 會上下顛倒
+  （·32 踩過）。用 `html[lang^="zh"] .mx-ylabel { transform: none }` 分開。
+
+【2 · 顏色 = 解決難易度】
+· 色票改成區塊級自訂屬性：`--mx-paper #E6E2D8`、`--mx-hard #C85A32`、
+  `--mx-medium #66B2B2`、`--mx-easy #C2D6D1`。
+· `.mx-cell` 一律紙色；刪掉整個 `.mx-cell.mx-lv-*` 熱力色階（四檔舊色全移除）。
+  顏色只出現在 `.mx-chip` / `.mx-badge` / `.mx-swatch` 上，靠 `mx-diff-*` 三檔。
+· 對應：01 hard / 02 medium / 03 hard / 04 easy / 05 medium / 06 easy。
+· 圖例改三列：HARD (Ongoing field effort) / MEDIUM (Design & screening) /
+  EASY (One-off tech setup)，每列再加一句白話解釋。
+
+【3 · 三欄清單 + 詳情卡】
+· 表頭：ID / Risk Description / Difficulty (L×S)，第三欄膠囊寫「Hard · L3×S4」。
+· 格內標籤與表格膠囊都是 `<button>`：hover、focus、點一下都會開卡；
+  卡是 `.mx-block` 的絕對定位子節點（放進 `.mx-wrap` 會被 overflow-x 裁掉）。
+· 卡片內容：編號 + 難易度膠囊 + 完整風險描述 + MITIGATION STRATEGY + 策略全文。
+· 關閉：移開滑鼠 160ms、Esc、點空白處（document pointerdown 全域只掛一次）。
+· 表格下方提示：`HOVER · TAP` 標籤 + 「Move the cursor over any tag — or tap it
+  on a phone — to read the full risk and its mitigation strategy.」
+· 無障礙：標籤的 aria-label = 編號 + 完整風險 + 策略全文（讀屏不會漏掉卡裡的字）。
+
+【踩到的五個坑】
+1. **按鈕要吃 UA 樣式**：`<button>` 自帶 buttonface 底與 buttontext 字色，
+   只寫 background 不夠，還要 `appearance: none; font: inherit;` 與顯式 color。
+2. **膠囊文字黏在一起**：`textContent` 是「Hard·L3×S4」——視覺上有 gap，
+   複製 / 朗讀沒有。在 span 之間插空白文本節點即可（flex 不渲染純空白，
+   版面不變、文字有詞距）。提示行同理。
+3. **≤479 的卡片寬度被後面的規則蓋掉**：基準是 `min(320px, 100% - 12px)`，
+   但手機區塊又寫了一條 `width: calc(100% - 12px)`（同特異性、原始碼更後），
+   實測 332px，幾乎蓋住整塊矩陣。刪掉那條，手機也是 320。
+4. **手機只留編號 → 顏色消失**：編號自帶深色方框，把整個標籤的底色遮住。
+   ≤479 改成「編號框透明、顏色塗整塊標籤」，色塊反而更大更清楚。
+5. **堆疊卡重複「RISK DESCRIPTION」六遍**：桌面的表頭已說明列義，手機
+   逐行重複只會變吵。`.mx-td-desc .mx-cell-label` 在 ≤700 一併 display:none。
+
+【測試同步】
+· verify-bcm212-a2：130 → **172 條**。新增 16 格同紙色 / 舊色階 class 全移除 /
+  六枚標籤的難易度對應 / 03 與 05 同格異色 / 表頭三欄 / 六枚膠囊逐字
+  「Hard · L3×S4…」/ 策略列與長句不得留在表內 / 卡片預設隱藏→hover 出現
+  →內容正確→Esc 關閉→換標籤換內容→移開自動收起 / 提示語 / aria-label 帶策略 /
+  色票白名單（三色 + 紙色 + 三檔）/ 縱軸 rotate 與中文例外 / `.mx-pop[hidden]`。
+· 新增 `_shot34.mjs`：1440 / 1000 / 390 三檔量「16 格背景色」「六枚標籤的
+  computed 底色與字色」「圖例色塊」「標籤是否撐出格子」「卡片寬度與是否落在
+  盒內」「縱軸 transform」；中文態另量 `transform: none` 與「困難 · L3×S4」。
+· `_shot33.mjs` 已過時（舊四檔熱力），不要再跑；保留僅作歷史對照。
+
+【驗證】
+· 真機（`_shot34`）：全部通過 —— 16 格皆 rgb(230,226,216)；01/03 赤陶紅
+  rgb(200,90,50) 配奶油白字、02/05 rgb(102,178,178)、04/06 rgb(194,214,209)；
+  圖例三色與標籤一致；卡片 320px、左右都在盒內；en 縱軸 matrix(-1,0,0,-1)、
+  zh transform:none；表格與格子左右緣 dLeft = dRight = 0；390 無橫向滾動。
+· jsdom 全量 0 失敗：a2 172 / domtest 229 / bcm212-a1 108 / bcm206 129 /
+  bcm222 126 / bcm241 111 / hidden 93 / langswitch 12 / nav-static 52 /
+  nav-runtime 25 / narrow-geom 15 / mobile 33 / article 11。
+· 真機回歸：`_spread` 185 / `_figbind` 123 / `_refcolumn` 88 / `_refalign` /
+  `_tblalign` 全 PASS，console 無錯誤。
+· 眼檢：1440 矩陣 + 圖例 + 三欄表 + 提示、390 堆疊卡、中文態、
+  3× 放大的網格與詳情卡（確認 04/05/06 確實有上色，不是「白盒子」）。
+
+第三十五階段：改 03 的應對策略 + 換 BCM212 A2 封面（2026-10-20）
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（兩項）】
+1. 風險 03 的應對策略改成：Prioritize approaching international students
+   during campus iPad intercepts once enough local and Mainland responses
+   are collected.
+2. 這篇文章的標題圖不好看，換一張。
+
+【1 · 03 應對策略】
+· content.js：03 Unbalanced Sample 的 fix 換成新句（英文逐字、中文跟著改寫為
+  「待本地與內地樣本累積足夠後，於校園 iPad 面訪時優先接觸國際學生。」）。
+· 只影響詳情卡與 aria-label（表格第三欄是難易度，不含策略文字），
+  矩陣位置、難易度（hard · L2×S3）不動。
+· 測試同步：verify-bcm212-a2 的 mustKeep 清單與「換標籤換內容」斷言改指新句。
+
+【2 · 換封面】
+· 舊版問題（眼檢）：4×4 空格被兩條斜紙條從中間穿過，讀起來像「禁止」符號，
+  焦點散、格子又空，縮到 300px 只剩一堆方框。
+· 新版 `assets/posts/bcm212-a2-cover.png/.webp`：俯視平貼 —— 青底上一張撕邊
+  奶油紙，頂端一枚近黑夾紙夾，紙上「四格勾選框（第一格填青打勾）」＋兩條
+  粗橫線（暗示手寫欄，不畫假字），左上角一小段青色紙膠帶，右下角斜壓一支
+  近黑鉛筆；紙下有硬邊偏移陰影。語意＝問卷調查，正好對上這篇的研究方法主題。
+· 逐字帶【生圖規範】第五節風格錨；三色、無漸層、無臉、無假字。
+· 圖注跟著換：`FIG.03 — Plan first, then plot the risk`（講矩陣）
+  → `FIG.03 — Survey first, then the plan` / 先問卷，再談規劃（對應畫面上的四格勾選框）。
+
+⚠️ 重新配墨這次**不能只調 S/V**：生成圖背景落在 #60AE94（色相 160°），
+   圖庫檔位是 #5EA99E（色相 171°）——差 11° 的青綠偏，用 cover-recolor.py
+   的預設增益會把整張圖拉成 #5CCBA6（過亮）。改寫一支 `.workbuddy/_coverfit.py`：
+   只挑青藍色域（140°–200°、S≥0.3、V 0.25–0.85）像素，量主色（中位數）後
+   算 H/S/V 三軸比值，帶平滑權重回填，4 輪逼近；紙白與近黑完全不吃設定。
+   實測 #60AE94 → #5EA99E（4 輪內收斂），四角採樣 #62AEA2 / #5CAB9F，
+   與 a1 (#59A79A / #5BACA1)、舊 a2 (#5CA5A2) 同一家族。
+   → **往後：生成圖色相偏了就別硬調飽和度，先量色相。**
+
+· 舊封面備份在 `.workbuddy/_old-covers/bcm212-a2-cover.v1.png/.webp`
+  （.workbuddy 不進版控，要對照才找得到）。
+
+【驗證】
+· verify-bcm212-a2：172 通過 / 0 失敗。domtest：229 通過 / 0 失敗。
+· 伺服器實測：`/assets/posts/bcm212-a2-cover.webp` 200、content.js 回傳新句。
+· 眼檢：1024 全幅 + 縮到 300px 與舊版並排比對（新版一眼讀得出「問卷 + 鉛筆」）。
