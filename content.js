@@ -34,10 +34,13 @@
  *   { type: 'diagram', ... }  内联 SVG 环形流程图
  *   { type: 'table', tag?, title, columns, groups, caption }  剪报风分组表格
  *     （tag 已于第二十五階段撤除，不要再写；分组轴由 groups[].label 提供）
- *   { type: 'matrix', title, xLabel, yLabel, legend, risks, fixLabel, caption }
- *     風險矩陣：risks 每項 { no, l, s, desc, fix }（l / s 各 1–4），
- *     依「可能性 × 嚴重度」落格，格子深淺由 l*s 分數決定；矩陣下方
- *     自動附一張編號對應的應對策略清單。代替原本的五列風險表。
+ *   { type: 'matrix', title, xLabel, yLabel, xTicks, yTicks, legendTitle,
+ *     legend: [{ key: 'hard'|'medium'|'easy', label, note, desc }],
+ *     tableTitle, cols: { id, desc, diff }, hintTag, hint,
+ *     risks: [{ no, short, l, s, diff, desc, fix }], fixLabel, caption? }
+ *     風險矩陣（·34 定稿）：4×4 落格，座標軸自己講 L×S；顏色只講
+ *     「解決難易度」，空白格一律紙色。格內只放「編號 + 2–3 詞」，
+ *     完整描述與策略在懸停 / 輕點打開的詳情卡裡，下方配三欄清單。
  *   { type: 'timeline', title, range, items, caption }
  *     時間軸：items 每項 { date, text, milestone? }。≥1100px 橫向 ——
  *     事件小卡全部排在軸線**上方**（等寬欄位，永不重疊），
@@ -1240,47 +1243,103 @@ const SUBJECTS = {
       {
         id: 'bcm222-a2',
         no: 'No.02',
-        placeholder: true,
-        title: { en: 'Voice & Visibility: Who Gets the Mic?', zh: '發聲與可見性：誰拿到麥克風？' },
-        excerpt: {
-          en: 'Amplification is power. Comparing two student protests covered by the same campus paper — one front-page, one buried, and the structural reason why.',
-          zh: '放大就是權力。比較同一份校園報紙報導的兩場學生抗議——一則上了頭版，一則被埋掉，以及背後結構性的原因。',
+        studentId: '1723674',
+        title: {
+          en: 'Orientalism in Plain Sight: BCM222 A2 Pitch',
+          zh: '藏在光天化日下的東方主義：BCM222 A2 提案',
         },
-        date: '2026-09-18',
+        excerpt: {
+          en: 'Streaming platforms no longer sell stereotypes outright — they style them. A visual pitch for a video essay that hands viewers the tools to see through the screen.',
+          zh: '串流平台不再直接販賣刻板印象，而是把它做成風格。一份影像論文的視覺提案：把看穿螢幕的工具交到觀眾手上。',
+        },
+        date: '2026-10-28',
         tags: [
-          { en: 'Representation', zh: '再現' },
-          { en: 'Analysis', zh: '分析' },
+          { en: 'BCM222 A2', zh: 'BCM222 A2' },
+          { en: 'Visual Pitch', zh: '視覺提案' },
+          { en: 'Video Essay', zh: '影像論文' },
         ],
-        image: 'assets/posts/bcm222-a2-megaphone.png',
-        figLabel: { en: 'FIG.03 — Voice, amplified', zh: 'FIG.03 — 被放大的聲音' },
+        /* 同 bcm222-a1：文章頁不渲染開場主圖（第三十階段）。
+           image 仍供科目頁卡片縮圖，兩者解耦 —— 別刪。 */
+        noHero: true,
+        image: 'assets/posts/bcm222-a2-cover.png',
         body: [
-          {
-            type: 'p',
-            text: {
-              en: 'Two student protests, one campus paper, same academic year. The first ran on the front page above the fold; the second was a 90-word brief on page seven. The difference was not newsworthiness. It was proximity — to the paper’s routines, its sources, its idea of its audience.',
-              zh: '兩場學生抗議、一份校園報紙、同一個學年。第一場上了頭版摺線以上；第二場是第七頁一則 90 字的短訊。差別不在新聞價值，而在親近程度——與報紙的日常流程、它的消息來源、它對讀者的想像之間的親近程度。',
-            },
-          },
-          { type: 'h2', text: { en: 'The megaphone supply chain', zh: '麥克風的供應鏈' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Voice is not distributed by need; it is distributed by access. The groups already inside a newsroom’s source network get amplified by default, while unfamiliar organisers must first become legible to the paper before they can become visible through it.',
-              zh: '聲音不是按需求分配的，而是按門路分配的。已經在編輯部消息網絡裡的那些團體，預設就會被放大；而陌生的組織者必須先變得讓報紙「讀得懂」，才能透過報紙變得可見。',
-            },
-          },
           {
             type: 'quote',
             text: {
-              en: 'A megaphone does not make your voice stronger. It makes you audible to whoever owns the megaphone supply.',
-              zh: '麥克風不會讓你的聲音變強。它只是讓你被「擁有麥克風供應鏈的人」聽見。',
+              en: 'Your pitch is an audio-visual recording where you explain what problem or issue you are focusing on for the final project, your approach, two sources you have found and you give us some images reflecting the kind of images you might use.',
+              zh: '你的提案是一段影音錄製：說明你為期末專案聚焦的問題或議題、你的切入方式、你找到的兩份文獻，並提供一些能反映你可能會使用什麼樣影像的畫面。（作業說明 A#2）',
             },
+          },
+          {
+            type: 'h2',
+            text: { en: 'The Problem', zh: '問題' },
           },
           {
             type: 'p',
             text: {
-              en: 'My analysis proposes a “source diversity audit” — a repeatable checklist any student paper could run quarterly. Modest intervention, but audits are how defaults get noticed.',
-              zh: '我的分析提出一份「消息來源多樣性稽核」——任何校園報紙都能按季執行的可複製清單。干預幅度不大，但稽核正是讓預設值被看見的方式。',
+              en: 'This final project looks at how global streaming platforms, like Netflix, keep Orientalism alive. Today, Orientalism does not look like old-fashioned racism; it has become a visual style. Streaming platforms hide old Western stereotypes behind big budgets, neon lights, and mysterious Asian streets. Because the shows look so good, global audiences accept a fake, twisted image of Asia without realizing it. Orientalism is now hiding in plain sight.',
+              zh: '這份期末專案檢視像 Netflix 這樣的全球串流平台，如何讓東方主義繼續存活。今天的東方主義不再長得像老派的種族歧視，它已經變成一種視覺風格。串流平台用大筆預算、霓虹燈光、神祕的亞洲街景，把老一套的西方刻板印象藏在後面。因為影集看起來太漂亮，全球觀眾就在不知不覺中接受了對亞洲那個虛假、扭曲的形象。東方主義如今就藏在光天化日之下。',
+            },
+          },
+          {
+            type: 'h2',
+            text: { en: 'The Solution & Core Ideas', zh: '解方與核心概念' },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'This project moves past the problem to build a solution: teaching everyday viewers how to question what they watch. Recent media studies show that Orientalism survives today because it adapts and blends directly into modern pop culture (Gencel, 2023). Furthermore, research proves a simple truth: media does not reflect reality; media builds reality (Tharun & John, 2025). When streaming platforms keep showing Asia in the same strange way, they shape how the public sees the real world. Therefore, the best way to break this illusion is critical media literacy, giving audiences the tools to see through the screen.',
+              zh: '這份專案要跨過問題本身，去建構一個解方：教會日常觀眾如何質疑自己正在看的東西。近期的媒體研究顯示，東方主義今天之所以還能存活，是因為它會自我調適、直接融進流行文化（Gencel, 2023）。此外，研究也證實了一個簡單的道理：媒體並不反映現實，媒體建構現實（Tharun & John, 2025）。當串流平台不斷用同一種奇異的方式呈現亞洲，它們就在塑造公眾對真實世界的看法。因此，打破這層幻象最好的方法就是批判性媒體識讀——把看穿螢幕的工具交到觀眾手上。',
+            },
+          },
+          {
+            type: 'h2',
+            text: { en: 'The Execution & Impact', zh: '執行方式與影響' },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'To achieve this, the project consists of an educational video essay for the general public. Currently, academic research stays locked in journals that normal audiences do not read because they are too long and complex. This project bridges that gap by turning academic ideas into a clear, visual breakdown of streaming tricks. Ultimately, this video gives the audience a new lens. Viewers will shift from passive fans into active thinkers, knowing exactly how to spot Orientalism on their screens and see through the digital illusion.',
+              zh: '為了做到這件事，這份專案的形式是一支面向一般大眾的教學型影像論文。目前學術研究被鎖在期刊裡，一般觀眾不會去讀，因為它們又長又複雜。這份專案要搭起那座橋，把學術概念轉譯成對串流手法清晰、視覺化的拆解。最終，這支影片要給觀眾一副新的鏡片：觀眾會從被動的粉絲變成主動的思考者，清楚知道怎麼在自己的螢幕上辨識東方主義，看穿那層數位幻象。',
+            },
+          },
+          {
+            type: 'embed',
+            provider: 'youtube',
+            id: 'Y56iKzyyK8c',
+            title: {
+              en: 'The pitch — problem, approach, and the two sources behind it',
+              zh: '提案影片——問題、切入方式，與支撐它的兩份文獻',
+            },
+            caption: {
+              en: 'The recorded pitch walks through the issue, the approach, the two sources, and the kind of images the final video essay will use — academic arguments restated in plain language, for people who would never open a journal.',
+              zh: '這段錄影依序說明議題、切入方式、兩份文獻，以及最終影像論文會使用什麼樣的畫面——把學術論證用平白的語言重講一遍，講給那些永遠不會去翻期刊的人聽。',
+            },
+            captionStyle: 'note',
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: "Gencel, B. (2023). From Orientalism to neo-Orientalism: Medial representations of the 'other'. Textual Practice, 38(3), 464–484.",
+              zh: "Gencel, B. (2023). From Orientalism to neo-Orientalism: Medial representations of the 'other'. Textual Practice, 38(3), 464–484.",
+            },
+            url: 'https://www.tandfonline.com/doi/full/10.1080/0950236X.2023.2288112',
+            note: {
+              en: 'Establishes the premise the whole pitch rests on: Orientalism did not disappear, it adapted — which is why it now reads as style rather than ideology.',
+              zh: '確立整份提案所依據的前提：東方主義沒有消失，而是自我調適了——這正是它如今讀起來像「風格」而不像「意識形態」的原因。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Tharun, T., & John, C. (2025). Constructing reality: A critical study of media representation and social perception. International Journal for Research in Applied Science and Engineering Technology, 13(1), 598–601.',
+              zh: 'Tharun, T., & John, C. (2025). Constructing reality: A critical study of media representation and social perception. International Journal for Research in Applied Science and Engineering Technology, 13(1), 598–601.',
+            },
+            url: 'https://www.ijraset.com/research-paper/critical-study-of-media-representation-and-social-perception',
+            note: {
+              en: 'Supplies the mechanism: representation is not a mirror but a mould — repeated images do not describe the world, they teach audiences how to see it.',
+              zh: '提供運作機制：再現不是鏡子，而是模具——反覆出現的影像不是在描述世界，而是在教觀眾怎麼看世界。',
             },
           },
         ],

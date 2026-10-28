@@ -3458,3 +3458,71 @@ multicol 的兩欄**永遠從容器頂部往下長**：整篇一個容器 → �
 · verify-bcm212-a2：172 通過 / 0 失敗。domtest：229 通過 / 0 失敗。
 · 伺服器實測：`/assets/posts/bcm212-a2-cover.webp` 200、content.js 回傳新句。
 · 眼檢：1024 全幅 + 縮到 300px 與舊版並排比對（新版一眼讀得出「問卷 + 鉛筆」）。
+
+第三十六階段：BCM222 A2 視覺提案上線（Orientalism in Plain Sight）（2026-10-28）
+════════════════════════════════════════════════════════════════════
+
+【內容】
+· 把 `新建 文本文档.txt` 的 A2 提案稿搬進 content.js 的 bcm222-a2 記錄，
+  取代原本的佔位貼文（Voice & Visibility 那篇是假的，已整段換掉）。
+· 英文**逐字保留**：三段正文、兩條文獻、作業說明引文一字未改；
+  中文是新增的繁中翻譯（台灣用語）。
+· 區塊結構 11 個：quote（作業 A#2 說明原文）+ 4×h2 + 3×p + embed + 2×ref。
+  節奏＝問題 → 解方與核心概念 → 執行方式與影響 → 影片 → 文獻。
+· 影片用既有的 `embed` 塊（provider 白名單 + id 正則），id `Y56iKzyyK8c`；
+  用戶給的 `?si=1z0drySvgt-gjnK5` 分享參數**沒有**抄進資料（會讓人以為是片源的一部分）。
+· 沿用 a1 的 `noHero: true`：文章頁不出開場主圖，封面只當科目頁卡片縮圖。
+
+【封面】
+· 青底 + 奶油紙「電視」、近黑夜色畫面上一枚奶油滿月 + 青色三層塔樓剪影
+  + 右側三根青色霓虹豎條 + 右下角撕邊奶油紙條掀開露出底色。
+  語意＝「藏在光天化日下的東方主義」：畫面很漂亮、但你看到的是被挑選過的夜景。
+· 走 `.workbuddy/_coverfit.py` 配墨（1536×1024 → 裁水印 1414×948 → 1024×683）。
+  這張青域量到 **#558980**（色相 169° 對，但明度太低），4 輪收斂到 #5EA99E；
+  紙白與近黑不吃設定。PNG 1,174,804 B / WebP 79,516 B。
+· 舊的 `bcm222-a2-megaphone.png/.webp` **保留不刪**（那是占位貼文的插圖，
+  現在沒有頁面引用它，但檔名可能被外部連結記著）。
+
+【科目頁】
+· bcm222 從 1 張卡變 2 張 —— 這是**唯一**的頁面層面變化，
+  但測試裡寫死卡片數的地方要跟著改（domtest / verify-hidden 的 `LIVE_SUBJECTS`、
+  verify-bcm222-a1 的 `cards.length === 1`），否則會假失敗。
+
+【順手修的文檔債】
+· content.js 頭部的 `matrix` 註釋還是 ·33 的舊簽名（`legend/risks/fixLabel` 四欄），
+  跟 ·34 定稿的 `xTicks/yTicks/legendTitle/tableTitle/cols/hint` 完全對不上 ——
+  改成現行形狀，並註明「顏色講解決難易度、空白格紙色」。
+
+⚠️ 這一輪踩到的四個「測試自己寫錯」的坑（都不是站點的問題，但會浪費一輪）：
+   ① jsdom 裡嵌 YouTube 的文章會拋 `Cannot read properties of undefined
+      (reading 'responseStart')` —— 那是 jsdom-dispatcher 內部行為，不是頁面錯。
+      斷言「無運行時錯誤」時必須過濾 `responseStart` 與 `Not implemented`。
+   ② embed 會輸出 **兩個**頂層節點：`.embed-rule`（剪刀虛線 span）+ `figure.embed-block`。
+      直接數 `.article-body > *` 會得到 12 而不是 11 —— 要嘛濾掉 `.embed-rule`，
+      要嘛就明確斷言「內容區塊 11 + 虛線 1」。
+   ③ iframe 量測要對 `.video-frame` 的 **content box**（`clientWidth/clientHeight`）。
+      畫框自帶 2px 內邊線，拿 `getBoundingClientRect()` 跟 iframe 比會固定差 4px，
+      看起來像「被裁掉」，其實是量錯了基準。
+   ④ 窄屏「影片塊鋪滿版心」要量 `.embed-block`（含 18px 電視機殼），
+      不是量 `.video-frame`（那會少 42px）。同理 h2 的「公共左軌」要量**盒左緣**
+      （含 3px 邊框條），量文字左緣會多出 20px 的內距，變成第二條左軌的假象。
+
+【驗證】
+· 新增 `verify-bcm222-a2.mjs`：**86 通過 / 0 失敗**。覆蓋：區塊計數與順序、
+  19 條英文逐字保留、文獻連結與 `si=` 不得出現、iframe 走 youtube-nocookie、
+  說明用 note 體、兩條文獻都有「書目 → 獨立一行完整連結 → 註解」三層、
+  中文態四節標題與注解、`ZineI18n.set('zh')` 後 DOM 節點數不變、iframe src 不變、
+  色票白名單、封面 PNG+WebP、科目頁 2 張卡且第 2 張走新封面 WebP。
+· 新增 `_shot36.mjs` 真機探針（1440 / 390）：影片塊 660 居中（中心 720＝版心中心）、
+  iframe 嚴絲合縫填滿 614×344 內容盒、16:9（1.776）、剪刀虛線寬 660 且在影片塊上方
+  不重疊、三段正文 + 4 個 h2 + 2 條文獻同一左軌、文獻註解豎線退到軌外 16px、
+  390 無橫向滾動且影片塊 350＝版心寬，**ALL PASS**，console 無錯誤。
+· `_spread.mjs` 的 IDS 加入 bcm222-a2 → **225 通過 / 0 失敗**（原本 185）。
+· jsdom 全量 0 失敗：domtest 229 / bcm212-a1 108 / bcm212-a2 172 / bcm206 129 /
+  bcm222-a1 126 / bcm241 111 / hidden 94 / nav-static 52 / article 11 /
+  langswitch 12 / nav-runtime 25 / narrow-geom 15 / mobile 33。
+· 真機回歸：`_figbind` 123 / `_refcolumn` 88 / `_refalign` / `_tblalign` 全 PASS。
+
+【待辦】
+· 尚未 commit / push（依慣例等「上傳」）。
+· 封面是生成的，眼檢由 Master 做；若不滿意可從 `.workbuddy/tmp-cover/` 的原始圖重配。
