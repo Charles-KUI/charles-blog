@@ -781,6 +781,176 @@ const SUBJECTS = {
           },
         ],
       },
+      {
+        id: 'bcm241-a2',
+        no: 'No.02',
+        studentId: '1723674',
+        title: {
+          en: 'Mapping the Cross-Border E-Commerce Niche',
+          zh: '描繪跨境電商領域：田野現場與位置性反思',
+        },
+        excerpt: {
+          en: 'A month of lurking across Bilibili, Xiaohongshu and storefronts — and two epiphanies: AI fixed the language but not the taste, and vocabulary is the paywall.',
+          zh: '一個月在 Bilibili、小紅書與各店面前的潛水——以及兩個體悟：AI 修好了語言，卻沒修好品味；而詞彙本身，就是那道付費牆。',
+        },
+        date: '2026-10-29',
+        tags: [
+          { en: 'BCM241 A2.1', zh: 'BCM241 A2.1' },
+          { en: 'Autoethnography', zh: '自我民族誌' },
+          { en: 'Field Notes', zh: '田野筆記' },
+        ],
+        noHero: true,
+        image: 'assets/posts/bcm241-a2-figmap.png',
+        figLabel: { en: 'FIG.01 — The field site, mapped', zh: 'FIG.01 — 被描繪的田野現場' },
+        body: [
+          {
+            type: 'p',
+            text: {
+              en: 'My media niche is China’s cross-border e-commerce community. It connects domestic sellers, complete beginners, and knowledge creators trying to sell globally. In my previous pitch, I noted that China’s manufacturing is massive, yet the domestic market is saturated. Going global is the clear way out. My field site spans two worlds. Sellers learn the ropes on domestic apps like Bilibili, Douyin, and Xiaohongshu, then apply those lessons on overseas platforms like Shopify, Amazon, and TikTok Shop. The field site map below breaks down the platforms, the players, and the two biggest friction points I found while lurking in this community.',
+              zh: '我的媒體領域是中國的跨境電商社群：它連結了國內賣家、完全的新手，以及想把東西賣到全球的知識創作者。在上一份提案裡我提過，中國的製造能量龐大，但內銷市場已經飽和，出海是明確的出路。我的田野現場橫跨兩個世界——賣家先在 Bilibili、抖音、小紅書這些國內 App 上摸清門道，再把學到的東西搬到 Shopify、Amazon、TikTok Shop 這些海外平台上。下方的田野現場地圖，拆解了平台、行動者，以及我在這個社群裡潛水時發現的兩大摩擦點。',
+            },
+          },
+          {
+            type: 'figure',
+            src: 'assets/posts/bcm241-a2-figmap.png',
+            alt: {
+              en: 'Field site map of the cross-border e-commerce knowledge niche: platforms (Bilibili, Douyin, Xiaohongshu at home; Shopify, TikTok Shop, Amazon overseas), actors (gurus, newcomers, sellers, co-learners), and two frictions — taste and jargon.',
+              zh: '跨境電商知識領域的田野現場地圖：平台（國內的 Bilibili、抖音、小紅書；海外的 Shopify、TikTok Shop、Amazon）、行動者（大師、新手、賣家、共同學習者），以及兩道摩擦——品味與術語。',
+            },
+            caption: {
+              en: 'FIG.01 — The field site, mapped',
+              zh: 'FIG.01 — 被描繪的田野現場',
+            },
+          },
+          { type: 'h2', text: { en: 'My Background, Biases, and Online Persona', zh: '我的背景、偏見與網路人格' } },
+          {
+            type: 'p',
+            text: {
+              en: 'I entered this niche from two angles. First, I have relatives running cross-border stores. Second, I spend a lot of time following the AI space, which overlaps heavily with e-commerce right now. That background gave me a huge bias. Watching the shift from the internet era to the AI era, I assumed AI tools would easily flatten the barriers to global trade. I thought AI translation and image generation were magic bullets for domestic "involution" (cutthroat competition).',
+              zh: '我從兩個角度進入這個領域。第一，我有親戚在經營跨境店鋪。第二，我花很多時間關注 AI 領域，而它現在與電商高度重疊。這個背景給了我一個巨大的偏見：看著網路時代轉向 AI 時代，我假設 AI 工具會輕鬆鏟平全球貿易的門檻。我以為 AI 翻譯與圖像生成，是解決國內「內捲」的萬靈丹。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'At the same time, I am just a university student with zero hands-on selling experience. To handle this ethically, I built my online persona as an honest "co-learner". I do not pretend to be an industry guru. Instead, I document what I learn from public case studies and share it in plain language, staying transparent about what I actually know and what I am still figuring out.',
+              zh: '同時，我只是一個毫無實際銷售經驗的大學生。為了在倫理上妥善處理這件事，我把自己的網路人格設定成一個誠實的「共同學習者」。我不假裝自己是產業大師，而是把從公開案例研究裡學到的東西記錄下來，用平白的語言分享，並對我真正知道什麼、還在摸索什麼保持透明。',
+            },
+          },
+          { type: 'h2', text: { en: 'Field Notes and Visual Data', zh: '田野筆記與視覺資料' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Over the past month, I lurked across Bilibili, Xiaohongshu, and e-commerce storefronts to see how sellers and creators actually operate. Per ethical guidelines, I only sampled public media posts and store pages, leaving out all audience comments and private user info.',
+              zh: '過去一個月，我在 Bilibili、小紅書與各電商店面之間潛水，看賣家與創作者實際怎麼運作。依倫理準則，我只取樣公開的媒體貼文與店面頁面，排除所有觀眾留言與私人使用者資訊。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'First, I compared product listings for a women\'s red hoodie. On Taobao, the image is packed with bright orange "Double 11" banners, countdown timers, and price-slash tags. On an overseas storefront, the exact same style of hoodie sits on a plain white background with zero text.',
+              zh: '首先，我比較了一款女性紅色連帽外套的商品頁。在淘寶，圖片塞滿亮橘色的「雙十一」橫幅、倒數計時與劃線價標。在海外店面，完全相同款式的連帽外套擱在純白背景上，一個字都沒有。',
+            },
+          },
+          {
+            type: 'figure',
+            srcs: [
+              'assets/posts/bcm241-a2-taobao.png',
+              'assets/posts/bcm241-a2-overseas.png',
+            ],
+            alt: {
+              en: 'Left: the same red hoodie listed on Taobao, buried under orange Double 11 banners, countdown timers and slashed prices. Right: an overseas storefront listing of the same style on a plain white background with no text.',
+              zh: '左：同一件紅色連帽外套的淘寶商品頁，被橘色雙十一橫幅、倒數計時與劃線價壓住。右：海外店面的同款商品頁，純白背景、沒有一行字。',
+            },
+            caption: {
+              en: 'FIG.02 — One hoodie, two visual grammars',
+              zh: 'FIG.02 — 一件外套，兩套視覺語法',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Second, I tracked creator posts on Xiaohongshu. One viral post from a trademark agency used giant red text and a US certificate to warn sellers about "hijacked listings" (跟卖) and sudden store takedowns.',
+              zh: '第二，我追蹤小紅書上的創作者貼文。一則由商標代理機構發布的爆紅貼文，用巨大的紅字與一張美國證書，警告賣家小心「跟賣」與店鋪突然被下架。',
+            },
+          },
+          {
+            type: 'figure',
+            src: 'assets/posts/bcm241-a2-xhs.png',
+            alt: {
+              en: 'A Xiaohongshu post from a trademark agency: oversized red Chinese type reading "apply through us for a US trademark", layered over an official certificate.',
+              zh: '一則小紅書商標代理貼文：巨大的紅字寫著「找我們申請美國商標」，疊在一張官方證書上。',
+            },
+            caption: {
+              en: 'FIG.03 — Anxiety, packaged as a service',
+              zh: 'FIG.03 — 把焦慮包裝成服務',
+            },
+          },
+          { type: 'h2', text: { en: 'Two Key Epiphanies', zh: '兩個關鍵體悟' } },
+          { type: 'h3', text: { en: '1. AI Fixed the Language, Not the Taste', zh: '1. AI 修好了語言，沒修好品味' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Comparing the Taobao and overseas hoodie listings killed my blind faith in AI. I used to think language was the main wall stopping Chinese sellers from going global. Now I see that AI can translate product titles in seconds, but it cannot translate taste. Domestic sellers grow up in a hyper-promotional ecosystem. They rely on visual noise—flashing discounts, urgent timers, and crowded layouts—to drive impulse buys. When they use AI to dump these exact visuals onto Shopify or Amazon, overseas buyers read it as cheap spam. The real barrier is no longer technical or linguistic; it is breaking out of domestic "promo grammar" to match foreign visual expectations.',
+              zh: '把淘寶與海外店面的連帽外套商品頁並在一起看，殺死了我對 AI 的盲目信仰。我以前以為語言是擋住中國賣家出海的那道主牆。現在我看到，AI 幾秒鐘就能翻譯商品標題，但它翻譯不了品味。國內賣家成長於一個超促銷的生態系，他們依賴視覺噪音——閃爍的折扣、急迫的倒數、擁擠的版面——來驅動衝動購買。當他們用 AI 把這些一模一樣的視覺倒到 Shopify 或 Amazon 上，海外買家讀到的是廉價的垃圾訊息。真正的障礙不再是技術或語言，而是跳脫國內的「促銷語法」，去對上外國的視覺期待。',
+            },
+          },
+          { type: 'h3', text: { en: '2. Vocabulary is the Paywall', zh: '2. 詞彙就是那道付費牆' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My second realization hit while scrolling through "guru" content on Xiaohongshu and Bilibili. I initially worried that having zero store experience made me useless as a creator. Lurking proved the opposite. The niche is flooded with agencies and course-sellers who weaponize industry jargon. They throw around buzzwords like "listing weight" or "hijacking" to trigger Fear Of Missing Out (FOMO) among beginners, pushing them to buy overpriced courses or services. Almost nobody shares basic knowledge for free because everyone is trying to monetize anxiety. My lack of commercial ties is actually my biggest asset. By translating gatekept jargon into plain words, my "co-learner" persona fills a massive trust gap in this community.',
+              zh: '第二個體悟，是在小紅書與 Bilibili 上滑「大師」內容時撞上的。我一開始擔心，零店面經驗會讓我作為創作者毫無用處。潛水反而證明了相反的事。這個領域塞滿了代理商與賣課的人，他們把產業術語當武器：丟出「listing 權重」或「跟賣」這類流行詞，在新手身上觸發錯失恐懼（FOMO），把他們推向購買昂貴的課程或服務。幾乎沒有人免費分享基礎知識，因為每個人都在把焦慮變現。我沒有商業牽連，這反而成了我最大的資產。把被守門的術語翻譯成白話，我的「共同學習者」人格，正好填補了這個社群裡巨大的信任缺口。',
+            },
+          },
+          { type: 'h2', text: { en: 'From Personal Experience to Cultural Reality', zh: '從個人經驗到文化現實' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My observations point to two broader cultural patterns in digital trade and online communities.',
+              zh: '我的觀察，指向數位貿易與網路社群中兩個更廣的文化模式。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'First, the clash between Taobao\'s loud promotions and overseas minimalism shows why tech alone cannot solve cross-cultural marketing. Chen (2026) tested cross-border communication strategies and proved that literal translation fails to convert foreign buyers. Real conversion requires cultural adaptation and stripping away cognitive overload. When Chinese sellers carry domestic price-war visuals overseas, they trigger cultural misunderstandings. Moving products across borders is easy; moving a seller\'s mindset across aesthetic cultures is the actual hard work.',
+              zh: '第一，淘寶的高聲量促銷與海外極簡之間的衝撞，說明了為什麼單靠技術解決不了跨文化行銷。Chen（2026）測試了跨境溝通策略，證明直譯無法讓外國買家買單。真正的轉換需要文化調適，並剝除認知超載。當中國賣家把國內價格戰的視覺帶到海外，他們觸發的是文化誤解。把產品搬過邊界很容易；把賣家的心態搬過美學文化的邊界，才是真正困難的功課。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Second, the jargon paywall I noticed reflects a wider trust crisis in virtual communities. Examining how users share knowledge on platforms like Bilibili, Zhang, Ma, and Lyu (2021) found that community loyalty depends heavily on the quality—specifically the authenticity and readability—of shared information, driven by mutual trust and reciprocity rather than commercial motives. When gurus hide simple concepts behind industry slang to sell courses, they poison interpersonal trust and raise the cost of learning. Stepping in as a transparent novice works because it restores reciprocity. Honest, plain-language sharing builds the exact kind of community satisfaction that commercial gatekeepers destroy.',
+              zh: '第二，我注意到的術語付費牆，反映了虛擬社群中更廣泛的信任危機。Zhang、Ma 與 Lyu（2021）在研究 Bilibili 這類平台上的知識分享時發現，社群忠誠度高度取決於所分享資訊的品質——具體來說是真實性與可讀性——並由相互信任與互惠驅動，而非商業動機。當大師把簡單概念藏在產業黑話後面來賣課，他們毒害了人際信任，也抬高了學習成本。以一個透明的生手身分介入之所以有效，是因為它恢復了互惠。誠實、白話的分享，建立的正是商業守門人破壞掉的那種社群滿意度。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Chen, J. (2026). Cross-Border E-commerce English Communication Strategies for Silk Products Targeting the Belt and Road Market: Language Style, Cultural Adaptation, and Platform Optimization. Textile & Leather Review, 9, 3680-3699.',
+              zh: 'Chen, J.（2026）。針對一帶一路市場的絲綢產品跨境電商英語溝通策略：語言風格、文化調適與平台優化。Textile & Leather Review, 9, 3680-3699。',
+            },
+            url: 'https://doi.org/10.31881/TLR.2026.3680',
+            note: {
+              en: 'The theoretical backbone for the first epiphany: literal translation does not convert, cultural adaptation does.',
+              zh: '第一個體悟的理論骨架：直譯不會帶來轉換，文化調適才會。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Zhang, J., Ma, Y., & Lyu, B. (2021). Relationships Between User Knowledge Sharing in Virtual Community with Community Loyalty and Satisfaction. Psychology Research and Behavior Management, 14, 1509-1523.',
+              zh: 'Zhang, J.、Ma, Y.、Lyu, B.（2021）。虛擬社群中使用者知識分享與社群忠誠、滿意度之間的關係。Psychology Research and Behavior Management, 14, 1509-1523。',
+            },
+            url: 'https://doi.org/10.2147/PRBM.S331132',
+            note: {
+              en: 'Explains why the jargon paywall damages trust, and why plain-language sharing rebuilds it.',
+              zh: '解釋了術語付費牆為何損害信任，以及白話分享為何能把它重建起來。',
+            },
+          },
+        ],
+      },
     ],
   },
 
