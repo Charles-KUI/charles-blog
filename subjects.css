@@ -175,6 +175,7 @@
     font-weight: 800;
     line-height: 1.25;
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    text-wrap: balance;
 }
 
 .assignment-card:hover .assignment-title {

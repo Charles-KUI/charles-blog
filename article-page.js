@@ -728,7 +728,10 @@
     const plates = srcs.map(function (src) {
       return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '" loading="lazy" decoding="async">';
     }).join('');
-    const cls = 'inline-figure' + (srcs.length > 1 ? ' inline-figure--plates' : '');
+    const cls = 'inline-figure'
+      + (srcs.length > 1 ? ' inline-figure--plates' : '')
+      + (block.wide ? ' inline-figure--wide' : '')
+      + (block.narrow ? ' inline-figure--narrow' : '');
     const capCls = block.captionStyle === 'note' ? ' class="is-note"' : '';
     return '<figure class="' + cls + '">' + plates
       + '<figcaption' + capCls + '>' + util.tr(block.caption) + '</figcaption></figure>';

@@ -800,8 +800,9 @@ const SUBJECTS = {
           { en: 'Field Notes', zh: '田野筆記' },
         ],
         noHero: true,
-        image: 'assets/posts/bcm241-a2-figmap.png',
-        figLabel: { en: 'FIG.01 — The field site, mapped', zh: 'FIG.01 — 被描繪的田野現場' },
+        // 卡片缩略图 1:1 拼贴（·37）：科目页缩略图位是 1:1 cover，地图是横图会被裁掉两边
+        image: 'assets/posts/bcm241-a2-cover.png',
+        figLabel: { en: 'COVER — Two worlds, one box', zh: '封面圖 — 兩個世界，一個箱子' },
         body: [
           {
             type: 'p',
@@ -812,6 +813,7 @@ const SUBJECTS = {
           },
           {
             type: 'figure',
+            wide: true, // 信息密集的示意图：≥1100 铺满版心，否则 660 宽字号不可读（第三十七階段）
             src: 'assets/posts/bcm241-a2-figmap.png',
             alt: {
               en: 'Field site map of the cross-border e-commerce knowledge niche: platforms (Bilibili, Douyin, Xiaohongshu at home; Shopify, TikTok Shop, Amazon overseas), actors (gurus, newcomers, sellers, co-learners), and two frictions — taste and jargon.',
@@ -876,6 +878,7 @@ const SUBJECTS = {
           },
           {
             type: 'figure',
+            narrow: true, // 竖长手机截图：不放大到 660（第三十七階段）
             src: 'assets/posts/bcm241-a2-xhs.png',
             alt: {
               en: 'A Xiaohongshu post from a trademark agency: oversized red Chinese type reading "apply through us for a US trademark", layered over an official certificate.',

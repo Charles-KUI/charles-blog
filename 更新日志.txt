@@ -3526,3 +3526,93 @@ multicol 的兩欄**永遠從容器頂部往下長**：整篇一個容器 → �
 【待辦】
 · 尚未 commit / push（依慣例等「上傳」）。
 · 封面是生成的，眼檢由 Master 做；若不滿意可從 `.workbuddy/tmp-cover/` 的原始圖重配。
+
+
+第三十七階段：BCM241 A2.1 上線（急件）+ 圖版尺寸全面校準（2026-10-29）
+════════════════════════════════════════════════════════════════════
+
+【使用者要求（兩段）】
+· 第一次：「更新並上傳，先創造個頁面和連結給我，再繼續做後續更新，很急，
+  我要先交作業交連結上去。」→ 先出可點的線上文章頁（見下），當晚即交付。
+· 第二次：「換（新地圖 PDF）然後優化一下全部圖片的尺寸之類的細節，
+  我交了，所以可以稍微扣一下美觀和細節了。」
+
+【內容（BCM241 A2.1 · Autoethnography）】
+· 來源：`BCM241_A2.1_WangWingShing.docx`。22 段、4 張圖，英文逐字保留。
+· 結構：11 個段落 + 3 張圖版 + 4 個 h2 + 2 個 h3 + 2 條 DOI 文獻。
+  ① 領域與田野現場（開篇即接 FIG.01 地圖）
+  ② 我的背景、偏見與網路人格
+  ③ 田野筆記與視覺資料（淘寶／海外店面紅帽衫對比、小紅書商標貼）
+  ④ 兩個關鍵體悟：AI 修好了語言沒修好品味／詞彙就是那道付費牆
+  ⑤ 從個人經驗到文化現實（Chen 2026；Zhang, Ma & Lyu 2021）
+· `noHero: true`：文章頁不渲染開場主圖，image 只供科目頁卡片縮圖。
+· 科目頁 BCM241 早已上線（a1 live），新文章自動成第二張卡片，未動 hidden。
+
+【圖片：從 docx 拆出來的四張，全部重做】
+· 原檔名與內容完全對不上 —— 依實際畫面重新命名：
+  `image2.jpeg` 是**淘寶頁**、`image3.jpeg` 是**海外店面**、`image4.jpeg` 是
+  小紅書商標貼，`image1.png` 才是田野地圖。命名前先逐張看過，別照序號猜。
+· 地圖：改用使用者提供的 `BCM241 Field Site Map.pdf`（標題已是 BCM241 A2）。
+  PyMuPDF 以 2.4× 渲染（3456×2160）→ 偵測內容 bbox 裁掉四周大片米色留白
+  → **塗掉右上角溢出頁面、被切掉一半的作者／學號小字**（正文 meta 已有）
+  → resize 1600×920。原 docx 那張標著「BCM241 A1」，換掉。
+· 紅帽衫兩張：原本 587×791 與 663×824，並排時高度差 68px（底邊不齊）。
+  統一裁到 **0.77 比例**：淘寶圖裁上下（保底部促銷條完整，裁頂部背景）、
+  海外圖裁右側 29px（順手去掉右邊殘留的頁面 UI 欄）。並排後 852 / 853。
+· 小紅書豎長圖 321×695：660 寬顯示會變成 1430px 高，一屏裝不下。
+
+【圖幅變體：兩個新欄位（第三十七階段）】
+· `{ type:'figure', wide: true }` → `.inline-figure--wide`：≥1100px 鋪滿版心
+  （同多圖 figure 的破格處理）。給資訊密集的示意圖／地圖用 —— 660 寬時
+  圖上 12px 小字縮到 5px，等於不可讀。
+· `{ type:'figure', narrow: true }` → `.inline-figure--narrow`：限寬 380px。
+  給豎長手機截圖用，不再放大到 660。
+· 兩條都只改 `max-width`，居中仍交給 660 組的 `margin-left/right:auto`
+  —— 別在這裡寫 `margin:` 簡寫（CSS 陷阱 1）。
+· `renderFigure` 的 class 拼接改成四段式（plates / wide / narrow 可疊加）。
+
+【卡片封面：1:1 拼貼（當晚補做）】
+· 起因：科目頁縮圖位是 `aspect-ratio:1/1 + object-fit:cover`，而地圖是 1.74:1
+  —— cover 會把左右兩塊（01 PLATFORMS / 02 ACTORS）整片裁掉。
+· 做法：ImageGen 生成 1:1（1024×1024）「紙箱跨在兩種視覺世界之間」——
+  左半是重疊的鋸齒價標／爆炸塊，右半是留白 + 紅帽衫剪影 + 小地球。
+  提示詞逐字帶【生圖規範】第五節風格錨；無臉、無漸層、無假字（三關眼檢過）。
+· 配墨：原圖青 `H173/S0.756/V0.525`（偏深），走 `cover-recolor.py`
+  `--sat 0.62 --val 1.26` → `H173/S0.474/V0.663`，落在圖庫檔位。
+  裁右下 AI 水印（942×947）後 resize 1024×1024。
+· 生成原圖留檔 `.workbuddy/gen/bcm241-a2-cover_raw_2026-10-29.png`；
+  `generated-images/` 臨時目錄不留。
+· 卡片圖注寫 `COVER — Two worlds, one box`，**不佔正文圖號**（正文 FIG.01 是地圖）。
+
+【排版細節】
+· `.article-title` 與 `.assignment-title` 加 `text-wrap: balance`：
+  原本「Mapping the Cross-Border E-」會把 Commerce 甩到下一行，讀起來像斷詞；
+  均衡後兩行長度接近。
+· 雙圖 figure 的圖注 `flex-basis:100%` 仍獨佔一行，未受影響。
+
+【踩到的坑（留檔）】
+1. **測試腳本 spawn 的 serve.mjs 會中途斷掉**：`_shot37` 前三張圖載入成功、
+   第四張 `naturalWidth=0`，誤報「圖片未載入」。curl 一測 root 已 000 ——
+   子進程早在測試中途就沒了。改法：測試腳本**自帶 http server**（讀檔 + MIME 表），
+   生命週期跟測試進程一致，不再外掛 serve.mjs。
+2. **科目頁第二張卡片截圖是空白**：`.assignment-card` 有 IntersectionObserver
+   入場動畫，沒滾過就是 `opacity:0`（DOM 有、斷言過、截圖空白）。截圖前必須
+   先整頁滾一遍再回到頂部。
+3. **量圖寬一律用 `offsetWidth`**：`.inline-figure` 帶 `rotate(±0.8deg)`，
+   `getBoundingClientRect().width` 會多 6–10px（660 量成 666、350 量成 360），
+   容易誤判成「溢出」。
+4. **圖片請求失敗先查服務，別急著改圖**：PIL 能開、檔案大小正常、就是
+   `naturalWidth=0` —— 那是伺服器沒了，不是圖壞了。
+
+【測試】
+· domtest **229**、verify-hidden **95**（多一篇 live）、verify-bcm241-a1 **111**、
+  bcm241-a2 專屬 `_shot37` **ALL PASS**（24 條）、bcm222-a2 86、bcm212-a2 172、
+  bcm222-a1 126、bcm206 129、article 11、langswitch 12。
+· **既有測試債（非本次引入，已用 git stash 對照確認）**：
+  `verify-bcm212-a1` 的 4 條「≤700px 表格堆疊」斷言失敗 —— 它用正則抓
+  article.css 裡**第一個** `@media (max-width:700px)` 塊，而現在的表格斷點
+  不是第一個（矩陣／時間軸先用了）。純斷言寫法過時，頁面本身沒問題。
+  下次動表格時一併把正則改成「抓包含 `.tbl thead` 的那一塊」。
+· `LIVE_SUBJECTS` 同步：domtest / verify-hidden 的 bcm241 由 `['bcm241-a1']`
+  改為兩篇；verify-bcm241-a1 的卡片數 1 → 2，「a2 舊占位已移除」改為
+  「a2 已轉正式（不再是 placeholder）」。

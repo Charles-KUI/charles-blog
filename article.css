@@ -73,6 +73,9 @@
     /* 大屏标题不用 20ch 硬折行（会在右侧留出大片空白），
        给到 2 行以内的合理行宽上限即可。 */
     max-width: 26ch;
+    /* 两行时让两行长度接近（·37）：否则「Cross-Border E-」会把
+       Commerce 单独甩到下一行，读起来像断词。 */
+    text-wrap: balance;
 }
 
 /* ===== 元信息条 ===== */
@@ -380,6 +383,20 @@
     .article-body > .inline-figure--plates img + img { margin-top: 0; }
     .article-body > .inline-figure--plates figcaption { flex-basis: 100%; }
 }
+
+/* 图幅变体（第三十七階段）：素材真实比例差别很大，统一塞进 660 会让
+   竖长的手机截图高到失控、信息密集的地图看不清。
+   · --wide   信息密集的示意/地图 → ≥1100 铺满版心（同多图 figure 的处理）
+   · --narrow 竖长截图（手机页面）→ 限宽 420，不再放大到 660
+   两条都只改 max-width，居中仍由 660 组的 margin auto 负责。 */
+@media (min-width: 1100px) {
+    .article-body > .inline-figure--wide {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+.article-body > .inline-figure--narrow { max-width: 380px; }
 
 .inline-figure figcaption {
     font-family: var(--font-round);
