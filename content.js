@@ -802,7 +802,7 @@ const SUBJECTS = {
         noHero: true,
         // 卡片缩略图 1:1 拼贴（·37）：科目页缩略图位是 1:1 cover，地图是横图会被裁掉两边
         image: 'assets/posts/bcm241-a2-cover.png',
-        figLabel: { en: 'COVER — Two worlds, one box', zh: '封面圖 — 兩個世界，一個箱子' },
+        figLabel: { en: 'COVER — The same hoodie, across the line', zh: '封面圖 — 同一件帽衫，跨過那條線' },
         body: [
           {
             type: 'p',
