@@ -3672,3 +3672,89 @@ multicol 的兩欄**永遠從容器頂部往下長**：整篇一個容器 → �
 · 生成原圖歸檔 `.workbuddy/gen/bcm241-a2-cover_{v2,altA,altB}_raw.png`；
   `generated-images/` 臨時目錄不留。
 · `_shot37` 重跑 **ALL PASS**（24 條）。
+
+
+第三十八階段：BCM222 A2「Blog Post 2」上線（第三張卡片）+ 清掉舊測試債（2026-11-05）
+════════════════════════════════════════════════════════════════════
+
+【使用者要求】
+「@BCM222_A2_Blog Post 2_WangWingshing.docx 更新 @作業要求截圖」
+截圖是 Moodle 的「Assignment 2 Blog Post 2 – submit here」，截止 2026-11-06 14:00。
+
+【關鍵判斷：新增，不是替換】
+· 檔名是 Blog Post 2；現有 `bcm222-a2` 是 A2 的**視覺提案**
+  （Orientalism in Plain Sight: BCM222 A2 Pitch）。
+· 更硬的證據：docx 第一段自己寫「This post continues my autoethnographic
+  exploration ... (https://.../article.html?id=bcm222-a2)」——它明確把 a2 當
+  **上一篇**。若拿這份去覆蓋 a2，連結會變成自指，敘事直接崩掉。
+· 所以新增 `bcm222-a3`（No.03），BCM222 索引由 2 張卡變 3 張。
+  科目頁早已上線，不必動 hidden。
+
+【內容（17 個區塊）】
+作業說明引文 → Introduction → Production（3 段 + 1 張圖）→ Proliferation
+（2 段）→ Reflection（2 段）→ References（2 條 DOI 文獻）。
+英文逐字保留：用 Node 取出渲染資料、Python 拆解 docx 段落逐段比對，
+**16 段 + 標題 + 2 條文獻全部 0 差異**（僅把參考文獻尾端的 URL 移到
+獨立的 `.ref-link-row` 欄位，這是全站既有體例，讀者看到的內容不變）。
+
+【對照作業要求五點（重要）】
+  1. Introduction to the media niche（簡短、點出內容產製焦點與平台）→ 有。
+  2. **Media Research Ethic Charter → docx 完全沒有這一節。**
+     這是評分點，已向使用者指出；未擅自補寫（不能代編倫理章程內容）。
+  3. Content generation process（ideation / research / production / editing
+     + key challenges）→ 只寫到 production 與 editing：多代理腳本、
+     Canvas 程式轉影片、AI 配音、用留存數據改節奏。
+     **ideation 與 research 兩項幾乎沒展開**，已向使用者指出。
+  4. 三平台分享與困難 → 有，且是最完整的一節：Bilibili 實名驗證卡住
+     香港身分證 → 換微信視頻號；客製三版毀掉邏輯 → 改做單一完整版，
+     並用 Nieborg & Poell 的 platformization 收束。
+  5. 結論反思（洞見 + 從觀眾到創作者）→ 有：看影片變得抽離、
+     在沒有評論時必須當自己的批評者。
+
+【兩處內容疑點（不改原文，留給使用者決定）】
+· **上一篇連結對不上主題**：正文說的是「跨境電商共學網路 / Paper Magellan /
+  Cider、Halara」，但 `bcm222-a2` 實際是「東方主義視覺提案」。
+  真正做跨境電商 autoethnography 的是 `bcm241-a2`。
+  老師點進去會看到不相關的文章 —— 若確認是指錯，改一個 id 即可。
+· 正文裡那條 URL 是**純文字不可點**，390px 下還會斷成三行。
+  要做成可點連結得改 `renderP` 並補語言切換的 linkify 兜底
+  （切換語言是設 `textContent`，會把 a 標籤洗掉），先沒動。
+
+【圖片】
+· docx 內嵌 `image1.png`（1551×270）是平台後台數據條：播放 4940、
+  完播率 4.47%、2 秒跳出率 40.89%、評論 6 —— 正是「沒有評論只能看數據」
+  的證據，放在 Production 兩段之間。
+· 5.7:1 的扁平橫條在 660 寬會把 14px 字縮成 6px，啟用 ·37 的 `wide:true`
+  → 1440 下實測 1348 鋪滿版心、高 291px，字清晰。
+· 卡片封面 1:1：沿用 ·37 定下的「青底 + 旋轉米白紙片 + 一個主體 +
+  一條橫貫虛線」。主體選**磚紅紙折小船**，呼應正文的創作者人格
+  「Paper Magellan」與跨平台分發；第一版船是空心線描、缺紅，
+  退掉重出實心版。逐族平移配墨後四色精確落檔
+  （青 93,168,157 / 紙 247,239,211 / 紅 200,90,50 / 墨 38,35,32）。
+  webp 53KB；原圖留 `.workbuddy/gen/bcm222-a3-cover_{v1,v2}_raw.png`。
+
+【測試基線（全部 0 失敗）】
+domtest 229 / hidden 96 / bcm222-a1 126 / bcm222-a2 86 /
+**bcm222-a3 67（新）** / bcm212-a1 **108（舊債清掉）** / bcm212-a2 172 /
+bcm241-a1 111 / bcm206 129 / article 11 / langswitch 12 /
+nav-static 52 / nav-runtime 25 / mobile 33 / narrow-geom 15。
+`_shot38` 真機 ALL PASS（wide 幾何、圖片解碼、3 張卡、390 無橫滾）。
+
+【本次修掉的三個假失敗（留檔）】
+1. **驗證腳本的記錄切片不能用「到檔案末尾」**：`verify-bcm222-a2` 原本從
+   `id: bcm222-a2` 一路切到 content.js 結尾，a3 上線後把新文章的區塊也算
+   進去，段落數 3→11、文獻 2→4。改成切到「下一個 assignment 起點」。
+   ⚠️ 同科多篇時，任何用 `indexOf(結尾錨點)` 的舊腳本都要回頭查。
+2. **清掉 ·37 記下的既有測試債**：`verify-bcm212-a1` 原本用正則抓
+   「第一個 max-width:700px 媒體塊」，但矩陣／時間軸的 700px 斷點排在
+   表格之前，四條斷言一直紅。改成**括號計數**切出所有 700px 塊、
+   再挑「含 .tbl thead 的那一塊」。104/4 → 108/0，頁面本身從沒壞過。
+3. **captureBeyondViewport 的 clip 是「文件座標」**：`scrollY` 不為 0 時，
+   `position:fixed` 的 `.navbar` 會被畫在文件中段，看起來像「標題被導航
+   壓住」。截窄屏前必須強制 `scrollTo({top:0,behavior:'instant'})` 並
+   實測 `scrollY === 0` 再截。已加進 `_shot38` 當斷言。
+
+【踩坑】
+· Bash heredoc 裡的 Python raw string 會被 MSYS 路徑轉換動到：
+  正則的 `\s` 被寫成 `/s`、`\)` 被寫成 `/)`，產生 SyntaxError。
+  → 涉及大量反斜橓的補丁改用 Write 工具寫 .py 檔再執行，別走 heredoc。

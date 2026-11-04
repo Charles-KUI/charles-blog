@@ -1517,6 +1517,137 @@ const SUBJECTS = {
           },
         ],
       },
+      {
+        id: 'bcm222-a3',
+        no: 'No.03',
+        studentId: '1723674',
+        title: {
+          en: 'Blog Post 2: Autoethnographic Critical Reflections on Content Generation and Platform Proliferation',
+          zh: '部落格貼文 2：內容產製與平台擴散的自我民族誌批判反思',
+        },
+        excerpt: {
+          en: 'No comments, only metrics. An autoethnographic account of scripting, coding-to-video and distributing one video across Douyin, Xiaohongshu and WeChat Video — and what happens when the audience stays silent.',
+          zh: '沒有評論，只剩數據。一篇自我民族誌：從腳本、程式轉影片到三平台分發，以及當觀眾始終沉默時，創作者該怎麼辦。',
+        },
+        date: '2026-11-05',
+        tags: [
+          { en: 'BCM222 A2', zh: 'BCM222 A2' },
+          { en: 'Blog Post 2', zh: '部落格貼文 2' },
+          { en: 'Autoethnography', zh: '自我民族誌' },
+        ],
+        /* 同 a1 / a2：文章頁不渲染開場主圖；image 只供科目頁卡片縮圖。 */
+        noHero: true,
+        image: 'assets/posts/bcm222-a3-cover.png',
+        figLabel: { en: 'COVER — Paper Magellan, three platforms', zh: '封面圖 — 紙做麥哲倫，三個平台' },
+        body: [
+          {
+            type: 'quote',
+            text: {
+              en: 'In this blog you will detail your autoethnographic account of generating content for your media niche and distributing it across three platforms.',
+              zh: '在這篇部落格中，你將詳述自己為媒體利基產製內容、並將其擴散到三個平台的自我民族誌記述。（作業說明 Blog Post 2）',
+            },
+          },
+          { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
+          {
+            type: 'p',
+            text: {
+              en: 'This post continues my autoethnographic exploration of the "Cross-border E-commerce Co-learning Network" (https://charles-blog.netlify.app/articles/article.html?id=bcm222-a2). Under the creator persona "Paper Magellan," I analyze the global expansion of Chinese brands like Cider and Halara. In this phase, I produce short educational case studies using an automated coding-to-video workflow. I distribute these videos across three platforms: Douyin, Xiaohongshu, and WeChat Video. This post reflects on my content production, cross-platform distribution, and my transition from a viewer to a creator.',
+              zh: '本文延續我對「跨境電商共學網路」的自我民族誌探索（https://charles-blog.netlify.app/articles/article.html?id=bcm222-a2）。以「紙做麥哲倫」的創作者人格，我分析 Cider、Halara 等中國品牌的全球擴張。在這個階段，我用自動化的「程式轉影片」流程產製短篇教學案例，並把影片分發到抖音、小紅書與微信視頻號三個平台。本文反思我的內容產製、跨平台分發，以及從觀眾到創作者的轉變。',
+            },
+          },
+          { type: 'h2', text: { en: 'Production', zh: '產製' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My production workflow combines a multi-agent AI framework for scripting, HTML5 Canvas coding-to-video tools for visuals, and AI voiceovers for audio. While this automated system speeds up production, it revealed a major challenge during release: zero audience comments. Initially, I planned to improve my videos based on viewer comments. Facing complete silence in the comment section, I had to change my approach.',
+              zh: '我的產製流程結合了用於寫腳本的多代理 AI 框架、用於畫面的 HTML5 Canvas 程式轉影片工具，以及用於聲音的 AI 配音。這套自動化系統加快了製作速度，卻在發佈時揭露一個重大難題：觀眾評論掛零。原先我打算依觀眾留言來改進影片，但評論區一片死寂，我不得不改變做法。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Instead of waiting for comments, I turned to back-end metrics. I tracked completion rates and two-second retention rates to see exactly where viewers stopped watching.',
+              zh: '與其等評論，我轉向後台數據。我追蹤完播率與兩秒留存率，想看清觀眾究竟在哪一秒停下不再看。',
+            },
+          },
+          {
+            /* 1551×270 的後台數據條：660 寬會把 14px 字縮成 6px，必須 wide 鋪滿版心。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm222-a3-metrics.png',
+            alt: {
+              en: 'Back-end analytics for one published case-study video: 4,940 plays, 161 likes, 6 comments, 39 shares, 46 saves, 4.47% completion rate, 40.89% two-second recovery, and 10 new followers.',
+              zh: '一支已發佈案例影片的後台數據：播放 4940、按讚 161、評論 6、分享 39、收藏 46、完播率 4.47%、2 秒跳出率 40.89%、吸粉 10。',
+            },
+            caption: {
+              en: 'FIG.01 — When the comment section stays silent, metrics become the only feedback',
+              zh: 'FIG.01 — 當評論區一片沉默，數據成了唯一的回饋',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'These numbers guided my editing directly. Cotter (2019) notes that digital creators play a "visibility game," where they must read platform data to understand an audience reduced to metrics. Without direct replies from viewers, retention data became my main tool to fix slow pacing and improve future videos.',
+              zh: '這些數字直接指揮了我的剪輯。Cotter（2019）指出，數位創作者玩的是一場「能見度遊戲」：他們必須讀懂平台數據，才能理解被化約為指標的觀眾。在沒有觀眾直接回應的情況下，留存數據成了我修正節奏拖沓、改進往後影片的主要工具。',
+            },
+          },
+          { type: 'h2', text: { en: 'Proliferation', zh: '平台擴散' } },
+          {
+            type: 'p',
+            text: {
+              en: 'I originally planned to post on Bilibili, Douyin, and Xiaohongshu. However, Bilibili\'s real-name verification blocked my Hong Kong ID. I quickly replaced Bilibili with WeChat Video to keep my three-platform schedule on track.',
+              zh: '我原本打算發在 Bilibili、抖音與小紅書。然而 Bilibili 的實名驗證卡住了我的香港身分證，於是我很快把 Bilibili 換成微信視頻號，讓三平台的排程不至於脫軌。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'My biggest distribution challenge was deciding whether to customize videos for each platform. At first, I tried tailoring the content—cutting analysis short for Xiaohongshu and speeding up the pace for Douyin. I soon realized this approach ruined the content. Cutting down business case studies to fit platform habits broke the logic and lowered the educational quality. Nieborg and Poell (2018) explain that "platformization" pushes creators to constantly cut up and rework their content to match platform rules. To avoid this fragmentation, I changed my strategy. I stopped making multiple versions. Instead, I put all my effort into making one complete, high-quality video that works well across all platforms. This saved time and protected the depth of my analysis.',
+              zh: '分發上最大的難題，是要不要為每個平台客製影片。一開始我確實試著調整：為小紅書把分析剪短、為抖音把節奏加快。很快我就發現這麼做毀了內容。為了迎合平台習慣而腰斬商業案例，既打斷邏輯，也拉低了教學品質。Nieborg 與 Poell（2018）指出，「平台化」會驅使創作者不斷把內容切碎、重做，以配合平台規則。為了避免這種碎裂，我改了策略：不再做多個版本，而是把所有力氣放在一支完整、品質夠好、在各平台都站得住的影片上。這既省了時間，也保住了分析的深度。',
+            },
+          },
+          { type: 'h2', text: { en: 'Reflection', zh: '反思' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Becoming a creator permanently changed how I watch videos. I no longer scroll just for entertainment. Now, I watch with a sense of detachment. Whenever a video holds my attention, I step back and ask what specific hook or pacing kept me watching.',
+              zh: '成為創作者，永久改變了我看影片的方式。我不再只為了娛樂而滑；如今我看影片時帶著一層抽離。只要有一支影片抓住我的注意力，我就會往後退一步，問自己：究竟是哪個鉤子、哪種節奏把我留下了。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'This project also taught me the importance of self-review. Creating without viewer comments means I must be my own critic. While editing, I constantly switch to a viewer\'s mindset and ask myself: "Would I keep watching this?" and "Is this explanation clear?" Learning to judge and refine my own work without outside feedback is the most important skill I gained from this project.',
+              zh: '這份專案也教會我自我審視的重要。在沒有觀眾評論的情況下創作，意味著我必須當自己的批評者。剪輯時我不斷切回觀眾的心智，問自己：「我還會繼續看下去嗎？」「這段解釋清楚嗎？」在沒有外部回饋的情況下判斷並打磨自己的作品，是我在這份專案裡學到最重要的一件事。',
+            },
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: 'Cotter, K. (2019). Playing the visibility game: How digital influencers and algorithms negotiate influence on Instagram. New Media & Society, 21(4), 895–913.',
+              zh: 'Cotter, K. (2019). Playing the visibility game: How digital influencers and algorithms negotiate influence on Instagram. New Media & Society, 21(4), 895–913.',
+            },
+            url: 'https://journals.sagepub.com/doi/pdf/10.1177/1461444818815684',
+            note: {
+              en: 'Frames the shift from reading comments to reading metrics: the audience becomes a set of numbers the creator has to learn to interpret.',
+              zh: '為「讀評論」到「讀數據」的轉折提供框架：觀眾被化約成一組必須由創作者解讀的數字。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Nieborg, D. B., & Poell, T. (2018). The platformization of cultural production: Theorizing the contingent cultural commodity. New Media & Society, 20(11), 4275–4292.',
+              zh: 'Nieborg, D. B., & Poell, T. (2018). The platformization of cultural production: Theorizing the contingent cultural commodity. New Media & Society, 20(11), 4275–4292.',
+            },
+            url: 'https://journals.sagepub.com/doi/pdf/10.1177/1461444818769694',
+            note: {
+              en: 'Names the pressure to fragment content to match platform rules — the pressure this project chose to refuse by keeping one complete cut.',
+              zh: '為「配合平台規則而把內容切碎」的壓力命名，也正是這份專案最終拒絕、改採單一完整版本的理由。',
+            },
+          },
+        ],
+      },
     ],
   },
 };
