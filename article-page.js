@@ -21,7 +21,9 @@
     for (const key in subjects) {
       const subject = subjects[key];
       const found = subject.assignments.find(function (a) { return a.id === id; });
-      if (found) return { subject: subject, assignment: found };
+      // ·38 補記二：一律回傳所屬科目 key。返回科目連結不能再從 id 前綴猜 ——
+      // 文章改掛科目時，前綴會指到舊頁（本篇作業交 BCM241）。
+      if (found) return { subject: subject, assignment: found, key: key };
     }
     return null;
   }
@@ -856,7 +858,8 @@
 
     window.CURRENT_SUBJECT = subject.code; // 导航 chips 高亮
 
-    document.getElementById('subjectLink').href = root + 'subjects/' + id.split('-')[0] + '.html';
+    // 用實際所屬科目，別再從 id 前綴猜（文章改掛科目時前綴會指到舊頁）
+    document.getElementById('subjectLink').href = root + 'subjects/' + found.key + '.html';
     document.getElementById('postDate').textContent = util.formatDate(a.date);
     document.getElementById('postAuthor').textContent = util.t('article.byline');
 
