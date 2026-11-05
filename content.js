@@ -980,13 +980,8 @@ const SUBJECTS = {
         image: 'assets/posts/bcm241-a3-cover.png',
         figLabel: { en: 'COVER — Paper Magellan, three platforms', zh: '封面圖 — 紙做麥哲倫，三個平台' },
         body: [
-          {
-            type: 'quote',
-            text: {
-              en: 'In this blog you will detail your autoethnographic account of generating content for your media niche and distributing it across three platforms.',
-              zh: '在這篇部落格中，你將詳述自己為媒體利基產製內容、並將其擴散到三個平台的自我民族誌記述。（作業說明 Blog Post 2）',
-            },
-          },
+          /* ·38 補記四：開頭那則作業說明引文依 Master 指示撤下，正文直接從
+             Introduction 開始；docx 英文正文其餘部分逐字保留。 */
           { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
           {
             type: 'p',

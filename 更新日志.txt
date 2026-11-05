@@ -3833,3 +3833,41 @@ BCM212 2 篇 / BCM222 **2 篇** / BCM241 **3 篇** / BCM206 1 篇。
   assignments 陣列結束**，與文章掛在哪一科無關。
 · `verify-bcm241-a3` 第 6 段改為「舊位置已清空」：舊 id 走 404、
   不再渲染標題、BCM222 索引回到 2 張卡（77 → 76 條，0 失敗）。
+
+第三十八階段 · 補記三：作業封面表填寫流程沉澱（2026-11-05 傍晚）
+════════════════════════════════════════════════════════
+Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
+要求代填、缺的資訊先問、長期可複用資訊寫進 skill，並指定輸出檔名格式。
+
+· 四題一次問齊：截止／提交日皆 `05-11-2026`；導師 Mr Gregory Mak、
+  導修組 Thursday 10:00-13:00；科目名用全稱
+  `BCM 241 (UH26) Media Ethnographies`；作業名 `Assessment 2 – Blog Post 2`。
+· 其餘沿用舊封面表固定資料（WING SHING / WANG / 1723674 / 68420173），
+  連結 `?id=bcm241-a3`，簽名欄留空。
+· 成品 `C:\HOMEWORK\BCM241_A2_blog2_WangWingshing.docx`：
+  **只重寫 `word/document.xml`**，其餘 17 個套件成員逐位元組相同；
+  聲明段、Marking Rubric、校徽 EMF 原樣保留；值用 Arial 粗體。
+  以本地文件編輯器讀回導師姓名成功，確認可被 Word 引擎解析。
+· 新增**使用者級 skill** `~/.workbuddy/skills/assignment-cover-sheet/`：
+  SKILL.md（鐵律／命名規範／流程）、references/fields.json（固定資料）、
+  references/course-facts.md（各科導師、科目全名、歷史日期、已知錯值）、
+  scripts/fill_cover_sheet.py（保真填寫 + 自校驗）。
+  ⚠️ 舊 BCM241 封面表的 ASSIGNMENT NAME 曾誤填 BCM222 作業名，已記入事實表。
+· 檔名規範（以後一體適用）：
+  `BCM<科目代碼>_A<作業號>_<小寫slug>_WangWingshing.docx`，
+  科目代碼不含空格、輸出預設 `C:\HOMEWORK\`。
+· MEMORY.md 去重精簡 15.0KB → 12.8KB，補記封面表約定與 skill 位置。
+
+
+【·38 補記四】撤下 Blog Post 2 開頭的作業說明引文
+· Master 指示「In this blog you will detail your autoethnographic account… 這部分不要」：
+  content.js 的 bcm241-a3 開頭 quote 區塊整塊移除（中英兩版同時撤），正文直接從
+  Introduction 開始；docx 英文正文其餘部分逐字未動。渲染器與 CSS 不必改 —— quote
+  是一般文字區塊，渲染與語言切換都遍歷 a.body，增刪一塊會自動對齊。
+· 該句只存在於 content.js；封面表 docx、作業 docx 都沒有。BCM222 A2 開頭另有
+  「Your pitch is an audio-visual recording」引文，屬另一篇，本次未動。
+· 測試：verify-bcm241-a3.mjs 改為「16 區塊 / 0 quote / 引文原文已移除 / 首節點 H2」，
+  並補 EN、ZH 兩態的渲染斷言 → 81 通過 0 失敗。
+· 全站 jsdom 回歸 13 套全綠：domtest 229 / bcm212-a1 108 / bcm212-a2 172 /
+  bcm222-a1 126 / bcm222-a2 86 / bcm206 129 / bcm241-a1 111 / hidden 96 /
+  nav-static 52 / langswitch 12 / nav-runtime 25 / narrow-geom 15 / mobile 33。
