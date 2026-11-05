@@ -1086,6 +1086,15 @@ const SUBJECTS = {
               zh: '為「配合平台規則而把內容切碎」的壓力命名，也正是這份專案最終拒絕、改採單一完整版本的理由。',
             },
           },
+          /* ·38 補記八：文末補 Generative AI 使用聲明。措辭與 BCM212 A1 / A2、
+             BCM222 A2 三處逐字一致（Master 於 ·33 指定的原句），樣式沿用 .inline-note。 */
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
+            },
+          },
         ],
       },
     ],

@@ -3915,3 +3915,22 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   `scripts/append_article_body.py`（參數化封面表／JSON／圖／URL，讀 sectPr 算圖寬、
   讀 PNG IHDR 算比例、自帶逐字校驗），SKILL.md 加「可選：把網站正文貼進封面表」一節；
   已用無正文副本 dry-run 通過後清掉暫存檔。本次只動封面表，網站內容未改、未推送。
+
+【·38 補記八】BCM241 A2 文末補 Generative AI 使用聲明（2026-11-05 晚）
+· Master：「網站的這篇文下面加個 ai 聲明」→ `bcm241-a3` 正文最後（兩條 ref 之後）
+  補一塊 `type: 'note'`；措辭與 BCM212 A1 / A2、BCM222 A2 三處**逐字一致**
+  （·33 Master 指定原句 "Generative AI（Google Gemini）was utilized to assist with
+  structuring the research outline, and refining language clarity."），中文為既有繁中翻譯。
+· 沿用既有區塊類型，渲染器（`<p class="inline-note">`）、`.inline-note` 樣式、
+  語言切換 texts 隊列都不用改；CSS 的 660 居中組與 ≥1100 鋪滿組選擇器都是
+  `.article-body > p`，故新節點自動與正文共用同一條左軌，幾何不變。
+· 計數同步：正文 16 → 17 區塊；頂層 `<p>` 8 → 9（8 段正文 + 1 條聲明）。
+  verify-bcm241-a3.mjs 補 10 條斷言（note 數、逐字措辭、排在 ref 之後、
+  渲染為最後一個節點、中英切換、切換後仍只有一條）→ 87 → 97 通過 0 失敗。
+· 全站 13 套 jsdom 回歸全綠（229/108/172/126/86/129/111/96/52/12/25/15/33）。
+  ⚠️ 本機 CDP 9333 未開，真機 _spread / _shot38 本次未跑；新塊為既有樣式，
+  且 BCM212 A2 同類 `.inline-note` 已在 225 項真機基準內驗證過。
+· ⚠️ 兩點待 Master 確認（未擅改）：① 原句寫 "research outline"，本篇是 blog post，
+  且正文自述用 AI 做腳本／配音／轉影片，若老師看重準確性可換更貼切的措辭；
+  ② 補記七交付的 `BCM241_A2_blog2_WangWingshing.docx` 所貼正文**沒有這條聲明**，
+  需要時同步補一行。
