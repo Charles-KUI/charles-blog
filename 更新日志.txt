@@ -3871,3 +3871,25 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
 · 全站 jsdom 回歸 13 套全綠：domtest 229 / bcm212-a1 108 / bcm212-a2 172 /
   bcm222-a1 126 / bcm222-a2 86 / bcm206 129 / bcm241-a1 111 / hidden 96 /
   nav-static 52 / langswitch 12 / nav-runtime 25 / narrow-geom 15 / mobile 33。
+
+【·38 補記五】圖文一致：讓文字遷就「6 則評論」的後台數據
+· Master 指出數據圖寫 Comments: 6（播放 4940），正文卻寫 zero audience comments /
+  complete silence，圖文對不上。依指示兩處改為 minimal audience comments /
+  With almost no feedback in the comment section。
+· 「相關的部分」一併對齊（中英各一份）：
+  excerpt「No comments, only metrics / 沒有評論，只剩數據」→
+    「Minimal comments, mostly metrics / 評論寥寥，只能靠數據」及後半句受眾沉默；
+  FIG.01 圖注「stays silent / 一片沉默，唯一的回饋」→
+    「almost no feedback / 幾乎沒有有效回饋，主要依據」；
+  Cotter 段「Without direct replies / 在沒有觀眾直接回應的情況下」→
+    「With so few direct replies / 在觀眾直接回應寥寥的情況下」；
+  反思段「Creating without viewer comments / without outside feedback」→
+    「with almost no viewer comments / with almost no outside feedback」及中文兩處。
+· 資料本身不改：圖片未動，alt 仍寫 6 comments、4,940 plays、4.47% 等原數字。
+· 這是繼「上一篇連結」後第二處 Master 授權偏離 docx 原文，已寫進 content.js 註解
+  與測試標頭，避免日後誤判為英文遭擅自改動。
+· 測試：verify-bcm241-a3.mjs 新增 5 條圖文一致斷言、更新 mustKeep → 87 通過 0 失敗；
+  全站 13 套 jsdom 回歸全綠（229/108/172/126/86/129/111/96/52/12/25/15/33）。
+· ⚠️ 四份 docx 原稿仍寫舊句（BCM222_A2_Blog Post 2、BCM241_A2_Blog Post 2、
+  BCM_241_Assessment_2_Blog_Post_2_WangWingshing、
+  BCM_241_Assessment_2_Blog_Post_2_Coversheet_Final）；本次只改網站，未動原稿。

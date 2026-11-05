@@ -966,8 +966,8 @@ const SUBJECTS = {
           zh: '部落格貼文 2：內容產製與平台擴散的自我民族誌批判反思',
         },
         excerpt: {
-          en: 'No comments, only metrics. An autoethnographic account of scripting, coding-to-video and distributing one video across Douyin, Xiaohongshu and WeChat Video — and what happens when the audience stays silent.',
-          zh: '沒有評論，只剩數據。一篇自我民族誌：從腳本、程式轉影片到三平台分發，以及當觀眾始終沉默時，創作者該怎麼辦。',
+          en: 'Minimal comments, mostly metrics. An autoethnographic account of scripting, coding-to-video and distributing one video across Douyin, Xiaohongshu and WeChat Video — and what happens when the audience offers almost no feedback.',
+          zh: '評論寥寥，只能靠數據。一篇自我民族誌：從腳本、程式轉影片到三平台分發，以及當觀眾幾乎不給回饋時，創作者該怎麼辦。',
         },
         date: '2026-11-05',
         tags: [
@@ -981,13 +981,16 @@ const SUBJECTS = {
         figLabel: { en: 'COVER — Paper Magellan, three platforms', zh: '封面圖 — 紙做麥哲倫，三個平台' },
         body: [
           /* ·38 補記四：開頭那則作業說明引文依 Master 指示撤下，正文直接從
-             Introduction 開始；docx 英文正文其餘部分逐字保留。 */
+             Introduction 開始。·38 補記五：後台數據圖顯示 6 則評論，與原稿
+             「零評論／完全沉默」用詞矛盾，依 Master 指示統一改為「極少評論／
+             幾乎沒有有效回饋」（摘要、圖注、反思段一併對齊）；其餘英文逐字保留。 */
           { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
           {
             type: 'p',
             text: {
               // ·38 修正：docx 原稿把「上一篇」誤指 bcm222-a2（東方主義視覺提案），
-              // Master 確認應為 bcm241-a2（跨境電商自我民族誌）。除此之外英文逐字保留。
+              // Master 確認應為 bcm241-a2（跨境電商自我民族誌）；連結之外英文逐字保留，
+              // 另見 ·38 補記五的用詞修正。
               en: 'This post continues my autoethnographic exploration of the "Cross-border E-commerce Co-learning Network" (https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2). Under the creator persona "Paper Magellan," I analyze the global expansion of Chinese brands like Cider and Halara. In this phase, I produce short educational case studies using an automated coding-to-video workflow. I distribute these videos across three platforms: Douyin, Xiaohongshu, and WeChat Video. This post reflects on my content production, cross-platform distribution, and my transition from a viewer to a creator.',
               zh: '本文延續我對「跨境電商共學網路」的自我民族誌探索（https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2）。以「紙做麥哲倫」的創作者人格，我分析 Cider、Halara 等中國品牌的全球擴張。在這個階段，我用自動化的「程式轉影片」流程產製短篇教學案例，並把影片分發到抖音、小紅書與微信視頻號三個平台。本文反思我的內容產製、跨平台分發，以及從觀眾到創作者的轉變。',
             },
@@ -996,8 +999,8 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'My production workflow combines a multi-agent AI framework for scripting, HTML5 Canvas coding-to-video tools for visuals, and AI voiceovers for audio. While this automated system speeds up production, it revealed a major challenge during release: zero audience comments. Initially, I planned to improve my videos based on viewer comments. Facing complete silence in the comment section, I had to change my approach.',
-              zh: '我的產製流程結合了用於寫腳本的多代理 AI 框架、用於畫面的 HTML5 Canvas 程式轉影片工具，以及用於聲音的 AI 配音。這套自動化系統加快了製作速度，卻在發佈時揭露一個重大難題：觀眾評論掛零。原先我打算依觀眾留言來改進影片，但評論區一片死寂，我不得不改變做法。',
+              en: 'My production workflow combines a multi-agent AI framework for scripting, HTML5 Canvas coding-to-video tools for visuals, and AI voiceovers for audio. While this automated system speeds up production, it revealed a major challenge during release: minimal audience comments. Initially, I planned to improve my videos based on viewer comments. With almost no feedback in the comment section, I had to change my approach.',
+              zh: '我的產製流程結合了用於寫腳本的多代理 AI 框架、用於畫面的 HTML5 Canvas 程式轉影片工具，以及用於聲音的 AI 配音。這套自動化系統加快了製作速度，卻在發佈時揭露一個重大難題：觀眾評論極少。原先我打算依觀眾留言來改進影片，但評論區幾乎沒有有效回饋，我不得不改變做法。',
             },
           },
           {
@@ -1017,15 +1020,15 @@ const SUBJECTS = {
               zh: '一支已發佈案例影片的後台數據：播放 4940、按讚 161、評論 6、分享 39、收藏 46、完播率 4.47%、2 秒跳出率 40.89%、吸粉 10。',
             },
             caption: {
-              en: 'FIG.01 — When the comment section stays silent, metrics become the only feedback',
-              zh: 'FIG.01 — 當評論區一片沉默，數據成了唯一的回饋',
+              en: 'FIG.01 — With almost no feedback in the comment section, metrics became my main guide',
+              zh: 'FIG.01 — 評論區幾乎沒有有效回饋，數據成了主要依據',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'These numbers guided my editing directly. Cotter (2019) notes that digital creators play a "visibility game," where they must read platform data to understand an audience reduced to metrics. Without direct replies from viewers, retention data became my main tool to fix slow pacing and improve future videos.',
-              zh: '這些數字直接指揮了我的剪輯。Cotter（2019）指出，數位創作者玩的是一場「能見度遊戲」：他們必須讀懂平台數據，才能理解被化約為指標的觀眾。在沒有觀眾直接回應的情況下，留存數據成了我修正節奏拖沓、改進往後影片的主要工具。',
+              en: 'These numbers guided my editing directly. Cotter (2019) notes that digital creators play a "visibility game," where they must read platform data to understand an audience reduced to metrics. With so few direct replies from viewers, retention data became my main tool to fix slow pacing and improve future videos.',
+              zh: '這些數字直接指揮了我的剪輯。Cotter（2019）指出，數位創作者玩的是一場「能見度遊戲」：他們必須讀懂平台數據，才能理解被化約為指標的觀眾。在觀眾直接回應寥寥的情況下，留存數據成了我修正節奏拖沓、改進往後影片的主要工具。',
             },
           },
           { type: 'h2', text: { en: 'Proliferation', zh: '平台擴散' } },
@@ -1054,8 +1057,8 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'This project also taught me the importance of self-review. Creating without viewer comments means I must be my own critic. While editing, I constantly switch to a viewer\'s mindset and ask myself: "Would I keep watching this?" and "Is this explanation clear?" Learning to judge and refine my own work without outside feedback is the most important skill I gained from this project.',
-              zh: '這份專案也教會我自我審視的重要。在沒有觀眾評論的情況下創作，意味著我必須當自己的批評者。剪輯時我不斷切回觀眾的心智，問自己：「我還會繼續看下去嗎？」「這段解釋清楚嗎？」在沒有外部回饋的情況下判斷並打磨自己的作品，是我在這份專案裡學到最重要的一件事。',
+              en: 'This project also taught me the importance of self-review. Creating with almost no viewer comments means I must be my own critic. While editing, I constantly switch to a viewer\'s mindset and ask myself: "Would I keep watching this?" and "Is this explanation clear?" Learning to judge and refine my own work with almost no outside feedback is the most important skill I gained from this project.',
+              zh: '這份專案也教會我自我審視的重要。在觀眾評論寥寥的情況下創作，意味著我必須當自己的批評者。剪輯時我不斷切回觀眾的心智，問自己：「我還會繼續看下去嗎？」「這段解釋清楚嗎？」在外部回饋寥寥的情況下判斷並打磨自己的作品，是我在這份專案裡學到最重要的一件事。',
             },
           },
           { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
