@@ -1551,8 +1551,10 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'This post continues my autoethnographic exploration of the "Cross-border E-commerce Co-learning Network" (https://charles-blog.netlify.app/articles/article.html?id=bcm222-a2). Under the creator persona "Paper Magellan," I analyze the global expansion of Chinese brands like Cider and Halara. In this phase, I produce short educational case studies using an automated coding-to-video workflow. I distribute these videos across three platforms: Douyin, Xiaohongshu, and WeChat Video. This post reflects on my content production, cross-platform distribution, and my transition from a viewer to a creator.',
-              zh: '本文延續我對「跨境電商共學網路」的自我民族誌探索（https://charles-blog.netlify.app/articles/article.html?id=bcm222-a2）。以「紙做麥哲倫」的創作者人格，我分析 Cider、Halara 等中國品牌的全球擴張。在這個階段，我用自動化的「程式轉影片」流程產製短篇教學案例，並把影片分發到抖音、小紅書與微信視頻號三個平台。本文反思我的內容產製、跨平台分發，以及從觀眾到創作者的轉變。',
+              // ·38 修正：docx 原稿把「上一篇」誤指 bcm222-a2（東方主義視覺提案），
+              // Master 確認應為 bcm241-a2（跨境電商自我民族誌）。除此之外英文逐字保留。
+              en: 'This post continues my autoethnographic exploration of the "Cross-border E-commerce Co-learning Network" (https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2). Under the creator persona "Paper Magellan," I analyze the global expansion of Chinese brands like Cider and Halara. In this phase, I produce short educational case studies using an automated coding-to-video workflow. I distribute these videos across three platforms: Douyin, Xiaohongshu, and WeChat Video. This post reflects on my content production, cross-platform distribution, and my transition from a viewer to a creator.',
+              zh: '本文延續我對「跨境電商共學網路」的自我民族誌探索（https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2）。以「紙做麥哲倫」的創作者人格，我分析 Cider、Halara 等中國品牌的全球擴張。在這個階段，我用自動化的「程式轉影片」流程產製短篇教學案例，並把影片分發到抖音、小紅書與微信視頻號三個平台。本文反思我的內容產製、跨平台分發，以及從觀眾到創作者的轉變。',
             },
           },
           { type: 'h2', text: { en: 'Production', zh: '產製' } },
