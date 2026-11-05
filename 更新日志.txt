@@ -3893,3 +3893,25 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
 · ⚠️ 四份 docx 原稿仍寫舊句（BCM222_A2_Blog Post 2、BCM241_A2_Blog Post 2、
   BCM_241_Assessment_2_Blog_Post_2_WangWingshing、
   BCM_241_Assessment_2_Blog_Post_2_Coversheet_Final）；本次只改網站，未動原稿。
+
+【·38 補記七】封面表貼上網站正文（連結下方）（2026-11-05 晚）
+· Master：「幫我給正文內容貼在這個文件裡（我的網站連結下方）」→ 目標為已填好並貼簽名的
+  `BCM241_A2_blog2_WangWingshing.docx`，同名覆寫，不另出新檔。
+· 文字源**只取 content.js 的 bcm241-a3 英文版**，不照抄四份仍寫舊句的 docx 原稿：
+  含補記五的「極少評論」用詞、以及首段上篇連結 `?id=bcm241-a2`。
+· 插入點＝文章 URL 段落之後，共 19 個新段落：標題 14pt 粗 / 5 個 h2 12pt 粗 + keepNext /
+  8 個正文段（繼承 Times New Roman 11pt、1.25 倍行距、段後 6pt）/
+  居中數據截圖（15.2 × 2.65cm，版心 17.82cm）/ FIG.01 圖註 9pt /
+  2 條參考文獻（手動編號 + 懸掛縮進 + 同段換行顯示完整 URL）/ 末尾分頁。
+· 網站 `ref-note` 編輯性評註未貼（非學術正文）；圖用網站
+  `assets/posts/bcm241-a3-metrics.png`，與原稿 word/media/image1.png 同尺寸 1551×270。
+· 末尾分頁讓 Marking Rubric 獨立一頁；**結構變化**：評分表由「緊跟封面」移到「正文之後」，
+  若 Master 要評分表留在封面表後，改把正文放文末即可。
+· 校驗：新增段落文字與 JSON 逐字一致（15 段長文本 + 2 條 ref）、圖片關係 rId9 →
+  media/blog-metrics.png、封面表／評分表／聲明段／簽名原樣、其餘 15 個 zip 部件逐位元組相同；
+  本機編輯器 `open_file` 正常、`doc_get_images` 認出 3 張圖（校徽 emf + 簽名 png + 數據圖 png）。
+· 原檔備份 `.workbuddy/BCM241_A2_blog2_WangWingshing.before-body.docx`。
+· 流程沉澱：用戶級 skill `assignment-cover-sheet` 新增
+  `scripts/append_article_body.py`（參數化封面表／JSON／圖／URL，讀 sectPr 算圖寬、
+  讀 PNG IHDR 算比例、自帶逐字校驗），SKILL.md 加「可選：把網站正文貼進封面表」一節；
+  已用無正文副本 dry-run 通過後清掉暫存檔。本次只動封面表，網站內容未改、未推送。
