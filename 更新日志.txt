@@ -3934,3 +3934,43 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   且正文自述用 AI 做腳本／配音／轉影片，若老師看重準確性可換更貼切的措辭；
   ② 補記七交付的 `BCM241_A2_blog2_WangWingshing.docx` 所貼正文**沒有這條聲明**，
   需要時同步補一行。
+
+
+────────────────────────────────────────
+第三十九階段｜BCM206 A2 情境報告上線（2026-11-07）
+────────────────────────────────────────
+· 作業要求（`BCM206_A2_Artefact (2).pdf`）：750 words contextual report + 支撐截圖；
+  評分三準則 Operation（行動→反思→調整鏈）／Contextualisation（理論當思考工具）／
+  Presentation（格式、字數、媒體證據）；繳交 YouTube link + Blog post link；
+  截止 2026-11-08 23:55；明文鼓勵使用 AI 工具。
+· `bcm206-a2` 由佔位展示稿「Network Topologies of Daily Life」**轉正**（去掉
+  `placeholder:true`），No.02／date 2026-11-07／沿用既有 `bcm206-a2-nodes` 封面。
+  BCM206 索引由 1 張卡變 2 張；同步 domtest / verify-hidden 的 `LIVE_SUBJECTS`、
+  `_spread` 的 IDS。
+· 英文正文**逐字保留**：長文本被壓掉的段落邊界依語意還原（Intro 1／Contextualisation 3／
+  Operation 2／Conclusion 1 = 7 段），9 段長文本逐字比對全數通過；補繁中譯文。
+  原稿三個 `[Insert Image N]` 是插圖提示、不是正文 → 換成 3 個 figure：
+    FIG.01 三平台帳號矩陣（抖音／視頻號／小紅書），`srcs` 多圖共用一條說明；
+    FIG.02 內容管理四支影片列表（`wide`）；FIG.03 投稿數據曲線（`wide`）。
+  文末補 2 條參考文獻（書目＋獨立 URL 行＋引用位置註記）與站上既有的 AI 聲明。
+· 圖片：5 張剪貼板截圖 → `assets/posts/bcm206-a2-*.png` + 同名 `.webp`。
+  三張平台圖先貼進 **1000×280 白底畫布**、內容等比置中，讓 `--plates` 在 ≥1100
+  等寬橫排時框線／頂邊／底邊全齊（Master 要求「排版工整」）。
+  曲線圖裁掉頂部 20px（剪貼板帶到的上一條內容殘字）；小紅書圖右側半截面板是
+  後台的獲贊收藏數與帳號簡介、屬有效證據，**不擅裁**。
+  alt 逐項寫出 4,986／591／5,572／1,596 播放與四個完播率，跟正文數據一致。
+· 驗證：新增 `.workbuddy/verify-bcm206-a2.mjs`（120 項）；全站 15 套 jsdom
+  0 失敗（229/108/172/126/86/129/120/111/97/97/52/12/25/15/33）。
+  真機 `.workbuddy/_shot39.mjs` ALL PASS：三圖 435×125 等寬等高、
+  `offsetTop` 全 10／底邊全 135；plates 與兩張 wide 都鋪滿 1348 版心；
+  390 無橫向溢出，三圖 326×94 同寬縱排。眼檢 a-plates／b-works／c-curve／e-390 通過。
+· ⚠️ 兩個假失敗坑（已修，留給下次）：
+  ① Python 文字模式重寫 content.js 把全檔 LF 轉成 CRLF → 以 `\n    ],\n  },\n`
+     切記錄的驗證腳本找不到邊界、把後面科目一起算進來（51 區塊）。
+     已把 content.js 還原 LF，驗證腳本改用 `\r?\n` 正則相容兩種換行。
+  ② `loading="lazy"` 最後一張圖整頁快滾沒觸發 → `naturalWidth=0`、
+     顯影佔位高度 1314 被誤讀成「圖被拉成巨幅」。改成逐張 `scrollIntoView`
+     再等解碼；真機腳本已內建此流程。
+· ⚠️ 待 Master 確認（未擅改）：作業要求繳交 **YouTube link + blog post link**，
+  本篇沒有嵌入影片；若要一併放上，需給影片 id。另封面沿用 A2 原有的網路節點插畫，
+  可換成新拼貼封面。

@@ -1272,47 +1272,162 @@ const SUBJECTS = {
       {
         id: 'bcm206-a2',
         no: 'No.02',
-        placeholder: true,
-        title: { en: 'Network Topologies of Daily Life', zh: '日常生活的網路拓撲' },
-        excerpt: {
-          en: 'Your morning is a star topology, your group chat a mesh. Drawing the hidden network diagrams inside one ordinary day.',
-          zh: '你的早晨是星狀拓撲，你的群組聊天是網狀。把一個平凡日子裡隱藏的網路圖畫出來。',
+        studentId: '1723674',
+        /* 第三十九階段：原為「Network Topologies of Daily Life」佔位展示稿，
+           本階段轉正為 BCM206 A2 Contextual Report（750 words + 支撐截圖）。
+           作業要求見 BCM206_A2_Artefact.pdf：Operation / Contextualisation /
+           Presentation 三項評分準則，繳交 Blog post link + YouTube link。       */
+        title: {
+          en: 'BCM206 Contextual Report: Rapid Prototyping in the Networked Era',
+          zh: 'BCM206 情境報告：網絡時代的快速原型',
         },
-        date: '2026-09-15',
+        excerpt: {
+          en: 'Four uploads, four sets of back-end numbers, one lesson: in a networked era, selling clothes and explaining business both run on the same loop — launch a small test, read the signal, adjust fast.',
+          zh: '四支影片、四組後台數字、一個領悟：在網絡時代，賣衣服與講商業邏輯跑的是同一個循環——先小規模測試、讀訊號、快速調整。',
+        },
+        date: '2026-11-07',
         tags: [
-          { en: 'Diagram', zh: '圖解' },
-          { en: 'Analysis', zh: '分析' },
+          { en: 'BCM206 A2', zh: 'BCM206 A2' },
+          { en: 'Contextual Report', zh: '情境報告' },
+          { en: 'Rapid Prototyping', zh: '快速原型' },
+          { en: 'Data Iteration', zh: '數據迭代' },
         ],
         image: 'assets/posts/bcm206-a2-nodes.png',
-        figLabel: { en: 'FIG.03 — Nodes & threads', zh: 'FIG.03 — 節點與線' },
+        figLabel: {
+          en: 'COVER — Rapid prototyping in the networked era',
+          zh: '封面圖 — 網絡時代的快速原型',
+        },
         body: [
+          { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
           {
             type: 'p',
             text: {
-              en: 'Network engineers have a precise vocabulary for shapes — star, ring, mesh, bus. I borrowed it for something less precise: one ordinary Tuesday, drawn as topology diagrams.',
-              zh: '網路工程師對各種形狀有一套精確的詞彙——星狀、環狀、網狀、匯流排。我把它借來用在沒那麼精確的事情上：一個平凡的星期二，畫成拓撲圖。',
+              en: 'My digital artefact, "Paper Magellan," is a cross-platform short video project that explains the business logic of Chinese cross-border e-commerce brands for the general public. This project provides clear social utility by breaking down information barriers, helping beginners understand how global online retail actually works. This report analyzes how the shift from traditional trade to modern networks changed retail, and details how I used back-end data to rapidly iterate my video content.',
+              zh: '我的數位作品「紙上麥哲倫」（Paper Magellan）是一個跨平台的短影音專案，向一般大眾解釋中國跨境電商品牌的商業邏輯。這份專案透過打破資訊壁壘，提供明確的社會效益，幫助新手理解全球網路零售實際上是如何運作的。本報告分析從傳統貿易到現代網絡的轉變如何改變了零售，並詳述我如何運用後台數據快速迭代自己的影片內容。',
             },
           },
-          { type: 'h2', text: { en: 'The day as a diagram', zh: '把一天畫成一張圖' } },
+          {
+            /* 原稿 Image 1 位置 → DA distribution matrix。三張平台帳號截圖先統一
+               成 1000×280 白底畫布，--plates 在 ≥1100 等寬橫排才會框線齊平。 */
+            type: 'figure',
+            srcs: [
+              'assets/posts/bcm206-a2-platform-douyin.png',
+              'assets/posts/bcm206-a2-platform-wechat.png',
+              'assets/posts/bcm206-a2-platform-xhs.png',
+            ],
+            alt: {
+              en: 'The same "Paper Magellan" creator identity across three platforms: Douyin (TikTok account 61571729642, 3 following, fan index 14, 409 likes), WeChat Video (Video ID sphsHGJs3mjQrC5, 4 videos, 7 followers), and Xiaohongshu (account 5569986628, 0 following, 11 followers, 56 likes and saves).',
+              zh: '同一個「紙上麥哲倫」創作者身分分布於三個平台：抖音（抖音號 61571729642、關注 3、粉絲指數 14、獲贊 409）、微信視頻號（視頻號 ID sphsHGJs3mjQrC5、影片 4 支、關注者 7）、小紅書（帳號 5569986628、關注 0、粉絲 11、獲贊與收藏 56）。',
+            },
+            caption: {
+              en: 'FIG.01 — DA distribution matrix: one "Paper Magellan" identity across Douyin, WeChat Video and Xiaohongshu.',
+              zh: 'FIG.01 — 數位作品分發矩陣：同一個「紙上麥哲倫」身分，橫跨抖音、微信視頻號與小紅書。',
+            },
+          },
+          { type: 'h2', text: { en: 'Contextualisation', zh: '脈絡化' } },
           {
             type: 'p',
             text: {
-              en: 'My morning is a star: the phone at the centre, every app a spoke, all messages flowing through one hub. My family group chat is a partial mesh — everyone technically connected to everyone, but three nodes doing 80% of the talking. The university’s learning management system is a bus topology with the policy of a one-way street.',
-              zh: '我的早晨是星狀：手機在中央，每個 App 是一根輻條，所有訊息都流經同一個集線器。我的家庭群組是部分網狀——技術上每個人都連著每個人，但三個節點講了 80% 的話。學校的學習管理系統是匯流排拓撲，配上一條單行道的政策。',
-            },
-          },
-          {
-            type: 'quote',
-            text: {
-              en: 'Draw your day as a network diagram and the power structure becomes embarrassingly visible.',
-              zh: '把你的一天畫成網路圖，權力結構就會明顯到令人尷尬。',
+              en: 'Developing my DA allowed me to observe a fundamental shift in how products are sold before and after the internet. Before the internet, selling products overseas was a slow, one-way street. A factory had to make thousands of items upfront, ship them across the ocean, and rely on offline trade shows, middlemen, and physical stores to reach buyers. Brands had no direct contact with consumers. They had to guess what people wanted months in advance.',
+              zh: '經營這個數位作品，讓我觀察到網路出現前後，產品銷售方式出現了根本性的轉變。在網路之前，把商品賣到海外是一條緩慢的單行道：工廠得先一次做好數千件、橫越海洋運送，再靠線下展會、中間商與實體店鋪才碰得到買家。品牌與消費者沒有直接接觸，只能提前好幾個月猜測人們想要什麼。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'The exercise’s real finding: the nodes that feel most “social” are usually the most centralised. The diagram does not lie, even when the marketing does. Full diagram set attached.',
-              zh: '這個練習真正的發現是：感覺最「社交」的節點，通常是最中心化的那些。圖不會說謊，即使行銷文案會。完整圖集見附件。',
+              en: 'Today, digital networks have completely flipped this model. While researching brands like Cider for my first video ("Only Produce 100 Pieces?"), I discovered that modern cross-border e-commerce no longer relies on middlemen or guesswork. As Hänninen et al. (2018) explain, digitalization has turned retail into multi-sided platform networks. Today, brands connect directly with global buyers through social media and websites. Instead of mass-producing upfront, they post product photos online first, track real-time user clicks and orders, and only manufacture items that prove popular.',
+              zh: '今日的數位網絡把這套模式完全翻轉了過來。在為第一支影片〈只做 100 件？〉研究 Cider 等品牌時，我發現現代跨境電商已不再依賴中間商或瞎猜。正如 Hänninen 等人（2018）所說，數位化把零售變成了多邊平台網絡。如今品牌透過社群媒體與官網直接連結全球買家：不再先生產一大批，而是先貼出商品照片、追蹤即時的點擊與訂單，只製造那些被驗證受歡迎的品項。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'I truly understood the power of this difference while operating my own DA. Just as modern e-commerce brands use network data to test clothes before mass production, I realized I was using social platform data to test my video topics. In the networked era, both selling products and sharing knowledge rely on the exact same rule: launch a small test, read the immediate network data, and adjust fast.',
+              zh: '真正讓我體會到這個差異有多大，是在實際經營自己的數位作品時。就像現代電商品牌用網絡數據在量產前測試衣服，我意識到自己也在用社群平台數據測試影片主題。在網絡時代，賣商品與分享知識靠的是完全相同的一條規則：先丟出一個小測試、讀取即時的網絡數據、然後快速調整。',
+            },
+          },
+          {
+            /* 原稿 Image 2 位置 → First 3 Seconds comparison。內容管理後台四支
+               影片正好呈現封面從概念式標題到情緒鉤子的變化，旁邊就是逐片數據。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm206-a2-works.png',
+            alt: {
+              en: 'Content manager listing four uploads, newest first: "Escape Skateboard" (Nov 6, 1,596 plays, 6.72% completion, 35.81% two-second bounce), "The 1-Star Review" (Nov 4, 5,572 plays, 12.26% completion, 32.4% bounce), "Abandoning Amazon for DTC" (Nov 3, 591 plays, 1.09% completion, 51.22% bounce), and "Only Produce 100 Pieces?" (Nov 2, 4,986 plays, 4.43% completion, 41.01% bounce). The thumbnails move from concept-led covers to emotional hooks.',
+              zh: '內容管理後台列出四支影片，由新到舊：〈逃命滑板〉（11/6，1,596 播放、6.72% 完播、35.81% 兩秒跳出）、〈一星負評〉（11/4，5,572 播放、12.26% 完播、32.4% 跳出）、〈放棄亞馬遜改做 DTC〉（11/3，591 播放、1.09% 完播、51.22% 跳出）、〈只做 100 件？〉（11/2，4,986 播放、4.43% 完播、41.01% 跳出）。縮圖可見封面從概念式標題轉向情緒鉤子。',
+            },
+            caption: {
+              en: 'FIG.02 — First 3 Seconds comparison: from the original dry business concept to a new version with visual impact and emotional hook.',
+              zh: 'FIG.02 — 前三秒對比：從原本枯燥的商業概念，到具備視覺衝擊與情緒鉤子的新版本。',
+            },
+          },
+          { type: 'h2', text: { en: 'Operation', zh: '操作與迭代' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My content iteration followed this exact test-and-adjust cycle. Using a multi-agent AI workflow, I launched my first video, "Only Produce 100 Pieces?" (Nov 2), which achieved a 4.43% completion rate. Assuming viewers wanted deeper industry terms, I released a heavily academic video, "Abandoning Amazon for DTC" (Nov 3). The data immediately showed this was the wrong direction: the two-second bounce rate jumped to 51.22%, and the completion rate dropped to 1.09%. This signal proved that online audiences immediately scroll past dry business jargon.',
+              zh: '我的內容迭代正是照著這個「測試—調整」循環在走。透過多代理 AI 工作流程，我發布了第一支影片〈只做 100 件？〉（11 月 2 日），完播率為 4.43%。我以為觀眾想看更深入的產業術語，於是在 11 月 3 日推出了一支學術味很重的影片〈放棄亞馬遜改做 DTC〉。數據立刻顯示方向錯了：兩秒跳出率飆到 51.22%，完播率掉到 1.09%。這個訊號證明，線上觀眾一看到枯燥的商業術語就會立刻滑走。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'I quickly changed my approach for the third video, "The 1-Star Review" (Nov 4). To stop viewers from scrolling, I redesigned the first three seconds. Instead of opening with business concepts, I turned the commercial logic into a relatable emotional conflict—how a team turned angry one-star reviews into a money-making machine—paired with fast motion graphics and a punchy opening frame. This change worked: the completion rate jumped to 12.26%, and the bounce rate fell to 32.4%. To push this further, I made my fourth video even shorter (1:12) and chased a viral topic, "Escape Skateboard" (Nov 6). However, the completion rate settled at 6.72%. Comparing these four data points taught me a clear lesson: emotional hooks and visuals grab attention in the first three seconds, but the video still needs solid educational depth to keep people watching until the end. Bhandari and Bimo (2022) note that creators on algorithmic platforms must constantly adjust their presentation based on system feedback. Tracking these metrics allowed me to find the exact balance between visual hooks and solid business analysis.',
+              zh: '第三支影片〈一星負評〉（11 月 4 日）我很快改了做法。為了讓觀眾停下來，我重新設計了前三秒：不再用商業概念開場，而是把商業邏輯轉成一個有共感的情緒衝突——一個團隊如何把憤怒的一星負評變成賺錢機器——再配上快速的動態圖像與有力的開場畫面。這個改動奏效了：完播率跳到 12.26%，跳出率降到 32.4%。為了再推一步，我把第四支影片縮得更短（1:12），並追了一個熱門話題〈逃命滑板〉（11 月 6 日）；然而完播率只落在 6.72%。比對這四個數據點，給了我一個很清楚的教訓：情緒鉤子與視覺效果能在前三秒抓住注意力，但影片仍需要紮實的知識深度，才能把人留到最後。Bhandari 與 Bimo（2022）指出，演算法平台上的創作者必須依據系統回饋持續調整自己的呈現方式。追蹤這些指標，讓我找到了視覺鉤子與紮實商業分析之間的確切平衡。',
+            },
+          },
+          {
+            /* 原稿 Image 3 位置 → Backend data screenshot showing the iteration curve。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm206-a2-curve.png',
+            alt: {
+              en: 'Back-end submission analytics for 2–6 November: 4 submissions, 11.7k total plays, 392 upvotes, 108 shares, 11 comments, 51.85% five-second completion, 44.6% two-second bounce, 76.39% cover click rate and 22.4s average watch time. The plays curve rises and falls twice across the five days.',
+              zh: '11 月 2 至 6 日的投稿後台數據：投稿 4 支、總播放 1.17 萬、總點讚 392、總分享 108、總評論 11、5 秒完播率 51.85%、2 秒跳出率 44.6%、封面點擊率 76.39%、平均播放時長 22.4 秒；播放曲線在五天內兩度起伏。',
+            },
+            caption: {
+              en: 'FIG.03 — Backend data screenshot showing the iteration curve.',
+              zh: 'FIG.03 — 後台數據截圖，呈現四支影片的迭代曲線。',
+            },
+          },
+          { type: 'h2', text: { en: 'Conclusion', zh: '結論' } },
+          {
+            type: 'p',
+            text: {
+              en: 'This project taught me that the internet is not just a place to upload videos; it is an instant feedback system where attention is the main currency. My videos genuinely helped everyday viewers understand the hidden mechanics of cross-border e-commerce. More importantly, running this project showed me how modern networks operate in practice. Whether a creator is selling clothes globally or explaining business concepts, success online comes down to reading data signals and translating complex ideas into clear, engaging stories that fit how people browse the internet today.',
+              zh: '這個專案讓我明白，網路不只是上傳影片的地方，而是一套即時回饋系統，注意力就是其中的主要貨幣。我的影片確實幫助了一般觀眾理解跨境電商背後沒被看見的運作機制。更重要的是，實際跑這個專案讓我看見現代網絡在實務上如何運轉。無論創作者是在全球賣衣服，還是在解釋商業概念，線上的成功終究回到同一件事：讀懂數據訊號，把複雜的想法轉譯成清楚、吸引人的故事，並符合今日人們瀏覽網路的方式。',
+            },
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: "Bhandari, A., & Bimo, S. (2022). Why’s everyone on TikTok now? The algorithmized self and the future of self-making on social media. Social Media + Society, 8(1).",
+              zh: "Bhandari, A., & Bimo, S. (2022). Why’s everyone on TikTok now? The algorithmized self and the future of self-making on social media. Social Media + Society, 8(1).",
+            },
+            url: 'https://journals.sagepub.com/doi/pdf/10.1177/20563051221086241',
+            note: {
+              en: 'Used in Operation to read the four-video data as algorithmic feedback, not as random variation.',
+              zh: '在〈操作與迭代〉中用來把四支影片的數據讀成演算法回饋，而非隨機波動。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Hänninen, M., Smedlund, A., & Mitronen, L. (2018). Digitalization in retailing: multi-sided platforms as drivers of industry transformation. Baltic Journal of Management, 13(2), 152–168.',
+              zh: 'Hänninen, M., Smedlund, A., & Mitronen, L. (2018). Digitalization in retailing: multi-sided platforms as drivers of industry transformation. Baltic Journal of Management, 13(2), 152–168.',
+            },
+            url: 'https://www.emerald.com/bjm/article-pdf/13/2/152/398126/bjm-04-2017-0109.pdf',
+            note: {
+              en: 'Used in Contextualisation to frame the shift from one-way trade to multi-sided platform networks.',
+              zh: '在〈脈絡化〉中用來框定「單向貿易 → 多邊平台網絡」的轉變。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
             },
           },
         ],
