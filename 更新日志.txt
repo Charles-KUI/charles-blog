@@ -4014,3 +4014,35 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   真機 `_shot39` 新增 `noteProbe`／`f-note` 截圖／390 `noteW` 斷言：桌面聲明寬 1348＝版心、
   4 行、541 字元、無溢出；390 窄屏 noteW=350 ≤ 390；ALL PASS。眼檢 f-note：上方剪刀虛線、
   小字 13.76px、4 行整齊、下方接 footer 無重疊。
+
+【第四十階段】BCM206 A2：影片合集放映區、平台主頁短鏈、AI 聲明收短
+· Master 給 YouTube 內嵌碼 `fxPwkEaA3Wc`，標明「這是合集」→ 在 `bcm206-a2`
+  文末（References 之後、AI 聲明之前）新增 `embed` 放映區；iframe 仍走既有白名單
+  → `youtube-nocookie.com`，圖注編號用 `VIDEO.01`，不與 FIG.01–03 撞號。
+· 放映區做成「場刊索引帶」：`embed` 新增三個可選欄位 `headText` / `tracksLabel` /
+  `tracks`，渲染四格奶油紙片（編號 01–04＋片名＋完播率），桌面 4 欄、≤700px 2 欄，
+  `grid-auto-rows:1fr` 讓兩行等高。其它三篇 embed 無此欄位，外觀完全不變。
+  ⚠️ 索引帶必須放在**播放器之前**：`_spread` 要求 iframe → figcaption 綁定間隙 ≤30px，
+  插在中間會把間隙撐成 100px+。片單文字全用 span/li，不進主文本隊列，由
+  `refreshEmbedText()` 單獨刷 textContent / aria-label，切語言不重建 iframe。
+· 播放器底圖改用本篇既有封面 `bcm206-a2-nodes.webp`：YouTube 尚未載入或不可達時
+  不留死黑框（headless 實拍確認），載入後由 iframe 自然蓋住。
+· Master 補給兩個平台主頁分享短鏈，要求「在結尾找個地方放一下、確保連結能打開」：
+  實測 `xhslink.cn/o/8tGPkP2L427` → `www.rednote.com/user/profile/...`、
+  `v.douyin.com/TD0m-Y3sbtU/` → `www.iesdouyin.com/share/user/...`，跟隨跳轉皆 HTTP 200。
+  新增第 15 類 body 區塊 `links`：**整張卡片就是 `<a target="_blank" rel=noopener>`**，
+  完整短鏈也印在卡上可複製；桌面兩欄、≤700px 單欄，收在 660 居中組。
+  ⚠️ 不能把 `<a>` 塞進 `note`/`p`：語言切換只改 textContent 會把子元素洗掉；
+  `links` 內部只用 span/div，主文本隊列**一個 null 都不 push**（多 push 會整體錯位），
+  文字由 `refreshLinksText()` 單獨刷。位置：放映區之後、AI 聲明之前。
+· AI 聲明改口：Master 看過頁面後覺得 ·39 的 541 字元詳述太長 →「兩句話簡單講下就行」。
+  定稿兩句（英文 250 字元）：第一句點工具與環節（multi-agent AI workflow ＋ Google Gemini
+  協助影片產製與報告架構），第二句點作者責任與邊界（數據判讀／迭代決策／反思皆本人，
+  平台數據／截圖／參考文獻非 AI 生成）。全站另外四處仍是 ·33 原句，未動。
+· 版式守衛修正：`_spread` 把 `inline-figure--wide`（·37 起 ≥1100 鋪滿版心）從
+  「永遠 660」媒體組拆出、另立寬幅圖斷言；圖註綁定間隙下限由 -2 放寬到 -14px
+  （`.inline-figure` 帶 rotate(±0.8deg)，外接盒底邊比真實底邊低 6–10px）。
+  `verify-bcm222-a1` 的 `renderEmbed` 靜態斷言改成盯語義（抬頭改為可拼接的 head 變數）。
+· 驗證：`verify-bcm206-a2.mjs` 131 → **205 項**，0 失敗；全站 16 套 jsdom 回歸 0 失敗
+  （229/97/108/172/126/86/111/97/129/205/52/12/25/15/33/11）；`_spread` **345/0**；
+  真機 `_shot40` ALL PASS（1440 與 390 各項幾何 ＋ 四張眼檢截圖）。

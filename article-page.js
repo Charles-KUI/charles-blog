@@ -49,6 +49,8 @@
     video: function (b, root, util) { return renderVideo(b, root, util); },
     // 剪刀虚线必须是 figure 之前的独立流内块，不能做成伪元素（CSS 陷阱 2）
     embed: function (b, root, util) { return embedRule() + renderEmbed(b, util); },
+    // 平台主页短链：整张纸片卡就是 <a>，内部只用 span / div（不进主文本队列）
+    links: function (b, root, util) { return renderLinks(b, util); },
   };
 
   /**
@@ -306,6 +308,35 @@
       + '<p class="ref-cite">' + util.tr(block.text) + '</p>'
       + link
       + (block.note ? '<p class="ref-note">' + util.tr(block.note) + '</p>' : '')
+      + '</div>';
+  }
+
+  /**
+   * 平台主页链接卡（type: 'links'，·40）
+   * ---------------------------------------------------------------
+   * 与文献条目不同：这里整张卡片就是 <a href target=_blank>，
+   * 而不是「一段文字里塞一个链接」—— 正文语言切换会把含子元素的
+   * <p> 整段洗成纯文本（只改 textContent），塞进去的 <a> 会被抹掉。
+   * 所以卡片内部只用 span / div，既不进
+   * 'p, h2, h3, blockquote, figcaption' 主队列，也不依赖它刷新；
+   * 标题与标签由 refreshLinksText() 单独写 textContent / aria-label。
+   * 完整短链印在卡上（.pl-url），既能点也能整条复制。
+   */
+  function renderLinks(block, util) {
+    var items = block.items.map(function (it, i) {
+      return '<a class="pl-card" href="' + esc(it.url) + '" target="_blank"'
+        + ' rel="noopener noreferrer" title="' + esc(it.url) + '"'
+        + ' aria-label="' + esc(util.tr(it.label)) + ' — ' + esc(it.url) + '">'
+        + '<span class="pl-no">' + String(i + 1).padStart(2, '0') + '</span>'
+        + '<span class="pl-label">' + esc(util.tr(it.label)) + '</span>'
+        + '<span class="pl-url">↗ ' + esc(it.url) + '</span>'
+        + '<span class="pl-note">' + esc(util.tr(it.note)) + '</span>'
+        + '</a>';
+    }).join('');
+    return '<div class="profile-links" role="group" aria-label="'
+      + esc(util.tr(block.heading)) + '">'
+      + '<span class="pl-heading">' + esc(util.tr(block.heading)) + '</span>'
+      + '<div class="pl-grid">' + items + '</div>'
       + '</div>';
   }
 
@@ -787,6 +818,25 @@
     },
   };
 
+  /**
+   * 合集放映区的「场刊索引带」（·40）：四格纸片，编号 + 片名 + 一片一数据。
+   * 只有带 tracks 的 embed 才会输出，其它文章的放映区完全保持原样。
+   * 文字全部包在 span / li 里 —— 它们不在主文本队列的
+   * 'p, h2, h3, blockquote, figcaption' 选择器内，切语言不会让队列错位，
+   * 由 refreshEmbedText() 单独写 textContent，不重建 DOM（不打断播放）。
+   */
+  function renderTracklist(block, util) {
+    var items = block.tracks.map(function (t, i) {
+      return '<li>'
+        + '<span class="tk-no">' + String(i + 1).padStart(2, '0') + '</span>'
+        + '<span class="tk-name">' + esc(util.tr(t.title)) + '</span>'
+        + '<span class="tk-meta">' + esc(util.tr(t.meta)) + '</span>'
+        + '</li>';
+    }).join('');
+    var label = block.tracksLabel ? esc(util.tr(block.tracksLabel)) : '';
+    return '<ol class="embed-tracks" aria-label="' + label + '">' + items + '</ol>';
+  }
+
   function renderEmbed(block, util) {
     var make = EMBED_PROVIDERS[block.provider];
     var vid = String(block.id || '');
@@ -803,8 +853,13 @@
       })()
       : '<div class="embed-placeholder" role="note">' + util.t('embed.invalid') + '</div>';
 
-    return mediaFrame('embed-block video-block', inner, block.caption, util,
-      '<span class="embed-head">' + util.t('embed.head') + '</span>', block.captionStyle);
+    var hasTracks = !!(block.tracks && block.tracks.length);
+    var headText = block.headText ? util.tr(block.headText) : util.t('embed.head');
+    var head = '<span class="embed-head">' + esc(headText) + '</span>'
+      + (hasTracks ? renderTracklist(block, util) : '');
+
+    return mediaFrame('embed-block video-block' + (hasTracks ? ' is-compilation' : ''),
+      inner, block.caption, util, head, block.captionStyle);
   }
 
   /* 嵌入区块上方的剪刀虚线：作为 figure 之前的独立流内块返回。
@@ -1169,6 +1224,9 @@
         }
         // 嵌入影片：字幕 + iframe 的无障碍标题（不是文本节点，单独刷新）
         else if (b.type === 'embed') { texts.push(b.caption || null); }
+        // links 内部只有 span / div / a，一个队列节点都不产生 → 不占位。
+        // 多 push 一个 null 会让后面的段落整体前移一格，静默错位。
+        else if (b.type === 'links') { /* 文字由 refreshLinksText 单独刷 */ }
         else texts.push(b.text);
       });
       if (a.video) texts.push(a.video.caption);
@@ -1188,6 +1246,7 @@
       refreshRefText(body, a, util);
       refreshFigureText(body, a, util);
       refreshEmbedText(body, a, util);
+      refreshLinksText(body, a, util);
       refreshTableText(body, a, util);
       refreshMatrixText(body, a, util);
       refreshTimelineText(body, a, util);
@@ -1276,6 +1335,31 @@
   }
 
   /**
+   * 语言切换时刷新平台主页卡的标题 / 标签 / 注解与无障碍名称。
+   * 卡片的 href 与印出来的短链跟语言无关，绝不重建 <a>：
+   * 重建会丢掉 hover / 焦点状态，也可能打断正在打开的链接。
+   */
+  function refreshLinksText(body, assignment, util) {
+    pairBlocks(assignment, body, 'links', '.profile-links').forEach(function (pair) {
+      const root = pair.node;
+      const data = pair.data;
+      root.setAttribute('aria-label', util.tr(data.heading));
+      const heading = root.querySelector('.pl-heading');
+      if (heading) heading.textContent = util.tr(data.heading);
+      const cards = root.querySelectorAll('.pl-card');
+      data.items.forEach(function (it, i) {
+        const card = cards[i];
+        if (!card) return;
+        card.setAttribute('aria-label', util.tr(it.label) + ' — ' + it.url);
+        const label = card.querySelector('.pl-label');
+        const note = card.querySelector('.pl-note');
+        if (label) label.textContent = util.tr(it.label);
+        if (note) note.textContent = util.tr(it.note);
+      });
+    });
+  }
+
+  /**
    * 语言切换时刷新嵌入影片的文字。
    * iframe 本身与语言无关（不应重建 —— 重建会中断播放），只更新两处：
    *   · figcaption（文本节点，但它是 .video-caption，已在 texts 队列里跳过 null
@@ -1289,9 +1373,26 @@
       const iframe = fig.querySelector('iframe');
       if (iframe) iframe.setAttribute('title', util.tr(data.title) || util.t('embed.videoFallback'));
       const head = fig.querySelector('.embed-head');
-      if (head) head.textContent = util.t('embed.head'); // span 不在主文本队列里
+      if (head) head.textContent = data.headText
+        ? util.tr(data.headText) : util.t('embed.head'); // span 不在主文本队列里
       const ph = fig.querySelector('.embed-placeholder');
       if (ph) ph.textContent = util.t('embed.invalid');
+
+      /* ·40 合集片单：aria-label 与 span 文字都不在主文本队列里，必须单独刷。
+         只写 textContent / 属性，绝不重建 li（会打断播放与文本选区）。 */
+      const tracks = fig.querySelector('.embed-tracks');
+      if (tracks && data.tracks) {
+        if (data.tracksLabel) tracks.setAttribute('aria-label', util.tr(data.tracksLabel));
+        const lis = tracks.querySelectorAll('li');
+        data.tracks.forEach(function (t, k) {
+          const li = lis[k];
+          if (!li) return;
+          const name = li.querySelector('.tk-name');
+          const meta = li.querySelector('.tk-meta');
+          if (name) name.textContent = util.tr(t.title);
+          if (meta) meta.textContent = util.tr(t.meta);
+        });
+      }
     });
   }
 

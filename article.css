@@ -214,7 +214,8 @@
 .article-body > .dg-block,
 .article-body > .tbl-block,
 .article-body > .mx-block,
-.article-body > .tl-block {
+.article-body > .tl-block,
+.article-body > .profile-links {
     max-width: 660px;
     margin-left: auto;
     margin-right: auto;
@@ -1677,6 +1678,90 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     opacity: 0.75;
 }
 
+/* ===== 平台主页短链卡（type: 'links'，·40） =====================
+   两张纸片并排收在 660 居中基线内；整卡是 <a target="_blank">，
+   短链完整印在卡上，既能点也能整条复制。内部没有 <p>，所以不进
+   语言切换的主文本队列（见 article-page.js 的 links 分支）。 */
+.profile-links {
+    margin-top: 1.9em;
+    padding-top: 16px;
+    border-top: 2px dashed rgba(38, 35, 32, 0.35);
+}
+
+.pl-heading {
+    display: block;
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.pl-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pl-card {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+    padding: 14px 15px 16px 15px;
+    background: var(--cream-white);
+    border: var(--border-medium);
+    box-shadow: var(--shadow-hard);
+    color: var(--dark-frame);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 按下位移 + 阴影归零，与全站按钮同一套手感 */
+.pl-card:hover,
+.pl-card:focus-visible {
+    transform: translate(3px, 3px);
+    box-shadow: var(--shadow-pressed);
+}
+
+.pl-no {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 1.4rem;
+    line-height: 1;
+    letter-spacing: 1px;
+}
+
+.pl-label {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.pl-url {
+    border-left: 3px solid var(--bg-teal);
+    padding-left: 8px;
+    font-family: var(--font-round);
+    font-size: 0.7rem;
+    line-height: 1.45;
+    word-break: break-all;
+    opacity: 0.75;
+}
+
+.pl-note {
+    font-family: var(--font-round);
+    font-size: 0.7rem;
+    line-height: 1.45;
+    opacity: 0.68;
+}
+
+@media (max-width: 700px) {
+    .pl-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
 /* ===== 视频块：复古电视机框 ===== */
 .video-block {
     margin: 2.4em 0;
@@ -1777,6 +1862,79 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     width: 100%;
     height: 100%;
     border: 0;
+}
+
+/* ===== 合集放映区：四格场刊索引带（·40） ==========================
+   位置刻意放在播放器「之上」：_spread 要求 figcaption 紧随媒体
+   （间隙 ≤30px），插在 iframe 与说明之间会把间隙撑成 100px+。
+   索引带是 figure 的子元素，不改 .embed-block 的 660 居中基线，
+   也不动 ≥1100 的媒体组守卫；只用 span / li，不进主文本队列。 */
+.embed-block.is-compilation > .embed-head {
+    border-left: 4px solid var(--bg-teal);
+    padding-left: 10px;
+}
+
+.embed-block.is-compilation > .embed-tracks {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* 窄屏落两行时让两行等高 —— 否则第一行片名折两行、第二行只一行，
+       四张纸片会一高一矮（·40 眼检实拍的第二行矮了 17px）。 */
+    grid-auto-rows: 1fr;
+    gap: 10px;
+    list-style: none;
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+/* 影片尚未载入 / YouTube 不可达时，画框不要留一块死黑：
+   用本篇既有的青底拼贴封面当「放映前幕布」，iframe 载入后自然盖住。
+   背景图相对 article.css 解析 → 线上是 /assets/posts/…。 */
+.embed-block.is-compilation > .video-frame {
+    background: #111 url('assets/posts/bcm206-a2-nodes.webp') center / cover no-repeat;
+}
+
+.embed-block.is-compilation > .embed-tracks > li {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+    padding: 10px 11px 12px 11px;
+    background: var(--cream-white);
+    color: var(--dark-frame);
+    /* 深底上深色硬阴影看不见 → 翻成半透明松石青，仍是同一套偏移语言 */
+    box-shadow: 3px 3px 0 rgba(94, 179, 174, 0.55);
+}
+
+.embed-block.is-compilation .tk-no {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 1px;
+    color: var(--dark-frame);
+}
+
+.embed-block.is-compilation .tk-name {
+    font-family: var(--font-display);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.embed-block.is-compilation .tk-meta {
+    font-family: var(--font-round);
+    font-size: 0.66rem;
+    line-height: 1.35;
+    letter-spacing: 0.3px;
+    border-left: 3px solid var(--bg-teal);
+    padding-left: 7px;
+    color: rgba(38, 35, 32, 0.72);
+}
+
+@media (max-width: 700px) {
+    .embed-block.is-compilation > .embed-tracks {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 /* 视频占位测试卡 */
