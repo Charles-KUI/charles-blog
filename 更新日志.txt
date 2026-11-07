@@ -3974,3 +3974,43 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
 · ⚠️ 待 Master 確認（未擅改）：作業要求繳交 **YouTube link + blog post link**，
   本篇沒有嵌入影片；若要一併放上，需給影片 id。另封面沿用 A2 原有的網路節點插畫，
   可換成新拼貼封面。
+
+
+第三十九階段｜補記一：AI 聲明寫清楚、作業要求考據（2026-11-07）
+----------------------------------------------------------------------
+· Master 三點指示：① 問清作業要求裡的 YouTube link 與影片內容；② 圖片就這樣就行；③ AI 聲明寫清楚些。
+
+· 作業要求考據（`BCM206_A2_Artefact (2).pdf`， Jackie Kwong／BCM206 Future Networks）：
+  - A 節：DA 必須 publicly available online、具明確 social utility；iteration 要整合 feedback loop
+    的學習並維持 rapid prototyping。報告 750 words，用至少一個 subject topic 分析關鍵學習時刻。
+  - A 節末：「Use of AI tools is encouraged to assist in ideation and production of media in any
+    component of your Digital Artefact project, your Discord posts, and your contextual and network
+    reports.」→ AI 聲明要扣著「構思／媒體產製」與「DA 影片／Discord 貼文／報告」三類範圍寫。
+  - B 節交付物兩項：**Your Digital Artefact**（影片）＋ **1x contextual report**（750 words 加支撐截圖）。
+  - C 節：DEADLINE 23:55 8th November 2026；「Upload your YouTube link and blog post link to the
+    Moodle submission drop box. Ensure the links provide access to your video and blog post, as
+    inaccessible links may result in no marks being awarded.」
+  → 結論：**YouTube link 只是 DA 影片的公開交付通道**，不是另外拍一支影片、也不是網站要嵌播放器；
+    blog post link 就是 `?id=bcm206-a2`。影片內容＝「Paper Magellan」四支解釋中國跨境電商商業邏輯
+    的短片（Only Produce 100 Pieces?／Abandoning Amazon for DTC／The 1-Star Review／Escape Skateboard），
+    原發抖音／微信視頻號／小紅書。Moodle 交兩個連結即可，影片 id 待 Master 提供，**未擅自加 embed**。
+    站上 `bcm206-a1` 已有的 embed（`hKcgyvl9nxw`）標題是 "contextual statement & video pitch"，
+    屬前期提案片，不能拿來頂替本次 DA 成片。
+
+· `bcm206-a2` 文末 note 由 ·33 通用句改成**本篇專屬詳述**（中英雙語，英文 541 字元）：
+  ① 工具：multi-agent AI workflow（DA 影片構思與產製）＋ Google Gemini（報告結構、語言清晰度）；
+  ② 作者責任：後台數據判讀、每一次調整影片的決策、全部分析與批判性反思皆本人；
+  ③ 邊界：AI 產出經檢視修改核對才用，所附平台數據／後台截圖／參考文獻並非 AI 生成。
+  其餘四處（BCM212 A1／A2、BCM241 A3、BCM206 A1）仍是 ·33 原句，**未動**。
+  ⚠️ 待 Master 核對：若 Discord 貼文也用了 AI、或截圖與數據有任何 AI 生成成分，聲明要再補改。
+
+· 五張圖依 Master「圖片就這樣就行」**保持原樣**：不裁小紅書右側半截面板、不拼左右對比圖、不換封面。
+
+· 驗證：本篇 `verify-bcm206-a2.mjs` 120 → **131 項**（新增聲明逐字、責任邊界、中文態、渲染後
+  工具名與長度等 11 條斷言），0 失敗；全站 15 套 jsdom 回歸 0 失敗
+  （229/108/172/126/86/129/131/111/97/52/12/25/15/33）。
+  ⚠️ 首次把回歸與讀檔命令並行跑，langswitch 出現 9/3 假失敗；單獨重跑 12/0 → 並行撞時序，
+  測試一律串行（既有坑，復發一次）。
+  真機 `_shot39` 新增 `noteProbe`／`f-note` 截圖／390 `noteW` 斷言：桌面聲明寬 1348＝版心、
+  4 行、541 字元、無溢出；390 窄屏 noteW=350 ≤ 390；ALL PASS。眼檢 f-note：上方剪刀虛線、
+  小字 13.76px、4 行整齊、下方接 footer 無重疊。
