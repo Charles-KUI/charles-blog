@@ -4089,3 +4089,43 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   ⚠️ 封面表 docx 的 `[insert URL]` 仍是占位，需 Master 自行貼文章連結或指示代填。
   ⚠️ FIG.01 是 1800×348 的極寬三平台拼圖，390px 下縮到 330px 寬、字看不清；
   普通 figure 不綁燈箱（只有 gallery 的 slide 能點開），若要手機可放大需另做。
+
+第四十二階段 · A4 換封面／三平台主頁拆圖／A3 影片內嵌／標訂正（2026-11-18）
+════════════════════════════════════════════════════════════════════
+【1 · A4 封面：禁大眼睛，改 AI 生圖折紙信封】
+· Master 明令「以後都不要生成大眼睛的封面圖，非常丑」→ bcm241-a4-cover
+  從眼睛換成 AI 生成的赤陶紅折紙信封，逐字帶【生圖規範】第五節風格錨，
+  以 a3 紙船封面作 image1 風格參考（ silk-screen 紙紋、套印錯位、硬陰影）。
+· 生成原圖 .workbuddy/gen/…png 右下有「AI生成」浮水印 → 裁底部 74px
+  再等比拉回 1024²（+7.8%，眼檢無感），轉 PNG + WebP q90。
+  ⚠️ 長遠硬規則：封面主體禁眼睛／臉；「大眼睛」已列入負面清單。
+· figLabel 從「COVER — The ethnographic gaze」改「COVER — Report submitted」。
+
+【2 · FIG.01 三合一極寬拼圖拆成三張獨立 wide 圖】
+· Master 提供 5 張新截圖，其中三張平台主頁：抖音／小紅書／微信視頻號。
+  原 1800×348 拼圖在 390px 下每格僅百餘像素、字全糊；拆成三張各自
+  wide 鋪滿版心的圖，圖號順延 FIG.01–03，原 Figure 2/3 改 FIG.04/05。
+  新素材 bcm241-a4-fig1-douyin/xhs/wechat：1400×728、1400×728、1203×958，
+  PNG + WebP 88；原 bcm241-a4-fig1.png 保留不刪（素材不刪體例）。
+· verify-bcm241-a4 區塊 30→32、圖 3→5、wide 3→5、WebP 順序改新檔名；
+  _shot41 同步 5 圖與 FIG.01–05 順序。
+
+【3 · BCM241 A4 文末加 BCM241 A3 提交影片】
+· Master 提供 YouTube 內嵌碼 GsRsTRQqPJQ（標題 BCM241_a3_WangWingShing_
+  1723674）。先問過 Master 放 a3 還是 a4 → 明確「放最新的那個」= a4。
+· 接在最後一條 ref 後、AI 聲明前；VIDEO.01 不與 FIG.01–05 撞號；
+  新增 .embed-block.has-poster → 用本篇封面當放映前幕布，YouTube 不可達
+  時不是死黑框（合集 bcm206-a2 的 .is-compilation 底圖不受影響）。
+· 原通用聲明（·33 原句）仍留最後一塊，未動。區塊 32→33。
+
+【4 · BCM241 A3 標籤訂正】
+· a2 標籤已為 BCM241 A2.1；Master 要求把 a3 從「BCM241 A2」改為
+  「BCM241 A2.2」（2 就是 2.1）。只改標籤，URL id / 卡片編號 No.01–04 不動。
+
+【驗證】
+· 17 套 jsdom 0 失敗：domtest 229 / hidden 98 / a1 108 / a2 172 / 222a1 126 /
+  222a2 86 / 241a1 111 / 241a3 98 / 241a4 107 / 206a1 129 / 206a2 205 /
+  nav-static 52 / langswitch 12 / nav-runtime 25 / narrow-geom 15 / mobile 33 /
+  article 11。_spread 440/0；_shot41 ALL PASS（1440／390 幾何＋眼檢）。
+· verify-mobile 末尾 fs.rmSync 加 try/catch（同 langswitch，沙箱 safe-delete
+  攔截不應讓 33/0 的驗證以 exception 收場）。

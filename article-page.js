@@ -858,7 +858,8 @@
     var head = '<span class="embed-head">' + esc(headText) + '</span>'
       + (hasTracks ? renderTracklist(block, util) : '');
 
-    return mediaFrame('embed-block video-block' + (hasTracks ? ' is-compilation' : ''),
+    return mediaFrame('embed-block video-block' + (hasTracks ? ' is-compilation' : '')
+      + (block.poster ? ' has-poster' : ''),
       inner, block.caption, util, head, block.captionStyle);
   }
 

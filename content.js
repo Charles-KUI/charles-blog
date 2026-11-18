@@ -971,7 +971,7 @@ const SUBJECTS = {
         },
         date: '2026-11-05',
         tags: [
-          { en: 'BCM241 A2', zh: 'BCM241 A2' },
+          { en: 'BCM241 A2.2', zh: 'BCM241 A2.2' },
           { en: 'Blog Post 2', zh: '部落格貼文 2' },
           { en: 'Autoethnography', zh: '自我民族誌' },
         ],
@@ -1125,7 +1125,7 @@ const SUBJECTS = {
         /* 同 bcm241 前三篇：文章頁不渲染開場主圖；image 只供科目頁卡片縮圖。 */
         noHero: true,
         image: 'assets/posts/bcm241-a4-cover.png',
-        figLabel: { en: 'COVER — The ethnographic gaze', zh: '封面圖 — 民族誌的注視' },
+        figLabel: { en: 'COVER — Report submitted', zh: '封面圖 — 報告已交付' },
         body: [
           { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
           {
@@ -1143,18 +1143,47 @@ const SUBJECTS = {
               zh: '為了在這個領域建立可信度，我在抖音、小紅書與微信視頻號上建構了一個統一的線上人格「紙上麥哲倫」。三個頻道共用一致的視覺識別：奶油色漫畫封面，粗黑標題壓在黃色重點上。自介把帳號定位成一位清晰、專業的同儕觀察者，用「一杯咖啡的時間」講清跨境邏輯，不做誇大的推銷。以 Moore、Barbour 與 Lee（2017）的線上人格五個維度來看，這個身分是刻意公開、媒介化且表演性的，同時又因邀請同儕一起學習而帶有集體性。它與我日常的社群使用形成強烈對比：私人生活裡我只是被動地滑影片找樂子，從不去想訊息是怎麼被建構出來的；但當我以「紙上麥哲倫」運作時，我得主動拆解視覺節奏、聲音提示與腳本韻律，把複雜的 B2B 概念轉譯成觀眾容易入口的故事。',
             },
           },
+          /* ·42：原稿 Figure 1 是三平台主頁「極寬拼圖」（1800×348），
+             網站上縮到版心後每格只剩一百多像素、字全糊。Master 改提供三張
+             獨立截圖，拆成三張各自鋪滿版心的 wide 圖，圖號順延為 01–03，
+             原 Figure 2/3 改 04/05。三張共用同一句統一識別的說明。 */
           {
-            /* 原稿 Figure 1：三平台主頁拼圖，極寬（1800×348）→ wide。 */
             type: 'figure',
             wide: true,
-            src: 'assets/posts/bcm241-a4-fig1.png',
+            src: 'assets/posts/bcm241-a4-fig1-douyin.png',
             alt: {
-              en: 'Three "Paper Magellan" creator homepages side by side: Douyin on the left with a dark grid of comic covers, WeChat Video in the middle with a light grid, and Xiaohongshu on the right with account analytics and a note list. All three share the same cream comic covers and bold black titles.',
-              zh: '三個「紙上麥哲倫」創作者主頁並排：左為抖音的深色漫畫封面網格，中為微信視頻號的淺色網格，右為小紅書的帳號數據與筆記列表；三者共用相同的奶油色漫畫封面與粗黑標題。',
+              en: 'Douyin creator homepage for "Paper Magellan": a dark grid of cream comic covers with bold black titles, with follower and like counts above.',
+              zh: '抖音「紙上麥哲倫」創作者主頁：深色背景上的奶油色漫畫封面網格與粗黑標題，上方為粉絲與按讚數據。',
             },
             caption: {
-              en: 'FIG.01 — Unified "Paper Magellan" creator profiles across Douyin, Xiaohongshu, and WeChat Video.',
-              zh: 'FIG.01 — 「紙上麥哲倫」在抖音、小紅書與微信視頻號上統一的創作者主頁。',
+              en: 'FIG.01 — "Paper Magellan" creator homepage on Douyin: a dark grid of comic covers with matching titles.',
+              zh: 'FIG.01 — 抖音上的「紙上麥哲倫」創作者主頁：深色網格中一致的漫畫封面與標題。',
+            },
+          },
+          {
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm241-a4-fig1-xhs.png',
+            alt: {
+              en: 'Xiaohongshu creator homepage for "Paper Magellan": a light grid of the same cream comic covers, with profile details and note counts above.',
+              zh: '小紅書「紙上麥哲倫」創作者主頁：淺色背景上同一套奶油色漫畫封面，上方為帳號資料與筆記數。',
+            },
+            caption: {
+              en: 'FIG.02 — The same persona on Xiaohongshu: identical covers carried across to a light-themed profile.',
+              zh: 'FIG.02 — 小紅書上的同一個身分：相同封面延伸到淺色主題的個人主頁。',
+            },
+          },
+          {
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm241-a4-fig1-wechat.png',
+            alt: {
+              en: 'WeChat Video creator centre for "Paper Magellan": account overview and yesterday\'s data, including new followers, plays, likes and comments.',
+              zh: '微信視頻號「紙上麥哲倫」創作者中心：帳號概覽與昨日數據，包含淨增關注、新增播放、點讚與評論。',
+            },
+            caption: {
+              en: 'FIG.03 — WeChat Video creator centre: the third channel of the same persona, with its own audience metrics.',
+              zh: 'FIG.03 — 微信視頻號創作者中心：同一身分的第三個頻道，附獨立觀眾數據。',
             },
           },
           { type: 'h2', text: { en: 'Key Epiphanies', zh: '關鍵頓悟' } },
@@ -1190,8 +1219,8 @@ const SUBJECTS = {
               zh: '小紅書創作服務平台的帳號診斷（11/10–11/16）：觀看數 3,990、互動 212、漲粉 36、主頁訪客 42、發布 3 篇，多項超過 99% 同類創作者；下方筆記數據顯示曝光 1.4 萬、封面點擊率 12.6%、平均觀看 41 秒、觀看總時長 31.1 小時。',
             },
             caption: {
-              en: 'FIG.02 — Xiaohongshu creator analytics dashboard confirming strong cover click-through and peer-leading engagement.',
-              zh: 'FIG.02 — 小紅書創作者後台，印證封面點擊率與領先同儕的互動表現。',
+              en: 'FIG.04 — Xiaohongshu creator analytics dashboard confirming strong cover click-through and peer-leading engagement.',
+              zh: 'FIG.04 — 小紅書創作者後台，印證封面點擊率與領先同儕的互動表現。',
             },
           },
           {
@@ -1233,8 +1262,8 @@ const SUBJECTS = {
               zh: '後台列出四支影片的逐片數據：〈逃命滑板〉1,596 播放、6.72% 完播、35.81% 兩秒跳出；〈一星負評〉5,372 播放、12.26%、32.4%；〈放棄亞馬遜改做 DTC〉591 播放、1.09%、51.22%；〈只做 100 件？〉4,986 播放、4.43%、41.01%。各片的收藏、分享與吸粉量差異明顯。',
             },
             caption: {
-              en: 'FIG.03 — Video-level backend retention and bounce rate comparison used to diagnose pacing and opening hooks.',
-              zh: 'FIG.03 — 逐支影片的後台完播率與跳出率對比，用來診斷節奏與開場鉤子。',
+              en: 'FIG.05 — Video-level backend retention and bounce rate comparison used to diagnose pacing and opening hooks.',
+              zh: 'FIG.05 — 逐支影片的後台完播率與跳出率對比，用來診斷節奏與開場鉤子。',
             },
           },
           {
@@ -1330,6 +1359,24 @@ const SUBJECTS = {
             note: {
               en: 'Explains the fast, recognizable rhythms that short-video communicative forms rely on.',
               zh: '解釋短影片溝通形式為何依賴快速、可辨識的節奏。',
+            },
+          },
+          /* ·42：Master 提供 BCM241 A3 提交影片的 YouTube 內嵌碼（视频标题
+             BCM241_a3_WangWingShing_1723674），放在文末放映區、AI 聲明之前。
+             沿用 embed 白名單 + id 正則校驗；VIDEO.01 不與 FIG.01–05 撞號。 */
+          {
+            type: 'embed',
+            provider: 'youtube',
+            id: 'GsRsTRQqPJQ',
+            poster: 'assets/posts/bcm241-a4-cover.webp',
+            title: {
+              en: 'BCM241 A3 submission video — Wang Wing Shing (1723674)',
+              zh: 'BCM241 A3 提交影片 — 學生 1723674',
+            },
+            captionStyle: 'note',
+            caption: {
+              en: 'VIDEO.01 — My BCM241 Assessment 3 submission video, presented alongside the contextual report and the three platform profiles above.',
+              zh: '影片 01 — 我的 BCM241 第三次評量提交影片，與上方情境研究報告及三個平台主頁一併呈現。',
             },
           },
           {

@@ -1893,6 +1893,12 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     background: #111 url('assets/posts/bcm206-a2-nodes.webp') center / cover no-repeat;
 }
 
+/* ·42：一般放映區（無片單）也可指定本篇封面當「放映前幕布」，
+   YouTube 不可達時不是死黑框。用 .has-poster 與合集底圖區分。 */
+.embed-block.has-poster > .video-frame {
+    background: #111 url('assets/posts/bcm241-a4-cover.webp') center / cover no-repeat;
+}
+
 .embed-block.is-compilation > .embed-tracks > li {
     display: flex;
     flex-direction: column;
