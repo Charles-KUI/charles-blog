@@ -44,6 +44,7 @@
     figure: function (b, root, util) { return renderFigure(b, root, util); },
     diagram: function (b, root, util) { return renderDiagram(b, util); },
     table: function (b, root, util) { return renderTable(b, util); },
+    chart: function (b, root, util) { return renderChart(b, util); },
     matrix: function (b, root, util) { return renderMatrix(b, util); },
     timeline: function (b, root, util) { return renderTimeline(b, util); },
     video: function (b, root, util) { return renderVideo(b, root, util); },
@@ -352,6 +353,322 @@
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  /* ======================================================================
+   * 数据图表（type: 'chart'）—— 代码驱动的内联 SVG
+   * ----------------------------------------------------------------------
+   * BCM212 A3 的五张研究图表全部由内容数组生成，不贴静态 PNG：
+   *   · 图中所有标签 / 标题 / 图注 / 图例一律英文（交接报告红线 1）；
+   *   · 每个数据标记挂一个 <title> 原生提示，悬停显示精确数值与 p 值；
+   *   · viewBox 自适应缩放，不依赖 ECharts / Chart.js 等外部脚本；
+   *   · 语言切换只刷新 figcaption（进主文本队列），SVG 本身不动。
+   * 配色沿用交接报告的数据语义色（蓝＝真人 / 负值，橙＝AI / 正值），
+   * 外框则沿用本站的纸卡 + 墨线视觉语言。
+   * ====================================================================== */
+
+  /** SVG 文本便签（含可选锚点） */
+  function ctText(x, y, str, cls, anchor) {
+    return '<text x="' + x + '" y="' + y + '" class="' + (cls || '') + '"'
+      + (anchor ? ' text-anchor="' + anchor + '"' : '') + '>'
+      + esc(str) + '</text>';
+  }
+
+  /** 数据语义色（交接报告 2.1 定稿值） */
+  var CT = {
+    blue: '#2E5E8C', orange: '#D97A2B', grey: '#9aa5b1',
+    grid: '#e6e9ed', ink: '#1f2933', zero: '#6b7280',
+    sig: '#b91c1c', green: '#3f8f7a', pale: '#7a9cc4',
+    stackNeutral: '#d9dee3', band: '#f4f7fa', amber: '#b45309'
+  };
+
+  /** Figure 1 —— 横向森林图（14 维度差值 + 95%CI） */
+  function chartForest(b) {
+    var data = b.data;                       // [label, diff, lo, hi, p]
+    var W = 760, L = 176, R = 726, TOP = 18, ROW = 30;
+    var xMin = -2, xMax = 2;
+    function X(v) { return L + (v - xMin) / (xMax - xMin) * (R - L); }
+    var zero = X(0), axisY = TOP + data.length * ROW + 8;
+    var H = axisY + 52;
+    var s = '<svg class="ct-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img"'
+      + ' aria-label="' + esc(b.title) + '">';
+
+    // S1 / S3 分组淡底（帮助读者把 14 行读成 4 组）
+    [[0, 3], [6, 10]].forEach(function (rg) {
+      var y0 = TOP + rg[0] * ROW - ROW / 2;
+      s += '<rect class="ct-band" x="' + (L - 6) + '" y="' + y0
+        + '" width="' + (R - L + 12) + '" height="' + ((rg[1] - rg[0]) * ROW)
+        + '" fill="' + CT.band + '"/>';
+    });
+
+    // 零参考线
+    s += '<line class="ct-zero" x1="' + zero + '" y1="' + (TOP - 8)
+      + '" x2="' + zero + '" y2="' + axisY + '" stroke="' + CT.zero
+      + '" stroke-width="1.2" stroke-dasharray="4 3"/>';
+
+    data.forEach(function (d, i) {
+      var cy = TOP + i * ROW + ROW / 2;
+      var color = d[1] > 0 ? CT.orange : CT.blue;
+      var xlo = X(d[2]), xhi = X(d[3]), xd = X(d[1]);
+      var sig = d[4] < 0.05;
+      s += '<g class="ct-mark"><title>' + esc(d[0] + ' — diff ' + d[1]
+        + ', 95% CI [' + d[2] + ', ' + d[3] + '], p = ' + d[4]
+        + (sig ? ' (*)' : ' (ns)')) + '</title>';
+      s += '<line x1="' + xlo.toFixed(1) + '" y1="' + cy + '" x2="' + xhi.toFixed(1)
+        + '" y2="' + cy + '" stroke="' + color + '" stroke-width="2"/>';
+      [xlo, xhi].forEach(function (cap) {
+        s += '<line x1="' + cap.toFixed(1) + '" y1="' + (cy - 5)
+          + '" x2="' + cap.toFixed(1) + '" y2="' + (cy + 5)
+          + '" stroke="' + color + '" stroke-width="2"/>';
+      });
+      s += '<circle cx="' + xd.toFixed(1) + '" cy="' + cy + '" r="5" fill="' + color + '"/>';
+      if (sig) s += ctText(xhi + 9, cy + 4.5, '*', 'ct-sig');
+      s += ctText(L - 12, cy + 4, d[0], 'ct-label', 'end');
+      s += '</g>';
+    });
+
+    // x 轴刻度 + 名称
+    s += '<line class="ct-axisline" x1="' + L + '" y1="' + axisY
+      + '" x2="' + R + '" y2="' + axisY + '" stroke="' + CT.ink + '" stroke-width="1"/>';
+    [-2, -1, 0, 1, 2].forEach(function (v) {
+      var x = X(v);
+      s += '<line x1="' + x + '" y1="' + axisY + '" x2="' + x + '" y2="' + (axisY + 5)
+        + '" stroke="' + CT.ink + '" stroke-width="1"/>';
+      s += ctText(x, axisY + 18, String(v), 'ct-tick', 'middle');
+    });
+    s += ctText((L + R) / 2, axisY + 40, b.xLabel, 'ct-axislabel', 'middle');
+    return s + '</svg>';
+  }
+
+  /** Figure 2 —— 竖向双柱（低质 vs 高质 AI，带误差线与显著性） */
+  function chartPaired(b) {
+    var data = b.data;
+    var W = 760, L = 78, R = 726, TOP = 26, BOT = 322;
+    var yMin = -1.15, yMax = 0.58;
+    function Y(v) { return BOT - (v - yMin) / (yMax - yMin) * (BOT - TOP); }
+    var zero = Y(0);
+    var s = '<svg class="ct-svg" viewBox="0 0 ' + W + ' 420" role="img"'
+      + ' aria-label="' + esc(b.title) + '">';
+
+    // 网格线
+    [-1, -0.5, 0, 0.5].forEach(function (v) {
+      var y = Y(v);
+      s += '<line x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + R + '" y2="'
+        + y.toFixed(1) + '" stroke="' + (v === 0 ? CT.zero : CT.grid)
+        + '" stroke-width="' + (v === 0 ? 1.2 : 1) + '"'
+        + (v === 0 ? '' : ' stroke-dasharray="3 3"') + '/>';
+      s += ctText(L - 12, y + 4, String(v), 'ct-tick', 'end');
+    });
+
+    var slot = (R - L) / data.length;
+    data.forEach(function (d, i) {
+      var cx = L + slot * (i + 0.5);
+      var bw = Math.min(136, slot * 0.46);
+      var yd = Y(d.diff), ylo = Y(d.lo), yhi = Y(d.hi);
+      var top = Math.min(yd, ylo), bottom = Math.max(yd, ylo);
+      s += '<g class="ct-mark"><title>' + esc(d.label.replace(/\n/g, ' ')
+        + ' — mean ' + d.diff + ', 95% CI [' + d.lo + ', ' + d.hi
+        + '], p = ' + d.p + ' (' + d.sig + ')') + '</title>';
+      s += '<rect x="' + (cx - bw / 2) + '" y="' + top.toFixed(1)
+        + '" width="' + bw + '" height="' + Math.max(2, bottom - top).toFixed(1)
+        + '" fill="' + d.color + '"/>';
+      // 误差线（从 lo 到 hi，上下端帽）
+      s += '<line x1="' + cx + '" y1="' + yhi.toFixed(1) + '" x2="' + cx
+        + '" y2="' + ylo.toFixed(1) + '" stroke="' + CT.ink + '" stroke-width="1.6"/>';
+      [yhi, ylo].forEach(function (yy) {
+        s += '<line x1="' + (cx - 12) + '" y1="' + yy.toFixed(1) + '" x2="'
+          + (cx + 12) + '" y2="' + yy.toFixed(1) + '" stroke="' + CT.ink
+          + '" stroke-width="1.6"/>';
+      });
+      // 数值 + 显著性标签（白底圆角小牌盖住误差线）
+      var label = (d.diff < 0 ? d.diff.toFixed(2) : '+' + d.diff.toFixed(2)) + '  ' + d.sig;
+      var ly = d.diff < 0 ? ylo + 22 : yhi - 12;
+      s += '<rect x="' + (cx - 47) + '" y="' + (ly - 14) + '" width="94" height="20" rx="4"'
+        + ' fill="#ffffff" stroke="' + CT.grid + '"/>';
+      s += ctText(cx, ly, label, 'ct-val' + (d.sig !== 'ns' ? ' ct-val-sig' : ''), 'middle');
+      // 两行 x 标签
+      var parts = d.label.split('\n');
+      s += ctText(cx, BOT + 24, parts[0], 'ct-label', 'middle');
+      if (parts[1]) s += ctText(cx, BOT + 40, parts[1], 'ct-label-sub', 'middle');
+      s += '</g>';
+    });
+    return s + '</svg>';
+  }
+
+  /** Figure 3 —— 100% 横向堆叠条（6 道二选一题） */
+  function chartStack(b) {
+    var data = b.data;                       // [label, LEFT, RIGHT, NEUTRAL]
+    var W = 760, L = 186, R = 726, TOP = 14, ROW = 47;
+    var H = TOP + data.length * ROW + 58;
+    var s = '<svg class="ct-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img"'
+      + ' aria-label="' + esc(b.title) + '">';
+
+    data.forEach(function (d, i) {
+      var cy = TOP + i * ROW + 12;
+      var total = d[1] + d[2] + d[3];
+      var x = L;
+      var segs = [
+        { v: d[1], c: CT.blue, n: 'Left' },
+        { v: d[2], c: CT.orange, n: 'Right' },
+        { v: d[3], c: CT.stackNeutral, n: 'Neutral' }
+      ];
+      s += ctText(L - 12, cy + 20, d[0], 'ct-label', 'end');
+      s += '<g class="ct-mark"><title>' + esc(d[0] + ' — Left ' + d[1]
+        + ', Right ' + d[2] + ', Unsure/neither ' + d[3] + ' (n=' + total + ')') + '</title>';
+      segs.forEach(function (sg) {
+        var w = sg.v / total * (R - L);
+        if (w <= 0) return;
+        s += '<rect x="' + x.toFixed(1) + '" y="' + cy + '" width="' + w.toFixed(1)
+          + '" height="26" fill="' + sg.c + '"/>';
+        var pct = sg.v / total * 100;
+        if (pct > 7) {
+          s += ctText(x + w / 2, cy + 18, String(sg.v), 'ct-segval', 'middle');
+        }
+        x += w;
+      });
+      s += '</g>';
+    });
+
+    // 图例（底部居中）
+    var legend = [
+      { c: CT.blue, t: 'Left = human / flat-lay' },
+      { c: CT.orange, t: 'Right = AI' },
+      { c: CT.stackNeutral, t: 'Unsure / neither' }
+    ];
+    var ly = TOP + data.length * ROW + 22;
+    var boxW = 232;
+    var startX = (W - boxW * legend.length) / 2;
+    legend.forEach(function (g, i) {
+      var gx = startX + i * boxW;
+      s += '<rect x="' + gx + '" y="' + (ly - 11) + '" width="14" height="14" fill="' + g.c + '"/>';
+      s += ctText(gx + 21, ly + 1, g.t, 'ct-legend');
+    });
+    return s + '</svg>';
+  }
+
+  /** 面板内竖向柱（Figure 4a / 5b 复用） */
+  function chartBarV(cfg) {
+    var W = 380, L = 42, R = 364, TOP = 40, BOT = 196;
+    var data = cfg.data;
+    var max = cfg.yMax || data.reduce(function (m, d) { return Math.max(m, d[1]); }, 0);
+    max = Math.max(max, 1);
+    function Y(v) { return BOT - v / max * (BOT - TOP); }
+    var s = '<svg class="ct-svg ct-svg--panel" viewBox="0 0 ' + W + ' 256" role="img"'
+      + ' aria-label="' + esc(cfg.label) + '">';
+    s += ctText(W / 2, 16, cfg.label, 'ct-sub', 'middle');
+
+    // y 轴刻度
+    for (var v = 0; v <= max; v++) {
+      var y = Y(v);
+      s += '<line x1="' + L + '" y1="' + y.toFixed(1) + '" x2="' + R + '" y2="'
+        + y.toFixed(1) + '" stroke="' + (v === 0 ? CT.ink : CT.grid)
+        + '" stroke-width="' + (v === 0 ? 1.1 : 1) + '"/>';
+      s += ctText(L - 8, y + 4, String(v), 'ct-tick', 'end');
+    }
+    // 正确区间背景带
+    if (cfg.highlight) {
+      cfg.data.forEach(function (d, i) {
+        if (d[0] !== cfg.highlight) return;
+        var bw = (R - L) / data.length * 0.72;
+        var cx = L + (i + 0.5) * (R - L) / data.length;
+        s += '<rect x="' + (cx - bw / 2 - 5) + '" y="' + (TOP - 8)
+          + '" width="' + (bw + 10) + '" height="' + (BOT - TOP + 10)
+          + '" fill="' + CT.green + '" opacity="0.10"/>';
+      });
+    }
+
+    data.forEach(function (d, i) {
+      var slot = (R - L) / data.length;
+      var cx = L + (i + 0.5) * slot;
+      var bw = Math.min(58, slot * 0.72);
+      var hi = cfg.highlight && d[0] === cfg.highlight;
+      var color = hi ? CT.green : (d[2] || CT.grey);
+      var yd = Y(d[1]);
+      s += '<g class="ct-mark"><title>' + esc(d[0] + ' — ' + d[1] + ' participants'
+        + (hi ? ' (correct)' : '')) + '</title>';
+      s += '<rect x="' + (cx - bw / 2) + '" y="' + yd.toFixed(1)
+        + '" width="' + bw + '" height="' + (BOT - yd).toFixed(1)
+        + '" fill="' + color + '"/>';
+      if (d[1] > 0) s += ctText(cx, yd - 7, String(d[1]), 'ct-val', 'middle');
+      s += ctText(cx, BOT + 17, d[0], 'ct-label', 'middle');
+      s += '</g>';
+    });
+    if (cfg.highlightNote) {
+      s += ctText(W / 2, BOT + 38, cfg.highlightNote, 'ct-sub', 'middle');
+    }
+    if (cfg.yLabel) s += ctText(12, 18, cfg.yLabel, 'ct-axislabel-small');
+    return s + '</svg>';
+  }
+
+  /** 面板内横向条（Figure 4b / 5a 复用） */
+  function chartBarH(cfg) {
+    var W = 380, L = cfg.labelW || 140, R = 366, TOP = 38;
+    var data = cfg.data;                     // [label, count]
+    var ROW = Math.min(26, (236 - TOP) / data.length);
+    var H = TOP + data.length * ROW + 46;
+    var max = cfg.xMax || data.reduce(function (m, d) { return Math.max(m, d[1]); }, 0);
+    max = Math.max(max, 1);
+    function X(v) { return L + v / max * (R - L); }
+    var s = '<svg class="ct-svg ct-svg--panel" viewBox="0 0 ' + W + ' ' + H
+      + '" role="img" aria-label="' + esc(cfg.label) + '">';
+    s += ctText(W / 2, 16, cfg.label, 'ct-sub', 'middle');
+
+    data.forEach(function (d, i) {
+      var cy = TOP + i * ROW + ROW / 2;
+      var w = X(d[1]) - L;
+      var color = d[2] || (cfg.threshold && d[1] >= cfg.threshold
+        ? CT.orange : (cfg.color || CT.grey));
+      s += '<g class="ct-mark"><title>' + esc(d[0] + ' — ' + d[1]
+        + ' participants') + '</title>';
+      s += ctText(L - 9, cy + 4, d[0], 'ct-label', 'end');
+      if (d[1] > 0) {
+        s += '<rect x="' + L + '" y="' + (cy - 8) + '" width="' + w.toFixed(1)
+          + '" height="16" fill="' + color + '"/>';
+        s += ctText(L + w + 6, cy + 4, String(d[1]), 'ct-val-small');
+      }
+      s += '</g>';
+    });
+    // x 轴
+    var axY = TOP + data.length * ROW + 6;
+    s += '<line x1="' + L + '" y1="' + axY + '" x2="' + R + '" y2="' + axY
+      + '" stroke="' + CT.ink + '" stroke-width="1"/>';
+    for (var t = 0; t <= max; t += cfg.tick || Math.ceil(max / 4)) {
+      s += ctText(X(t), axY + 16, String(t), 'ct-tick', 'middle');
+    }
+    if (cfg.xLabel) s += ctText((L + R) / 2, axY + 30, cfg.xLabel, 'ct-axislabel-small', 'middle');
+    return s + '</svg>';
+  }
+
+  /** Figure 4 / 5 —— 双面板（两枚独立 SVG 并排，窄屏堆叠）
+   *  Figure 4 是「竖柱 + 横条」，Figure 5 是「横条 + 竖柱」，
+   *  顺序不能写死 —— 由每个 panel 的 kind 决定用哪个绘制函数。 */
+  function chartPanel(b) {
+    var svgs = b.panels.map(function (p) {
+      return p.kind === 'barH' ? chartBarH(p) : chartBarV(p);
+    });
+    return '<div class="chart-frame chart-frame--panels">' + svgs.join('') + '</div>';
+  }
+
+  /** chart 区块统一外壳 */
+  function renderChart(block, util) {
+    var inner = '';
+    switch (block.kind) {
+      case 'forest':  inner = chartForest(block); break;
+      case 'paired':  inner = chartPaired(block); break;
+      case 'stack':   inner = chartStack(block); break;
+      case 'panel':   inner = chartPanel(block); break;
+      default:        inner = '';
+    }
+    var caption = util.tr(block.caption);
+    return '<figure class="chart-block">'
+      + '<div class="chart-title">' + esc(block.title) + '</div>'
+      + (block.kind === 'panel' ? inner
+        : '<div class="chart-frame">' + inner + '</div>')
+      + (block.footnote ? '<div class="chart-foot'
+        + (block.footnoteTone === 'amber' ? ' chart-foot--amber' : '')
+        + '">' + esc(block.footnote) + '</div>' : '')
+      + '<figcaption class="chart-caption">' + caption + '</figcaption>'
+      + '</figure>';
   }
 
   /**
@@ -1217,6 +1534,9 @@
         // 表格：单元格不是 <p>/<figcaption>，整块（含图注）都单独刷新；
         // 这里只占住 figcaption 那一个节点位，不然后面的文字会整体错位。
         else if (b.type === 'table') texts.push(null);
+        // 数据图表：SVG 内文字全是 <text>（不进队列），只有 figcaption 占位。
+        // 图内标签按交接报告规定恒为英文，切换语言时 SVG 不动。
+        else if (b.type === 'chart') texts.push(b.caption);
         // 矩阵 / 时间轴：内部文字（格内风险、轴刻度、事件卡）全是 span / td，
         // 队列里只可能出现一条 figcaption。两块的图注已撤（·33）→
         // **没有图注就不占位**，否则后面的文字整体前移一格。

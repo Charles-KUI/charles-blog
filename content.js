@@ -644,6 +644,395 @@ const SUBJECTS = {
         ],
       },
       {
+        /* ·44：BCM212 Assessment 3 – Opinion Piece + Short Reflection（定稿）。
+           來源 BCM212_Assessment3_Portfolio_WangWingShing_1723674.docx。
+           英文逐字保留；5 張研究圖表依「BCM212 圖表復現交接報告」的資料
+           改用程式生成 SVG（chart 區塊），不貼靜態 PNG；圖內標籤恒為英文。 */
+        id: 'bcm212-a3',
+        no: 'No.03',
+        studentId: '1723674',
+        title: {
+          en: 'AI-Generated Imagery in Cross-Border Fast Fashion: Visual Quality, Consumer Trust, and Gen Z Buying Decisions',
+          zh: 'AI 生成影像於跨境快時尚：視覺品質、消費者信任與 Z 世代購買決策',
+        },
+        excerpt: {
+          en: 'A controlled survey experiment with 17 BCM212 students: low-quality AI is spotted and penalised, high-quality AI matches real photos, and AI model shots beat flat-lays on fit — reproduced here as five interactive, code-drawn charts.',
+          zh: '一項以 17 位 BCM212 學生進行的控制問卷實驗：低品質 AI 被識破且被扣分，高品質 AI 與真人照片無異，而 AI 模特兒照在「合身度」上勝過平鋪照——本站以五張可互動的程式繪製圖表重現。',
+        },
+        date: '2026-11-17',
+        tags: [
+          { en: 'BCM212 A3', zh: 'BCM212 A3' },
+          { en: 'Opinion Piece', zh: '評論文章' },
+          { en: 'Data Visualisation', zh: '資料視覺化' },
+        ],
+        image: 'assets/posts/bcm212-a3-cover.png',
+        figLabel: { en: 'COVER — Opinion piece', zh: 'COVER — 評論文章' },
+        body: [
+          {
+            type: 'p',
+            text: {
+              en: 'Generative AI is rapidly reshaping fashion e-commerce, allowing cross-border sellers to replace expensive studio photography with virtual models (Harreis et al., 2023). While shoppers generally accept AI models more readily in fast fashion than in luxury retail, brands still face a core dilemma: cutting production costs with AI risks triggering visual discomfort that undermines product trust and buying intent (Srinivas et al., 2026; Xiong et al., 2026).',
+              zh: '生成式 AI 正快速改寫時尚電商，讓跨境賣家得以用虛擬模特兒取代昂貴的攝影棚拍攝（Harreis et al., 2023）。雖然消費者對快時尚 AI 模特兒的接受度普遍高於精品零售，品牌仍面臨一項核心兩難：用 AI 壓低製作成本，可能觸發視覺上的不適感，進而侵蝕產品信任與購買意圖（Srinivas et al., 2026; Xiong et al., 2026）。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'To examine how young online shoppers navigate this trade-off, I conducted a controlled survey experiment with 17 fellow BCM212 students across Hong Kong and Mainland China cohorts. The study evaluated how Gen Z consumers judge AI-generated versus real apparel imagery in terms of realism, brand credibility, and purchase decisions, as well as whether adding an "AI-generated" source label influences their reactions. Combining quantitative ratings with participants\' qualitative comments reveals a clear pattern: visual quality and practical fit visualization—rather than mere awareness of AI usage—govern consumer trust in fast-fashion imagery.',
+              zh: '為了檢視年輕網路消費者如何面對這項取捨，我以 17 位 BCM212 同學為樣本，進行了一項橫跨香港與中國內地群體的控制問卷實驗。研究評估 Z 世代消費者如何從真實感、品牌可信度與購買決策等面向，判斷 AI 生成與真實服飾影像，並測試加上「AI 生成」來源標籤是否影響其反應。量化評分與質性留言相互對照後，浮現出一個清晰的模式：主導快時尚影像信任的，是視覺品質與實用的合身視覺化，而非單純知道用了 AI。',
+            },
+          },
+          { type: 'h2', text: { en: '1. Summary of Data and Interpretations', zh: '1. 資料摘要與詮釋' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Participants evaluated four pairs of fast-fashion garment images (Sets 1–4), rating each image individually on a 1–5 Likert scale before making side-by-side forced choices. Across the human-versus-AI comparisons (Sets 1–3), AI imagery scored slightly lower than real photography overall, but separating the images by visual quality reveals what actually drives consumer judgment.',
+              zh: '參與者評估四對快時尚服飾影像（組別 1–4），先以 1–5 李克特量表個別評分每張圖，再進行並排二選一。在真人對 AI 的比較中（組別 1–3），AI 影像整體得分略低於真實攝影；但一旦依視覺品質拆分，真正驅動消費者判斷的因素便浮出水面。',
+            },
+          },
+          {
+            type: 'chart',
+            kind: 'forest',
+            title: 'Figure 1. AI − real difference by set and dimension (n = 17)',
+            xLabel: 'AI − real difference (positive = AI rated higher)',
+            footnote: 'Bars = 95% CI. Only significant results are starred (* p<.05). S1–S3: AI vs real; S4: AI model vs flat-lay.',
+            caption: {
+              en: 'FIG.01 — Paired AI−real differences across four image sets (n = 17). Positive values indicate higher AI ratings; error bars show 95% CI. Only significant results are starred (* p < .05). Sets 1–3 compare AI versus real photographs; Set 4 compares an AI-generated model versus a flat-lay product image.',
+              zh: 'FIG.01 — 四組影像的 AI 與真人配對差異（n = 17）。正值代表 AI 得分較高；誤差線為 95% 信賴區間。僅顯著結果標星（* p < .05）。組別 1–3 比較 AI 與真人攝影；組別 4 比較 AI 生成模特兒與平鋪商品圖。',
+            },
+            data: [
+              ['S1 Genuine', -0.529, -1.236, 0.177, 0.1319],
+              ['S1 Credible', -0.529, -1.188, 0.129, 0.1076],
+              ['S1 Purchase', -0.059, -0.588, 0.470, 0.8167],
+              ['S2 Genuine', -0.706, -1.404, -0.007, 0.0479],
+              ['S2 Credible', -0.588, -1.245, 0.069, 0.0758],
+              ['S2 Purchase', -0.294, -0.691, 0.103, 0.1357],
+              ['S3 Quality', 0.294, -0.212, 0.801, 0.2361],
+              ['S3 Genuine', -0.235, -0.952, 0.481, 0.4962],
+              ['S3 Credible', -0.059, -0.921, 0.803, 0.8867],
+              ['S3 Purchase', 0.294, -0.302, 0.891, 0.3114],
+              ['S4 Imagine fit', 0.647, -0.165, 1.459, 0.1105],
+              ['S4 Fabric texture', 0.471, -0.047, 0.989, 0.0720],
+              ['S4 Order conf.', 0.294, -0.329, 0.918, 0.3322],
+              ['S4 Purchase', -0.059, -0.701, 0.583, 0.8484],
+            ],
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Visual fidelity determines whether AI is penalized. As shown in Figure 1 and Figure 2, low-quality AI images (Sets 1 and 2, characterized by stiff poses and overly smoothed skin) experienced a statistically significant drop in perceived realism and credibility compared to real photographs. Conversely, high-quality AI imagery (Set 3) showed no statistically detectable difference from genuine human photography, demonstrating that well-executed AI visuals can eliminate the trust penalty at the group level.',
+              zh: '視覺擬真度決定 AI 是否受罰。如圖 1 與圖 2 所示，低品質 AI 影像（組別 1、2，特徵是僵硬姿勢與過度平滑的肌膚）在感知真實性與可信度上，相較真實照片出現統計顯著的下跌。反之，高品質 AI 影像（組別 3）與真實人像攝影之間沒有統計上可偵測的差異，顯示執行得當的 AI 視覺能在群體層次消除信任懲罰。',
+            },
+          },
+          {
+            type: 'chart',
+            kind: 'paired',
+            title: 'Figure 2. Low-quality AI scores lower; high-quality AI matches real photos (n = 17)',
+            footnote: 'Low vs high contrast = −0.441, p = 0.239 (ns). Error bars = 95% CI.',
+            caption: {
+              en: 'FIG.02 — Low-quality AI is penalised; high-quality AI is not (n = 17). Mean AI−real difference in realism and credibility. Low-quality AI (Sets 1 + 2): −0.59, p = .007 (**); high-quality AI (Set 3): −0.15, p = .630 (ns). Error bars = 95% CI.',
+              zh: 'FIG.02 — 低品質 AI 受罰，高品質 AI 則否（n = 17）。真實感與可信度的 AI 與真人平均差值。低品質 AI（組別 1+2）：−0.59，p = .007（**）；高品質 AI（組別 3）：−0.15，p = .630（ns）。誤差線為 95% 信賴區間。',
+            },
+            data: [
+              { label: 'Low-quality AI\n(Sets 1 + 2)', diff: -0.588, lo: -0.989, hi: -0.187, p: 0.0068, sig: '**', color: '#D97A2B' },
+              { label: 'High-quality AI\n(Set 3)', diff: -0.147, lo: -0.782, hi: 0.488, p: 0.6300, sig: 'ns', color: '#2E5E8C' },
+            ],
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'High-quality AI matches real photos, while AI models outperform flat-lays. The side-by-side comparisons in Figure 3 reinforce this distinction. Participants reliably identified real photographs over low-quality AI in Sets 1 and 2, yet high-quality AI in Set 3 tied evenly with human photography on perceived realism. More notably, Set 4 compared an unworn flat-lay garment photo against an AI-generated model wearing the same outfit. Here, respondents overwhelmingly preferred the AI model for judging how the clothing fits and making confident purchase decisions. As one respondent explained even after reading the AI disclosure label, "there is an on-body image; even though it\'s AI, at least it\'s a reference" (P12, Version B, translated from Chinese).',
+              zh: '高品質 AI 與真實照片不相上下，而 AI 模特兒則勝過平鋪照。圖 3 的並排比較強化了這個區別。在組別 1、2，參與者能穩定地從低品質 AI 中認出真實照片；但組別 3 的高品質 AI，在感知真實性上與真人攝影平分秋色。更值得注意的是，組別 4 比較的是「未穿著的商品平鋪照」與「穿上同一套衣服的 AI 生成模特兒」。在此，受訪者壓倒性地偏好 AI 模特兒來判斷衣服的合身度與做出有信心的購買決策。正如一位受訪者即使在讀過 AI 揭露標籤後仍解釋：「有上身圖，即使是 AI，至少是個參考」（P12，版本 B，中譯）。',
+            },
+          },
+          {
+            type: 'chart',
+            kind: 'stack',
+            title: 'Figure 3. Which image did participants choose? (n = 17)',
+            footnote: 'S1 real 10:1 p=.012 · S2 credible 8:1 p=.039 · S3 real 4:5 p=1.00 (ns) · S4 fit 0:15 p<.001 · S4 purchase 1:11 p=.006',
+            caption: {
+              en: 'FIG.03 — Forced-choice comparisons (n = 17). Left = human / flat-lay, Right = AI. S1 "real photo": 10 vs 1 (p = .012); S2 "credible": 8 vs 1 (p = .039); S3 "real photo": 4 vs 5 (p = 1.00, no preference); S4 "judge fit": 0 vs 15 (p < .001); S4 "help purchase": 1 vs 11 (p = .006).',
+              zh: 'FIG.03 — 二選一比較（n = 17）。左＝真人／平鋪，右＝AI。S1「真實照片」：10 比 1（p = .012）；S2「可信」：8 比 1（p = .039）；S3「真實照片」：4 比 5（p = 1.00，無偏好）；S4「判斷合身」：0 比 15（p < .001）；S4「幫助購買」：1 比 11（p = .006）。',
+            },
+            data: [
+              ['S1 Real photo', 10, 1, 6],
+              ['S2 Credible', 8, 1, 8],
+              ['S2 Real photo', 8, 1, 8],
+              ['S3 Real photo', 4, 5, 8],
+              ['S4 Judge fit', 0, 15, 2],
+              ['S4 Help purchase', 1, 11, 5],
+            ],
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Shoppers rely on broad intuition, and awareness alone does not lower ratings. Figure 4 shows that participants struggled to accurately identify how many images were AI-generated, with most respondents overestimating the actual count. Rather than relying on a single technical indicator, shoppers judged images through broad impressions of atmosphere, lighting, and skin texture. Open-ended comments from the unlabeled group illustrate these spontaneous cues: one participant noted that the AI model\'s skin "looked too smooth, with no visible texture, and the highlights felt oily and stiff" (P6, Version A, translated from Chinese), while another spotted perspective errors where "the ellipses at the top and bottom of the beverage cup did not match" (P5, Version A). Furthermore, suspicion rates before the final identification questions were equally high in both the labeled and unlabeled versions, indicating that source labels did not create a meaningful gap in awareness or evaluation.',
+              zh: '消費者仰賴整體直覺，而單純的「知道」並不會拉低評分。圖 4 顯示，參與者難以準確判斷有幾張圖是 AI 生成，多數受訪者高估了實際數量。消費者並非依賴單一技術指標，而是透過對氛圍、光線與肌膚紋理的整體印象來評圖。未標籤組的開放式留言具體呈現了這些自發線索：一位參與者指出 AI 模特兒的肌膚「看起來太光滑，沒有可見紋理，高光顯得油膩僵硬」（P6，版本 A，中譯）；另一位則發現透視錯誤——「飲料杯上下的橢圓形狀對不起來」（P5，版本 A）。此外，在最後的辨識題之前，標籤組與未標籤組的懷疑比例同樣偏高，顯示來源標籤並未在察覺或評價上造成有意義的差距。',
+            },
+          },
+          {
+            type: 'chart',
+            kind: 'panel',
+            title: 'Figure 4. Detection accuracy and judgement cues (n = 17)',
+            caption: {
+              en: 'FIG.04 — Detection accuracy and judgement cues (n = 17). (a) Estimated number of AI images (actual = 4): only 3 participants selected the correct 3–4 range, while 7 overestimated at 5–6. (b) Most-cited cues: overall atmosphere (12), lighting and shadows (11), skin texture (9); multi-select.',
+              zh: 'FIG.04 — 辨識準確度與判斷線索（n = 17）。(a) 估計 AI 影像張數（實際＝4）：僅 3 位參與者選中正確的 3–4 區間，7 位高估為 5–6。(b) 最常被提到的線索：整體氛圍（12）、光線與陰影（11）、肌膚紋理（9）；可複選。',
+            },
+            panels: [
+              {
+                kind: 'barV',
+                label: '(a) How many AI images?',
+                yLabel: 'Participants',
+                data: [['0', 0], ['1–2', 1], ['3–4', 3], ['5–6', 7], ['7–8', 2]],
+                highlight: '3–4',
+                highlightNote: 'correct (4 AI)',
+              },
+              {
+                kind: 'barH',
+                label: '(b) Cues used to spot AI',
+                labelW: 152,
+                threshold: 6,
+                tick: 3,
+                xLabel: 'Participants mentioning (multi-select)',
+                data: [
+                  ['Cannot tell', 1], ['Face and hair', 2], ['Background', 3],
+                  ['Fingers and limbs', 5], ['Fabric folds', 6], ['Garment details', 6],
+                  ['Image sharpness', 6], ['Facial symmetry', 7], ['Skin texture', 9],
+                  ['Lighting and shadows', 11], ['Overall atmosphere', 12],
+                ],
+              },
+            ],
+          },
+          { type: 'h2', text: { en: '2. Discussion and Implications', zh: '2. 討論與意涵' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Participants\' comments uncover a central tension in AI fashion marketing: informational accuracy versus aesthetic appeal. In Set 1, an unlabeled participant observed that while the real photo showed the true garment length, the AI image made it look longer and "felt a bit deceptive," yet added that "in terms of atmosphere, [the AI] model\'s pose makes the dress look better" (P6, Version A, translated from Chinese). This dual reaction explains why shoppers penalize low-grade AI on realism while still responding to its visual styling.',
+              zh: '參與者的留言揭示了 AI 時尚行銷中的一項核心張力：資訊準確性 versus 美學吸引力。在組別 1，一位未標籤組參與者觀察到，真實照片雖顯示了衣服真正的長度，AI 影像卻讓它看起來更長、「讓人覺得有點受騙」，但同時補充「論氣氛，［AI］模特兒的姿勢讓洋裝更好看」（P6，版本 A，中譯）。這種雙重反應解釋了為何消費者會在真實感上懲罰低階 AI，卻仍對其視覺造型有所共鳴。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'These findings extend current retail research in three ways. First, they confirm the uncanny valley mechanism in digital apparel: when low-grade AI distorts skin texture, object perspective, or body proportions, consumers immediately downgrade brand credibility (Xiong et al., 2026). Second, they clarify why fast-fashion shoppers tolerate AI models—once generation reaches high visual fidelity, Gen Z buyers treat AI visuals on par with human photography, and simply knowing an image is AI-generated rarely triggers a trust penalty on its own (Srinivas et al., 2026). Post-disclosure comments show that buyers evaluate AI pragmatically: one respondent noted that "the AI model helps with on-body reference; as long as there are no obvious errors, it\'s useful" (P9, Version B, translated from Chinese). Another participant remarked informally after completing the survey that even when knowing an AI image differs from the physical garment, they would still consider purchasing it because e-commerce clothing photos frequently differed from real items long before generative AI existed (translated from Chinese). This suggests that Gen Z shoppers apply a pre-existing baseline skepticism to all online apparel imagery rather than holding AI to a stricter standard of perfection. Third, the Set 4 results highlight a clear commercial advantage: beyond cutting studio costs, AI models transform static flat-lays into relatable fit previews, directly reducing online sizing uncertainty (Harreis et al., 2023).',
+              zh: '這些發現從三方面拓展了當前的零售研究。第一，它們證實了數位服飾中的恐怖谷機制：當低階 AI 扭曲肌膚紋理、物體透視或身體比例時，消費者會立即下修品牌可信度（Xiong et al., 2026）。第二，它們釐清了快時尚消費者為何容忍 AI 模特兒——一旦生成品質達到高度擬真，Z 世代買家便將 AI 視覺與真人攝影等量齊觀，而單純知道影像是 AI 生成，很少本身就可觸發信任懲罰（Srinivas et al., 2026）。揭露後的留言顯示，買家以務實態度評估 AI：一位受訪者指出「AI 模特兒有助於上身參考；只要沒有明顯錯誤，就很好用」（P9，版本 B，中譯）。另一位參與者在填完問卷後非正式地表示，即使知道 AI 影像與實體衣服有出入，仍會考慮購買，因為早在生成式 AI 出現之前，電商服飾照片就經常與實物不符（中譯）。這顯示 Z 世代消費者對所有線上服飾影像都抱持既有的基本懷疑，而非對 AI 採取更嚴格的完美標準。第三，組別 4 的結果凸顯了明確的商業優勢：AI 模特兒除了節省攝影棚成本，更能把靜態平鋪照轉化為有代入感的合身預覽，直接降低線上的尺寸不確定性（Harreis et al., 2023）。',
+            },
+          },
+          {
+            type: 'chart',
+            kind: 'panel',
+            title: 'Figure 5. Sample profile (n = 17)',
+            footnote: 'Caution: version A is all Hong Kong, version B is mostly Mainland China — A vs B is confounded with region.',
+            footnoteTone: 'amber',
+            caption: {
+              en: 'FIG.05 — Sample profile (n = 17). (a) Suspicion before the AI-related questions. (b) Residence: 10 Hong Kong, 7 Mainland China. Caution: version A is entirely Hong Kong and version B is mostly Mainland China; disclosure condition is confounded with region.',
+              zh: 'FIG.05 — 樣本輪廓（n = 17）。(a) 在 AI 相關題目前的懷疑程度。(b) 居住地：香港 10 人、中國內地 7 人。注意：版本 A 全為香港、版本 B 多為中國內地，揭露條件與地區存在混淆。',
+            },
+            panels: [
+              {
+                kind: 'barH',
+                label: '(a) Awareness before the AI question',
+                labelW: 168,
+                color: '#7a9cc4',
+                xLabel: 'Participants',
+                data: [
+                  ['Not sure', 0], ['Never suspected', 0], ['Wondered briefly', 3],
+                  ['Fairly sure AI', 8], ['Knew from survey info', 6],
+                ],
+              },
+              {
+                kind: 'barV',
+                label: '(b) Current residence / study location',
+                yLabel: 'Participants',
+                data: [
+                  ['Hong Kong', 10, '#2E5E8C'],
+                  ['Mainland China', 7, '#D97A2B'],
+                ],
+              },
+            ],
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Three methodological boundaries frame these findings. First, as shown in Figure 5, survey version (labeled vs. unlabeled) was confounded with participant residence (Hong Kong vs. Mainland China), presentation order, and survey platform, while suspicion rates remained similar across versions because participants either noticed the labels or inferred AI presence from the study context; therefore, between-group differences are not interpreted as disclosure effects, and the primary evidence rests on within-subject comparisons. Second, qualitative quotes (provided by 10 of 17 participants, alongside one informal post-survey remark) serve as illustrative insights from a convenience sample rather than representative statistics, and comments from Version B reflect post-disclosure reasoning. Third, stimulus pairs retained native resolution differences and subjective quality groupings, while Set 4 specifically tested product visualization (flat-lay vs. AI model) rather than human-versus-AI equivalence.',
+              zh: '三項方法論邊界框定了這些發現。第一，如圖 5 所示，問卷版本（標籤 vs. 未標籤）與參與者居住地（香港 vs. 中國內地）、呈現順序及問卷平台相互混淆；而兩版的懷疑比例相近，是因為參與者不是注意到標籤，就是從研究情境推斷出 AI 的存在。因此，組間差異不被解讀為揭露效果，主要證據立基於受試者內比較。第二，質性引文（17 位參與者中 10 位提供，另加一則問卷後的非正式評論）是來自便利樣本的說明性見解，而非具代表性的統計量，且版本 B 的留言反映了揭露後的推理。第三，刺激配對保留了原始解析度差異與主觀品質分組，而組別 4 特別測試的是產品視覺化（平鋪照 vs. AI 模特兒），而非真人對 AI 的等價比較。',
+            },
+          },
+          { type: 'h2', text: { en: '3. Conclusion', zh: '3. 結論' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Cross-border fast-fashion brands cannot treat generative AI as a shortcut for low-effort product listings. Crude AI visuals expose artificial flaws and misleading garment proportions that erode brand credibility. However, when sellers invest in high-fidelity generation—or use AI models to transform flat product shots into clear fit previews—AI imagery matches human photography in trust and actively supports Gen Z buying confidence.',
+              zh: '跨境快時尚品牌不能把生成式 AI 當作低用力商品上架的捷徑。粗糙的 AI 視覺會暴露人工痕跡與誤導性的衣服比例，侵蝕品牌可信度。然而，當賣家投入高擬真生成，或以 AI 模特兒把平面商品照轉為清晰的合身預覽時，AI 影像在信任上便能與真人攝影並駕齊驅，並積極支持 Z 世代的購買信心。',
+            },
+          },
+          { type: 'h2', text: { en: '4. Ethical Standard', zh: '4. 倫理規範' } },
+          {
+            type: 'p',
+            text: {
+              en: 'This study adhered strictly to course research ethics throughout data collection and reporting. Recruitment was limited exclusively to consenting peers enrolled in BCM212. All responses were collected anonymously without recording names, student numbers, or personal contact details. Participants completed a mandatory informed consent check on Page 1 detailing study procedures, voluntary participation, and the right to withdraw at any point without penalty. Neutral image filenames prevented leading cues during evaluation, and a final debriefing page transparently disclosed which images were AI-generated. Finally, confounded variables and illustrative qualitative remarks are reported openly without overstating causal claims.',
+              zh: '本研究在資料蒐集與報告的整個過程中，嚴格遵守課程研究倫理。招募對象僅限於已同意參與的 BCM212 同學。所有回應均以匿名方式蒐集，不記錄姓名、學號或個人聯絡資料。參與者於第 1 頁完成強制性的知情同意確認，內容詳述研究程序、自願參與，以及隨時無懲罰退出的權利。中性的影像檔名避免了評估時的誘導線索，最後的解密頁亦透明揭露哪些影像為 AI 生成。最後，混淆變項與說明性質性留言皆如實揭露，不誇大因果主張。',
+            },
+          },
+          { type: 'h3', text: { en: 'Consent Form Template Used in Survey (Page 01/16)', zh: '問卷所使用的同意書範本（第 01/16 頁）' } },
+          { type: 'h3', text: { en: 'Participant Information & Informed Consent (Page 01/16)', zh: '參與者資訊與知情同意（第 01/16 頁）' } },
+          {
+            type: 'p',
+            text: {
+              en: '1. Purpose & Procedure: This study examines how people perceive fashion advertising images. You will view four sets of apparel advertisements, each containing two images of the same outfit, and answer structured questions about each image (approximately 10–12 minutes). This project is part of the BCM212 Research Practice coursework conducted by a student researcher from UOW College Hong Kong (UOWCHK), part of the global network of the University of Wollongong (UOW) in Australia.',
+              zh: '1. 目的與程序：本研究探討人們如何看待時尚廣告影像。您將觀看四組服飾廣告，每組包含同一套衣服的兩張影像，並回答針對每張影像的結構化問題（約 10–12 分鐘）。本專案屬於 BCM212 研究實踐課程作業，由澳洲伍倫貢大學香港學院（UOWCHK）的學生研究員執行；該校為伍倫貢大學（UOW）全球網絡的一員。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '2. Anonymity & Data Handling: The researcher does not collect any information that could identify you (no name, student number, email address, date of birth, IP address, or location). Responses are stored in a password-protected account, used strictly for BCM212 coursework, and reported only as aggregated trends. All response data will be deleted by 31 December 2026.',
+              zh: '2. 匿名與資料處理：研究員不蒐集任何可辨識您身分的資訊（不蒐集姓名、學號、電子郵件、出生日期、IP 位址或所在地）。回應存放於受密碼保護的帳號中，僅用於 BCM212 課程作業，且只以彙整趨勢的方式呈現。所有回應資料將於 2026 年 12 月 31 日前刪除。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '3. Voluntary Participation & Risks: Participation is entirely voluntary and involves no physical or psychological risk. You may stop at any time before submission by closing the page without any consequence.',
+              zh: '3. 自願參與與風險：參與完全出於自願，不涉及任何生理或心理風險。您可以在提交前隨時關閉頁面停止，不會有任何後果。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '4. Disclaimer & Image Credits: Images are used solely for academic teaching and research, not for commercial purposes. Some images may have been digitally produced or edited; full details are provided on the final debriefing page.',
+              zh: '4. 免責聲明與影像來源：影像僅用於學術教學與研究，不作商業用途。部分影像可能經數位製作或編輯；完整細節載於最後的解密頁。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: '5. Researcher & Contact: Wang Wing Shing (Student ID: 1723674), BCM212 Research Practice, UOW College Hong Kong (UOWCHK). Contact: Charles1310597432@gmail.com.',
+              zh: '5. 研究員與聯絡方式：王永成（學號：1723674），BCM212 研究實踐，香港伍倫貢學院（UOWCHK）。聯絡：Charles1310597432@gmail.com。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Mandatory Consent Check: [ ] I have read and understood the information above, I am 18 or older, and I agree to take part.',
+              zh: '強制同意確認：[ ] 我已閱讀並瞭解上述資訊，我已年滿 18 歲，並同意參與。',
+            },
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+              zh: 'Harreis, H., Koullias, T., Roberts, R., & Te, K. (2023). Generative AI: Unlocking the future of fashion. McKinsey & Company.',
+            },
+            url: 'https://www.mckinsey.com/industries/retail/our-insights/generative-ai-unlocking-the-future-of-fashion',
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19–31.',
+              zh: 'Srinivas, N., Samba, V., & Rupaveni, A. (2026). The AI model premium gap: Schema incongruence, source credibility, and willingness-to-pay penalties across luxury and fast fashion advertising contexts. IOSR Journal of Business and Management, 28(7), 19–31.',
+            },
+            url: 'https://www.iosrjournals.org/iosr-jbm/papers/Vol28-issue7/Ser-2/B2807021931.pdf',
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Xiong, L., Wei, D., & Long, X. (2026). Real vs. virtual: How the uncanny valley weakens the persuasive power of celebrity AI avatar presenters. Journal of Theoretical and Applied Electronic Commerce Research, 21(5), 141.',
+              zh: 'Xiong, L., Wei, D., & Long, X. (2026). Real vs. virtual: How the uncanny valley weakens the persuasive power of celebrity AI avatar presenters. Journal of Theoretical and Applied Electronic Commerce Research, 21(5), 141.',
+            },
+            url: 'https://www.mdpi.com/0718-1876/21/5/141',
+          },
+          { type: 'h2', text: { en: 'Short Reflection', zh: '簡短省思' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Running this project taught me how much small visual details shape user research. When building the survey, I realized that subtle cues—like image resolution or whether a garment is shown flat or on a model—can instantly sway a shopper\'s judgment. To capture both quick instincts and deeper reasoning, I combined 1–5 rating scales with side-by-side choices and open-ended prompts. Together, these tools worked smoothly: the ratings showed where trust dropped, while participants\' comments explained the reasons behind those scores.',
+              zh: '執行這份專案讓我體會到，微小的視覺細節對使用者研究的影響有多麼深遠。在製作問卷時，我意識到一些細微線索——例如影像解析度，或衣服是平鋪呈現還是穿在模特兒身上——都能立刻動搖消費者的判斷。為了同時捕捉直覺反應與較深層的推理，我結合了 1–5 評分量表、並排二選一與開放式提問。這些工具搭配起來運作順暢：評分指出信任在哪裡下滑，而參與者的留言則解釋了這些分數背後的原因。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'The findings also differed noticeably from what I initially expected. Going in, I assumed Gen Z shoppers would easily spot AI models and that seeing an "AI-generated" label would immediately lower their trust. Instead, even when participants noticed the labels or suspected AI on their own, knowing an image was AI-generated did not automatically reduce their ratings—they judged the ads mainly by visual quality and how well they showed garment fit. If I ran this study again, I would randomize image order independently, distribute labeled and unlabeled versions evenly across Hong Kong and Mainland China peers, and avoid mentioning AI in the initial consent form so the unlabeled group stays truly blind.',
+              zh: '研究結果也與我最初的預期有明顯出入。一開始我假設 Z 世代消費者能輕易認出 AI 模特兒，而看到「AI 生成」標籤會立刻降低信任。然而，即使參與者注意到標籤或自行懷疑有 AI，知道影像是 AI 生成並不會自動拉低評分——他們主要依視覺品質與呈現衣服合身度的好壞來評斷廣告。若重做這項研究，我會獨立隨機化影像順序、將標籤版與未標籤版平均分給香港與中國內地的同儕，並避免在初始同意書中提及 AI，讓未標籤組維持真正的盲測。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Finally, using generative AI (Google Gemini) to help organize survey data, run Python statistical checks, and build charts was both efficient and professional. However, I learned that AI outputs cannot be accepted blindly—researchers still need to manually verify every figure against the raw responses to prevent errors or omissions. Aside from light grammar polishing, all study design, stimulus selection, and final interpretations were completed independently by me.',
+              zh: '最後，使用生成式 AI（Google Gemini）協助整理問卷資料、執行 Python 統計檢定與製作圖表，既有效率也相當專業。但我從中學到，AI 的產出不能照單全收——研究者仍需逐一比對原始回應，人工核實每個數字，以避免錯誤或遺漏。除了輕微的文法潤飾外，所有研究設計、刺激材料的選取與最終詮釋，皆由我獨立完成。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
+            },
+          },
+          { type: 'h2', text: { en: 'Appendix', zh: '附錄' } },
+          { type: 'h3', text: { en: '1. Questionnaire URLs', zh: '1. 問卷網址' } },
+          {
+            type: 'links',
+            heading: { en: 'Survey instruments · four versions + one randomised entry', zh: '問卷工具 · 四個版本 + 一個隨機入口' },
+            items: [
+              {
+                label: { en: 'Google Forms — Version A (Unlabeled Control)', zh: 'Google 表單 — 版本 A（未標籤對照）' },
+                note: { en: 'No source labels', zh: '無來源標籤' },
+                url: 'https://docs.google.com/forms/d/e/1FAIpQLSdtN0LLfloW6jTCCkAFbC7ydT7r1efMWjIHM4IO3_PIe94tdQ/viewform',
+              },
+              {
+                label: { en: 'Google Forms — Version B (Source-Labeled)', zh: 'Google 表單 — 版本 B（來源標籤）' },
+                note: { en: 'With source labels', zh: '附來源標籤' },
+                url: 'https://docs.google.com/forms/d/e/1FAIpQLSdFRCvlSc7ajsuG4VzbP3BJtJmzIBtus63rHv0pzq-5p0aZ6g/viewform',
+              },
+              {
+                label: { en: 'WeChat H5 — Version A (Unlabeled Control)', zh: '微信 H5 — 版本 A（未標籤對照）' },
+                note: { en: 'No source labels', zh: '無來源標籤' },
+                url: 'https://fashion-image-survey.app.workbuddy.host/?sharecode=2AGJP5XITM&v=A',
+              },
+              {
+                label: { en: 'WeChat H5 — Version B (Source-Labeled)', zh: '微信 H5 — 版本 B（來源標籤）' },
+                note: { en: 'With source labels', zh: '附來源標籤' },
+                url: 'https://fashion-image-survey.app.workbuddy.host/?sharecode=2AGJP5XITM&v=B',
+              },
+              {
+                label: { en: 'WeChat H5 — Unified Randomized Entry (50/50 Split)', zh: '微信 H5 — 統一隨機入口（50/50 分流）' },
+                note: { en: 'Auto-assigns A or B', zh: '自動分配 A 或 B' },
+                url: 'https://fashion-image-survey.app.workbuddy.host/?sharecode=2AGJP5XITM',
+              },
+            ],
+          },
+          { type: 'h3', text: { en: '2. Notes / Transcripts of Interviews', zh: '2. 訪談筆記／逐字稿' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Not applicable (this study employed a quantitative experimental survey with open-ended text responses rather than qualitative interviews).',
+              zh: '不適用（本研究採用量化實驗問卷與開放式文字回應，而非質性訪談）。',
+            },
+          },
+          { type: 'h3', text: { en: '3. Recordings of the Interviews [URL - optional]', zh: '3. 訪談錄音（網址，選填）' } },
+          { type: 'p', text: { en: 'Not applicable.', zh: '不適用。' } },
+          { type: 'h3', text: { en: '4. Screenshot of the Full Questionnaire (Screens 00/16 – 16/16)', zh: '4. 完整問卷截圖（第 00/16 – 16/16 頁）' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Below are the complete sequential screenshots of the bilingual survey instrument (Version B showing all source labels, followed by Version A unlabeled control comparison screens).',
+              zh: '以下為雙語問卷工具的完整連續截圖（版本 B 顯示所有來源標籤，其後為版本 A 未標籤對照畫面）。',
+            },
+          },
+          {
+            type: 'note',
+            text: {
+              en: 'Appendix Figures A1–A9 (questionnaire screens 00/16 – 16/16) are preserved in the original submitted document; full-resolution screenshots are not reproduced here.',
+              zh: '附錄圖 A1–A9（問卷第 00/16 – 16/16 頁）保留於原始繳交文件中；本站不重現全解析度截圖。',
+            },
+          },
+        ],
+      },
+      {
         id: 'bcm212-t1',
         no: 'No.03',
         placeholder: true,

@@ -215,6 +215,7 @@
 .article-body > .tbl-block,
 .article-body > .mx-block,
 .article-body > .tl-block,
+.article-body > .chart-block,
 .article-body > .profile-links {
     max-width: 660px;
     margin-left: auto;
@@ -657,6 +658,13 @@
         margin-left: 0;
         margin-right: 0;
     }
+    /* 數據圖表：760 視圖框在 660px 裡 14 行森林圖標籤會糊成一團，
+       放到 1040 居中（比環圖 860 略寬）才讀得清軸標籤。 */
+    .article-body > .chart-block {
+        max-width: 1040px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 /* 窄屏（≤700px）：三列在手机上只能压成窄条，改成**堆叠卡片** ——
@@ -717,6 +725,115 @@
         font-weight: 700;
         padding-bottom: 3px;
     }
+}
+
+/* ===== 數據圖表（type: 'chart'） =====
+   5 張研究圖表全部由 content.js 的資料陣列生成 SVG，不貼靜態 PNG：
+   標籤 / 標題 / 圖注 / 圖例恒為英文（交接報告紅線），每個標記帶
+   <title> 原生提示。配色沿用交接報告的資料語意色（藍＝真人／負值，
+   橙＝AI／正值），外框維持本站的紙卡 + 墨線質感。 */
+.chart-block {
+    background: var(--cream-white);
+    border: var(--border-medium);
+    box-shadow: var(--shadow-hard);
+    padding: 22px 24px 18px;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.chart-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--dark-frame);
+    border-bottom: 2px solid var(--dark-frame);
+    padding-bottom: 9px;
+    margin-bottom: 14px;
+}
+
+.chart-frame {
+    background: #fbfaf4;
+    border: 1px solid rgba(38, 35, 32, 0.14);
+    padding: 6px 4px;
+}
+
+/* 雙面板：兩枚 380 寬 SVG 併排；窄屏改堆疊（見下方 @media）。 */
+.chart-frame--panels {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 6px;
+    justify-content: center;
+}
+
+.chart-block .ct-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.chart-frame--panels .ct-svg--panel {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 380px;
+}
+
+/* SVG 文字：交接報告 2.2 字級（標題加粗 / 軸標籤 / 刻度 / 腳註）。 */
+.chart-block .ct-svg text {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    fill: #1f2933;
+}
+/* 注意：上面的 `.chart-block .ct-svg text` 已定 fill，颜色类必须多带一层
+   text 才能压过它（CSS 陷阱 1：源码顺序 + 特异度）。 */
+.chart-block .ct-sub { font-size: 11px; font-weight: 700; }
+.chart-block .ct-label { font-size: 10.5px; }
+.chart-block .ct-svg text.ct-label-sub { font-size: 9.5px; fill: #6b7280; }
+.chart-block .ct-svg text.ct-tick { font-size: 9.8px; fill: #4b5563; }
+.chart-block .ct-axislabel { font-size: 10.5px; font-weight: 700; }
+.chart-block .ct-svg text.ct-axislabel-small { font-size: 9.5px; fill: #6b7280; }
+.chart-block .ct-legend { font-size: 10px; }
+.chart-block .ct-val { font-size: 11px; font-weight: 700; }
+.chart-block .ct-svg text.ct-val-sig { fill: #b91c1c; }
+.chart-block .ct-val-small { font-size: 10px; font-weight: 700; }
+.chart-block .ct-svg text.ct-segval { font-size: 10.5px; font-weight: 700; fill: #ffffff; }
+.chart-block .ct-svg text.ct-sig { font-size: 15px; font-weight: 700; fill: #b91c1c; }
+
+.chart-caption {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--dark-frame);
+    opacity: 0.84;
+    padding-top: 12px;
+}
+
+.chart-foot {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: #4b5563;
+    border-top: 1px dashed rgba(38, 35, 32, 0.28);
+    margin-top: 12px;
+    padding-top: 9px;
+}
+
+.chart-foot--amber {
+    color: #b45309;
+    font-weight: 700;
+}
+
+/* 窄屏：雙面板改豎向堆疊，每枚圖表獨占一行才讀得清刻度。 */
+@media (max-width: 760px) {
+    .chart-frame--panels { flex-direction: column; align-items: stretch; }
+    /* 横排时 flex:1 1 0 分的是宽度；一旦改成 column，flex-basis:0 会作用在
+       **高度**上，把两枚 SVG 压成 0px（真机截图实测空盒）。窄屏必须改回
+       flex:none 让 viewBox 自己按宽度算高。 */
+    .chart-frame--panels .ct-svg--panel {
+        flex: none;
+        max-width: none;
+        width: 100%;
+    }
+    .chart-block { padding: 16px 14px 14px; }
 }
 
 /* ===== 風險矩陣（type: 'matrix'） =====
