@@ -1097,6 +1097,251 @@ const SUBJECTS = {
           },
         ],
       },
+      {
+        /* ·41：BCM241 Assessment 3 – Contextual Research Report（v2 定稿）。
+           來源 BCM_241_Assessment_3_Contextual_Research_Report_WangWingshing-v2.docx。
+           英文逐字保留，僅把文獻尾端 URL 依全站體例移到 .ref-link-row；
+           三張插圖依原稿 Figure 1/2/3 位置排放。本篇正文自引
+           Blog Post 1 (?id=bcm241-a2) 與 Blog Post 2 (?id=bcm241-a3)，
+           故必定是排在 a3 之後的第四篇，不覆蓋既有任何一篇。            */
+        id: 'bcm241-a4',
+        no: 'No.04',
+        studentId: '1723674',
+        title: {
+          en: 'Contextual Research Report: Balancing Attention and Practical Value in Cross-Border B2B Media',
+          zh: '情境研究報告：跨境 B2B 媒體中注意力與實用價值的平衡',
+        },
+        excerpt: {
+          en: 'Ten short videos, three platforms and almost no comments. Two epiphanies from an autoethnographic investigation: hooks win the click but practical substance earns the save, and silent back-end metrics can still work as field notes.',
+          zh: '十支短片、三個平台、幾乎沒有留言。一趟自我民族誌帶出兩個頓悟：鉤子換來點擊，可操作的實質內容才換得到收藏；沉默的後台數據，同樣能當作田野筆記。',
+        },
+        date: '2026-11-17',
+        tags: [
+          { en: 'BCM241 A3', zh: 'BCM241 A3' },
+          { en: 'Contextual Report', zh: '情境研究報告' },
+          { en: 'Autoethnography', zh: '自我民族誌' },
+          { en: 'Platform Metrics', zh: '平台數據' },
+        ],
+        /* 同 bcm241 前三篇：文章頁不渲染開場主圖；image 只供科目頁卡片縮圖。 */
+        noHero: true,
+        image: 'assets/posts/bcm241-a4-cover.png',
+        figLabel: { en: 'COVER — The ethnographic gaze', zh: '封面圖 — 民族誌的注視' },
+        body: [
+          { type: 'h2', text: { en: 'Introduction', zh: '導論' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Cross-border B2B (business-to-business) e-commerce involves complex supply chains, supplier sourcing, and trade rules that often confuse everyday viewers. To make these business mechanisms clear and accessible, I created "Paper Magellan" (纸上麦哲伦), a digital artefact dedicated to cross-border B2B knowledge popularization. Across 16 days, I produced 10 short animated case studies (1 to 2.5 minutes each) and distributed them across Douyin, Xiaohongshu, and WeChat Video. Rather than repeating my earlier niche mapping, readers can review my initial field exploration in Blog Post 1 (https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2) and my production workflow in Blog Post 2 (https://charles-blog.netlify.app/articles/article.html?id=bcm241-a3). Guided by the digital and autoethnographic methods introduced in our lectures, I treated my daily content production, cross-platform publishing, and backend data tracking as active fieldwork to examine how practical industry knowledge travels on social media.',
+              zh: '跨境 B2B（企業對企業）電商牽涉複雜的供應鏈、供應商尋源與貿易規則，往往讓一般觀眾一頭霧水。為了把這些商業機制講得清楚、講得親近，我創作了數位作品「紙上麥哲倫」，專門做跨境 B2B 的知識普及。16 天內我產出 10 支 1 至 2.5 分鐘的短篇動畫案例，分發到抖音、小紅書與微信視頻號。讀者若想回顧我最初的領域描繪，可看〈部落格貼文 1〉（https://charles-blog.netlify.app/articles/article.html?id=bcm241-a2），產製流程則見〈部落格貼文 2〉（https://charles-blog.netlify.app/articles/article.html?id=bcm241-a3），這裡不重複。在課堂介紹的數位與自我民族誌方法引導下，我把每日的內容產製、跨平台發佈與後台數據追蹤，都當成正在進行的田野工作，藉此檢視實用的產業知識如何在社群媒體上流動。',
+            },
+          },
+          { type: 'h2', text: { en: 'Online Persona', zh: '線上人格' } },
+          {
+            type: 'p',
+            text: {
+              en: 'To build credibility in this niche, I constructed a unified online persona named "Paper Magellan" across Douyin, Xiaohongshu, and WeChat Video. All three channels share consistent visual branding, paired with cream-colored comic covers featuring bold black titles on yellow highlights. My bio positions the account as a clear, professional peer observer who explains cross-border logic "in the time of a cup of coffee" without exaggerated sales pitches. Using Moore, Barbour, and Lee’s (2017) framework of the five dimensions of online persona, this identity is deliberately public, mediatized, and performative, while remaining collective in its invitation for peers to learn together. It contrasts sharply with my everyday social media use. In private life, I scroll through videos passively for entertainment without thinking about how messages are built. When operating as "Paper Magellan," however, I actively break down visual pacing, audio cues, and script rhythm to translate complex B2B concepts into simple, engaging stories for viewers.',
+              zh: '為了在這個領域建立可信度，我在抖音、小紅書與微信視頻號上建構了一個統一的線上人格「紙上麥哲倫」。三個頻道共用一致的視覺識別：奶油色漫畫封面，粗黑標題壓在黃色重點上。自介把帳號定位成一位清晰、專業的同儕觀察者，用「一杯咖啡的時間」講清跨境邏輯，不做誇大的推銷。以 Moore、Barbour 與 Lee（2017）的線上人格五個維度來看，這個身分是刻意公開、媒介化且表演性的，同時又因邀請同儕一起學習而帶有集體性。它與我日常的社群使用形成強烈對比：私人生活裡我只是被動地滑影片找樂子，從不去想訊息是怎麼被建構出來的；但當我以「紙上麥哲倫」運作時，我得主動拆解視覺節奏、聲音提示與腳本韻律，把複雜的 B2B 概念轉譯成觀眾容易入口的故事。',
+            },
+          },
+          {
+            /* 原稿 Figure 1：三平台主頁拼圖，極寬（1800×348）→ wide。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm241-a4-fig1.png',
+            alt: {
+              en: 'Three "Paper Magellan" creator homepages side by side: Douyin on the left with a dark grid of comic covers, WeChat Video in the middle with a light grid, and Xiaohongshu on the right with account analytics and a note list. All three share the same cream comic covers and bold black titles.',
+              zh: '三個「紙上麥哲倫」創作者主頁並排：左為抖音的深色漫畫封面網格，中為微信視頻號的淺色網格，右為小紅書的帳號數據與筆記列表；三者共用相同的奶油色漫畫封面與粗黑標題。',
+            },
+            caption: {
+              en: 'FIG.01 — Unified "Paper Magellan" creator profiles across Douyin, Xiaohongshu, and WeChat Video.',
+              zh: 'FIG.01 — 「紙上麥哲倫」在抖音、小紅書與微信視頻號上統一的創作者主頁。',
+            },
+          },
+          { type: 'h2', text: { en: 'Key Epiphanies', zh: '關鍵頓悟' } },
+          { type: 'h3', text: { en: 'Epiphany 1: Hooks and Substance', zh: '頓悟一：鉤子與實質' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My first major epiphany emerged while scripting and testing audience responses: short videos are not academic papers, so strong emotional or trending hooks are needed to capture initial clicks, while clear, step-by-step practical substance is what convinces target B2B viewers to save the video and follow the account.',
+              zh: '第一個重要頓悟，是在寫腳本與測試觀眾反應的過程裡浮現的：短影片不是學術論文，需要強烈的情緒或話題鉤子才能換到最初的點擊；而清晰、按步驟可執行的實質內容，才是讓目標 B2B 觀眾願意收藏並追蹤的理由。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'At the start of my production cycle, I assumed that clearly explaining one business concept per episode would naturally attract viewers. However, simply presenting an isolated industry term proved too dry to hold attention on fast-moving social feeds, as shown by the low reach of my term-focused video on DTC independent sites. To lower the entry barrier without cutting educational depth, I adopted a consistent five-step story structure across my series: a specific character faces a dilemma, conventional methods fail or cost too much, the character uses an unexpected method to break through, the result is shown, and the underlying business concept is revealed at the end. This narrative arc turns abstract trade rules into relatable problem-solving stories that everyday viewers can follow effortlessly.',
+              zh: '產製初期我以為，每集把一個商業概念講清楚，自然就會吸引觀眾。但事實證明，單純丟出一個孤立的產業術語，在快速滑動的社群動態裡太乾、留不住人——我那支講 DTC 獨立站的術語型影片觸及很低就是證據。為了降低進入門檻又不砍掉知識深度，我在整個系列改用一致的五段敘事：一個具體角色遇上難題、常規方法失效或成本太高、角色用意想不到的方法突圍、亮出結果，最後才揭開底層的商業概念。這條敘事弧線把抽象的貿易規則，變成一般人也能毫不費力跟著走的解題故事。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Two episodes illustrate how packaging and practical substance work together. First, in "1-Star Reviews," I opened with a relatable relationship-gossip hook—asking if viewers had ever scrolled through an ex’s chat logs to find a fatal flaw—shown through a chat interface with a highlighted red sentence, before pivoting to a student scraping overseas reviews for Voice of Customer (VOC) analysis. This emotional framing drove strong click-through and completion rates without diluting the analytical takeaway. Second, I tested a viral meme hook in "Escape Skateboard" (opening with a 4-second livestream clip to explain meme monetization), which drew high impressions and views on Xiaohongshu but generated very few saves or new followers. In contrast, "Earning the First US Dollar"—a pixel-game story following a character named Aze running a 1,000-RMB low-cost test—laid out a complete four-step operational chain: finding unmet demand on US pet forums (VOC), validating demand with a simple product page before buying stock (MVP), fulfilling orders via 1688 and domestic freight forwarders (dropshipping), and preventing chargebacks with trackable logistics. Because practitioners could save and follow these concrete steps, this episode achieved markedly higher saves than likes and drove steady follower growth.',
+              zh: '有兩集特別能說明「包裝」與「實質」是怎麼一起作用的。首先是〈一星負評〉：我用一個很有共感的感情八卦鉤子開場——問觀眾有沒有翻過前任的聊天紀錄、想找出致命破綻——畫面用聊天介面呈現，還把一句話標紅，之後才轉到學生爬取海外評論做 VOC（顧客之聲）分析。這個情緒框架帶來不錯的點擊與完播，卻沒有稀釋分析上的收穫。其次，我在〈逃命滑板〉測試了迷因鉤子（開頭放 4 秒直播片段來講迷因變現），它在小紅書拿到很高的曝光與觀看，卻幾乎沒換到收藏或新追蹤。相較之下，〈賺到第一塊美金〉用像素遊戲講一個叫 Aze 的角色拿 1,000 元人民幣做低成本測試，攤開了完整的四步操作鏈：在美國寵物論壇找未被滿足的需求（VOC）、進貨前先用簡單商品頁驗證需求（MVP）、透過 1688 與國內貨代出貨（dropshipping）、再用可追蹤物流避免拒付。因為從業者能直接照著存起來，這一集的收藏明顯高於按讚，也帶來穩定的追蹤成長。',
+            },
+          },
+          {
+            /* 原稿 Figure 2：小紅書創作服務平台帳號診斷 + 筆記數據。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm241-a4-fig2.png',
+            alt: {
+              en: 'Xiaohongshu creator service platform account diagnosis for 10–16 November: 3,990 views, 212 interactions, 36 new followers, 42 homepage visitors and 3 posts, each above 99% of comparable creators except homepage visitors. Below, note data shows 14,000 impressions, 12.6% cover click rate, 41s average watch time and 31.1 hours total watch time.',
+              zh: '小紅書創作服務平台的帳號診斷（11/10–11/16）：觀看數 3,990、互動 212、漲粉 36、主頁訪客 42、發布 3 篇，多項超過 99% 同類創作者；下方筆記數據顯示曝光 1.4 萬、封面點擊率 12.6%、平均觀看 41 秒、觀看總時長 31.1 小時。',
+            },
+            caption: {
+              en: 'FIG.02 — Xiaohongshu creator analytics dashboard confirming strong cover click-through and peer-leading engagement.',
+              zh: 'FIG.02 — 小紅書創作者後台，印證封面點擊率與領先同儕的互動表現。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Schellewald (2021) notes that communicative forms on short-video platforms rely on fast, recognizable rhythms and relatable frames to connect with scrolling users. Meanwhile, Bhandari and Bimo (2022) highlight how algorithmic feeds reward instant attention, pushing creators to package ideas for rapid consumption. My field observations show how these two forces interact in knowledge popularization. Emotional hooks and viral memes serve as an entry ticket that stops users from scrolling past. Once viewers stop, however, B2B practitioners judge the video by its practical utility, pressing "save" rather than "like" so they can apply the workflow later. Effective B2B short videos therefore require a clear two-part structure: an engaging hook to earn the click, followed immediately by actionable business steps.',
+              zh: 'Schellewald（2021）指出，短影片平台上的溝通形式依賴快速、可辨識的節奏與有共感的框架，才能接住正在滑動的使用者；Bhandari 與 Bimo（2022）則強調演算法動態會獎勵即時注意力，迫使創作者把想法包裝成便於快速消費的樣子。我的田野觀察顯示，這兩股力量在知識普及裡是怎麼交互作用的：情緒鉤子與病毒迷因是讓人停下手指的入場券；但觀眾一停下來，B2B 從業者就用「實不實用」來評斷影片，按的是「收藏」而不是「按讚」，好留著之後照做。因此有效的 B2B 短影片需要清楚的兩段式結構：先用鉤子換到點擊，緊接著給出可執行的商業步驟。',
+            },
+          },
+          { type: 'h3', text: { en: 'Epiphany 2: Silent Metrics', zh: '頓悟二：沉默的數據' } },
+          {
+            type: 'p',
+            text: {
+              en: 'My second epiphany centered on how to conduct ethnographic self-reflection and improve content when the audience remains quiet in the comment section.',
+              zh: '第二個頓悟，圍繞著「當觀眾在留言區保持沉默時，該怎麼做民族誌式的自我反思、又該怎麼改進內容」。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'When starting this project, I planned to refine my scripts by reading viewer comments and answering questions. Across 10 published episodes, however, the comment sections stayed largely silent across both Douyin and Xiaohongshu. Rather than treating silence as a lack of interest, my observations showed that B2B learners consume content quietly. Without direct text feedback, I built a structured review routine—checking backend data at 2 hours, 24 hours, 72 hours, and 7 days post-release—and compared performance across platforms.',
+              zh: '專案開始時，我本來打算靠讀觀眾留言、回答問題來打磨腳本。然而 10 支影片發出去後，抖音與小紅書的留言區都相當安靜。我沒有把沉默當成「沒興趣」，觀察反而顯示 B2B 學習者是安靜地消費內容。少了直接的文字回饋，我建立了一套固定的檢視流程——在發佈後 2 小時、24 小時、72 小時與 7 天各查一次後台數據——並跨平台比對表現。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Backend retention curves and interaction ratios replaced comments as my primary editing guide. Tracking two-second bounce rates and completion curves pinpointed the exact moments where viewer attention dropped, prompting me to tighten opening hooks and keep pacing crisp. At the same time, high save-to-like ratios on practical guides served as a reliable signal that practitioners valued the videos as working references, even without leaving comments. Comparing audience demographics across platforms further explained why identical episodes performed differently: Douyin attracted mainly younger male practitioners concentrated in major Chinese cross-border trade hubs, whereas Xiaohongshu reached an older, slightly female-majority audience alongside overseas users and broader lifestyle interests. Because each platform hosts a distinct audience, an episode that ranked first on Douyin ranked last on Xiaohongshu, while a meme-driven episode broke out on Xiaohongshu.',
+              zh: '後台的留存曲線與互動比例，取代留言成了我主要的剪輯依據。追蹤兩秒跳出率與完播曲線，能精準指出觀眾注意力在哪一秒掉下去，促使我把開頭鉤子收得更緊、節奏壓得更明快。同時，實用型指南偏高的「收藏／按讚比」，是個可靠訊號：即使不留言，從業者仍把影片當成工作參考。跨平台比對受眾輪廓，更解釋了為什麼同一支影片表現會完全不同：抖音吸引的多是集中在中國跨境貿易重鎮的年輕男性從業者，小紅書則觸及年紀稍長、女性略多、還包含海外使用者與更廣泛生活風格興趣的觀眾。因為每個平台裝著不同的受眾，一支在抖音排第一的影片，在小紅書可能墊底；而迷因驅動的那一集，反而是在小紅書爆開。',
+            },
+          },
+          {
+            /* 原稿 Figure 3：逐支影片後台數據（播放/按讚/評論/完播/兩秒跳出/吸粉）。 */
+            type: 'figure',
+            wide: true,
+            src: 'assets/posts/bcm241-a4-fig3.png',
+            alt: {
+              en: 'Back-end list of four uploads with per-video metrics: "Escape Skateboard" (1,596 plays, 6.72% completion, 35.81% two-second bounce), "The 1-Star Review" (5,372 plays, 12.26%, 32.4%), "Abandoning Amazon for DTC" (591 plays, 1.09%, 51.22%), and "Only Produce 100 Pieces?" (4,986 plays, 4.43%, 41.01%). Saves, shares and follower gains vary widely between episodes.',
+              zh: '後台列出四支影片的逐片數據：〈逃命滑板〉1,596 播放、6.72% 完播、35.81% 兩秒跳出；〈一星負評〉5,372 播放、12.26%、32.4%；〈放棄亞馬遜改做 DTC〉591 播放、1.09%、51.22%；〈只做 100 件？〉4,986 播放、4.43%、41.01%。各片的收藏、分享與吸粉量差異明顯。',
+            },
+            caption: {
+              en: 'FIG.03 — Video-level backend retention and bounce rate comparison used to diagnose pacing and opening hooks.',
+              zh: 'FIG.03 — 逐支影片的後台完播率與跳出率對比，用來診斷節奏與開場鉤子。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'This pattern aligns with Airoldi’s (2018) concept of "digital fields," which explains how different platform algorithms organize content and divide users into separate behavioral spaces. Furthermore, Anderson (2006) and Ellis, Adams, and Bochner (2010) emphasize that analytic autoethnography combines personal production experience with systematic observation to uncover broader cultural patterns. By treating retention curves, save ratios, and demographic splits as ethnographic field notes, I turned silent numbers into clear editing decisions. Cross-platform proliferation is not simply uploading one file to three apps; it requires reading how each platform’s algorithmic field filters and rewards different types of knowledge.',
+              zh: '這個現象呼應 Airoldi（2018）的「數位場域」概念：不同平台的演算法組織內容，也把使用者切分成不同的行為空間。此外，Anderson（2006）與 Ellis、Adams、Bochner（2010）都強調，分析式自我民族誌是把個人的產製經驗與系統性觀察結合起來，藉此挖出更大的文化模式。當我把留存曲線、收藏比與受眾分布當成民族誌田野筆記，沉默的數字就變成了明確的剪輯決策。跨平台擴散從來不是「把同一個檔上傳到三個 App」而已，而是要讀懂每個平台的演算法場域，如何篩選、又如何獎勵不同類型的知識。',
+            },
+          },
+          { type: 'h2', text: { en: 'Conclusion', zh: '結論' } },
+          {
+            type: 'p',
+            text: {
+              en: 'Conducting this autoethnographic investigation fundamentally reshaped my understanding of both the cross-border B2B media niche and my role as a content creator. Previously, I viewed educational videos simply as containers for facts. Now, I understand that short-video knowledge sharing requires a careful balance: using relatable stories, visual contrast, and strong hooks to earn initial attention, while keeping practical, step-by-step operational substance intact so target peers gain real value. This balance ensures that complex trade concepts remain both accessible to newcomers and useful to working practitioners.',
+              zh: '這趟自我民族誌調查，從根本上重塑了我對跨境 B2B 媒體領域、以及對「內容創作者」這個角色的理解。以前我把知識型影片單純看成裝事實的容器；現在我明白，短影片的知識分享需要小心拿捏：用有共感的故事、視覺對比與強鉤子換到最初的注意力，同時保住按步驟可操作的實質內容，讓目標同儕拿到真正的價值。這個平衡，才讓複雜的貿易概念既對新手友善，也對在職從業者有用。',
+            },
+          },
+          {
+            type: 'p',
+            text: {
+              en: 'Equally important is the growth of my ethnographic research skills. Operating in an environment with minimal comments taught me to read indirect behavioral signals—such as two-second bounce rates, save-to-like ratios, and audience demographics—as valid ethnographic evidence. Tracking these metrics across Douyin, Xiaohongshu, and WeChat Video showed me how distinct digital fields shape audience habits. Ultimately, becoming a reflective creator means standing both inside and outside the screen: crafting clear visual stories for everyday viewers while maintaining the critical distance of an ethnographer to observe, measure, and refine every iteration.',
+              zh: '同樣重要的是民族誌研究能力的成長。在留言極少的環境裡操作，教會我把間接的行為訊號——兩秒跳出率、收藏／按讚比、受眾輪廓——當成有效的民族誌證據。在抖音、小紅書與微信視頻號之間追蹤這些指標，讓我看見不同的數位場域如何塑造觀眾習慣。說到底，成為一個會反思的創作者，意味著同時站在螢幕裡與螢幕外：一方面為一般觀眾打磨清楚的視覺故事，另一方面維持民族誌者的批判距離，去觀察、去量測、去修正每一次迭代。',
+            },
+          },
+          { type: 'h2', text: { en: 'References', zh: '參考文獻' } },
+          {
+            type: 'ref',
+            text: {
+              en: 'Airoldi, M. (2018). Ethnography and the digital fields of social media. International Journal of Social Research Methodology, 21(6), 661–673.',
+              zh: 'Airoldi, M. (2018). Ethnography and the digital fields of social media. International Journal of Social Research Methodology, 21(6), 661–673.',
+            },
+            url: 'https://doi.org/10.1080/13645579.2018.1465622',
+            note: {
+              en: 'Names the "digital fields" used to explain why one episode ranks first on Douyin and last on Xiaohongshu.',
+              zh: '為「同一支影片在抖音排第一、在小紅書墊底」提供「數位場域」的解釋框架。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Anderson, L. (2006). Analytic autoethnography. Journal of Contemporary Ethnography, 35(4), 373–393.',
+              zh: 'Anderson, L. (2006). Analytic autoethnography. Journal of Contemporary Ethnography, 35(4), 373–393.',
+            },
+            url: 'https://doi.org/10.1177/0891241605280449',
+            note: {
+              en: 'Grounds the analytic autoethnographic method used to turn production experience into systematic observation.',
+              zh: '為把產製經驗轉成系統性觀察的「分析式自我民族誌」方法奠基。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Bhandari, A., & Bimo, S. (2022). Why’s everyone on TikTok now? The algorithmized self and the future of self-making on social media. Social Media + Society, 8(1).',
+              zh: 'Bhandari, A., & Bimo, S. (2022). Why’s everyone on TikTok now? The algorithmized self and the future of self-making on social media. Social Media + Society, 8(1).',
+            },
+            url: 'https://journals.sagepub.com/doi/pdf/10.1177/20563051221086241',
+            note: {
+              en: 'Frames algorithmic feeds as rewarding instant attention — the pressure behind the hook-first structure.',
+              zh: '把演算法動態如何獎勵即時注意力說清楚，正是「鉤子先行」結構的壓力來源。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Ellis, C., Adams, T. E., & Bochner, A. P. (2010). Autoethnography: An overview. Forum Qualitative Sozialforschung / Forum: Qualitative Social Research, 12(1).',
+              zh: 'Ellis, C., Adams, T. E., & Bochner, A. P. (2010). Autoethnography: An overview. Forum Qualitative Sozialforschung / Forum: Qualitative Social Research, 12(1).',
+            },
+            url: 'https://doi.org/10.17169/fqs-12.1.1589',
+            note: {
+              en: 'Supports treating personal production experience as valid ethnographic evidence.',
+              zh: '支持把個人產製經驗視為有效的民族誌證據。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Moore, C., Barbour, K., & Lee, K. (2017). Five dimensions of online persona. Persona Studies, 3(1), 1–11.',
+              zh: 'Moore, C., Barbour, K., & Lee, K. (2017). Five dimensions of online persona. Persona Studies, 3(1), 1–11.',
+            },
+            url: 'https://doi.org/10.21153/ps2017vol3no1art658',
+            note: {
+              en: 'Supplies the five-dimension framework used to describe the "Paper Magellan" persona.',
+              zh: '提供描述「紙上麥哲倫」人格時所用的五維度框架。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Schellewald, A. (2021). Communicative forms on TikTok: Perspectives from digital ethnography. International Journal of Communication, 15, 1437–1457.',
+              zh: 'Schellewald, A. (2021). Communicative forms on TikTok: Perspectives from digital ethnography. International Journal of Communication, 15, 1437–1457.',
+            },
+            url: 'https://ijoc.org/index.php/ijoc/article/view/16414',
+            note: {
+              en: 'Explains the fast, recognizable rhythms that short-video communicative forms rely on.',
+              zh: '解釋短影片溝通形式為何依賴快速、可辨識的節奏。',
+            },
+          },
+          {
+            /* 全站體例：每篇文末一條 AI 聲明，沿用 ·33 原句。 */
+            type: 'note',
+            text: {
+              en: 'Generative AI（Google Gemini）was utilized to assist with structuring the research outline, and refining language clarity.',
+              zh: '本作業使用生成式 AI（Google Gemini）協助擬定研究大綱的結構，並潤飾語言的清晰度。',
+            },
+          },
+        ],
+      },
     ],
   },
 

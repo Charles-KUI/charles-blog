@@ -4046,3 +4046,46 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
 · 驗證：`verify-bcm206-a2.mjs` 131 → **205 項**，0 失敗；全站 16 套 jsdom 回歸 0 失敗
   （229/97/108/172/126/86/111/97/129/205/52/12/25/15/33/11）；`_spread` **345/0**；
   真機 `_shot40` ALL PASS（1440 與 390 各項幾何 ＋ 四張眼檢截圖）。
+
+----------------------------------------------------------------------
+第四十一階段 · BCM241 Assessment 3 情境研究報告上線（·41）
+----------------------------------------------------------------------
+· Master 給 `BCM_241_Assessment_3_Contextual_Research_Report_WangWingshing-v2.docx`
+  與 Moodle 作業說明（Introduction 150 / Persona 150 / Epiphanies 1000 /
+  Conclusion 200 words；"Link to previous posts rather than repeat information"），
+  一句「更新上去」。
+· 判斷歸屬：報告標題是 Assessment 3 – Contextual Research Report，導論自引
+  Blog Post 1（`?id=bcm241-a2`）與 Blog Post 2（`?id=bcm241-a3`）→ 必定是排在
+  a3 之後的**新第四篇**，不是覆蓋既有任何一篇。純新增、可回退，故直接做不另問。
+  新 id `bcm241-a4` / `No.04` / date `2026-11-17`（封面表 DATE SUBMITTED）。
+· 英文 12 段逐字保留（唯一偏離：文獻尾端 URL 依全站體例移到 `.ref-link-row`；
+  圖註 `Figure N:` 改網站體例 `FIG.0N —`），另補繁中譯文。30 區塊：
+  5 H2 / 2 H3 / 12 p / 3 figure / 6 ref / 1 note；文末沿用 ·33 通用 AI 聲明原句。
+· docx 三張內嵌圖（image3/4/5，其中兩張副檔名是 .png 實為 JPEG）→ 轉
+  `bcm241-a4-fig1|2|3.png + .webp`，全部 `wide: true`（≥1100 鋪滿版心，
+  後台截圖收 660 會把小字縮到看不見）。另做 1:1 封面 `bcm241-a4-cover`：
+  青底 + 輕微旋轉米白紙片 + 一個「民族誌的注視」眼睛主體 + 一條橫貫虛線 +
+  硬陰影；初版睫毛像懸空劃痕、虛線切斷瞳孔 → 去掉睫毛、虛線下移後定稿。
+· 測試：`domtest` / `verify-hidden` 的 `LIVE_SUBJECTS.bcm241` 補 a4；
+  `verify-bcm241-a1` 3→4 卡、`verify-bcm241-a3` 3→4 卡；`_spread` IDS 補 a4。
+  ⚠️ `verify-bcm241-a3` 的記錄切片原停在「所屬科目陣列結束」，a4 變成同科
+  最後一篇後會把 a4 的圖／文獻／聲明一起算進來（假失敗：1 圖→4、2 ref→8、
+  1 note→2）→ 改為優先切在「下一條記錄起始」`\r?\n {6}\{\r?\n`，陣列結束作 fallback。
+  新增 `verify-bcm241-a4.mjs` **91 項**：12 段英文與 `.workbuddy/_a3-source.txt`
+  逐段比對、區塊序列、圖檔雙份、雙語原位切換、第 4 張卡。
+· `verify-langswitch` 9/3 假失敗：根因是首屏 `DOMContentLoaded` 因資源載入延後，
+  從 navigate 起算的固定 `sleep(2800)` 在 2s delay + 0.5s 動畫結束前就取樣；
+  改 6000ms → 12/0。另把末尾 `fs.rmSync` 包 try/catch（沙箱會攔 safe-delete，
+  清不掉暫存 profile 不該讓整份驗證以異常收場），並加 `Page.bringToFront` /
+  `Emulation.setFocusEmulationEnabled` 加固 headless。
+· `verify-article` / `_spread` 需外部 8788 → 後臺起 `.workbuddy/serve.mjs`，串行跑；
+  `_shot41` 自帶 server，懶加載圖逐張 `scrollIntoView` 等 `naturalWidth>0`
+  （沒做這步窄屏第 3 張會回 0）。
+· 驗證：全站 **17 套 jsdom 0 失敗**（229/98/108/172/126/86/111/97/91/129/205/
+  52/12/25/15/33/11）；`_spread` **405/0**；`_shot41` ALL PASS（1440／390 幾何
+  ＋ 7 張眼檢截圖：開場、FIG.01–02、文末、窄屏、科目頁 4 卡）。
+· ⚠️ 字數核對（未擅改英文）：導論 144 / Persona 154 / Epiphanies 853 /
+  Conclusion 176，全文約 1345 words，Epiphanies 比要求的 1000 words 少約 150。
+  ⚠️ 封面表 docx 的 `[insert URL]` 仍是占位，需 Master 自行貼文章連結或指示代填。
+  ⚠️ FIG.01 是 1800×348 的極寬三平台拼圖，390px 下縮到 330px 寬、字看不清；
+  普通 figure 不綁燈箱（只有 gallery 的 slide 能點開），若要手機可放大需另做。
