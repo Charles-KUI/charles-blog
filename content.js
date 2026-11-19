@@ -1005,31 +1005,6 @@ const SUBJECTS = {
               },
             ],
           },
-          { type: 'h3', text: { en: '2. Notes / Transcripts of Interviews', zh: '2. 訪談筆記／逐字稿' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Not applicable (this study employed a quantitative experimental survey with open-ended text responses rather than qualitative interviews).',
-              zh: '不適用（本研究採用量化實驗問卷與開放式文字回應，而非質性訪談）。',
-            },
-          },
-          { type: 'h3', text: { en: '3. Recordings of the Interviews [URL - optional]', zh: '3. 訪談錄音（網址，選填）' } },
-          { type: 'p', text: { en: 'Not applicable.', zh: '不適用。' } },
-          { type: 'h3', text: { en: '4. Screenshot of the Full Questionnaire (Screens 00/16 – 16/16)', zh: '4. 完整問卷截圖（第 00/16 – 16/16 頁）' } },
-          {
-            type: 'p',
-            text: {
-              en: 'Below are the complete sequential screenshots of the bilingual survey instrument (Version B showing all source labels, followed by Version A unlabeled control comparison screens).',
-              zh: '以下為雙語問卷工具的完整連續截圖（版本 B 顯示所有來源標籤，其後為版本 A 未標籤對照畫面）。',
-            },
-          },
-          {
-            type: 'note',
-            text: {
-              en: 'Appendix Figures A1–A9 (questionnaire screens 00/16 – 16/16) are preserved in the original submitted document; full-resolution screenshots are not reproduced here.',
-              zh: '附錄圖 A1–A9（問卷第 00/16 – 16/16 頁）保留於原始繳交文件中；本站不重現全解析度截圖。',
-            },
-          },
         ],
       },
       {

@@ -4183,3 +4183,14 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
 · 18 套 jsdom 全綠（新增 verify-bcm212-a3 72/0）；domtest 229、hidden 99、
   212-a2 172（切片邊界改停在 a3）；_spread 470/0；_shot42 真機 1440/390
   幾何＋逐圖截圖 0 FAIL。
+
+第四十五階段 · BCM212 A3 附錄刪去不適用章節（2026-11-19）
+════════════════════════════════════════════════════════════════════
+【改動】Master 指出 docx 附錄第 2「訪談筆記／逐字稿」、第 3「訪談錄音」、
+  第 4「完整問卷截圖」三節都是 Not applicable／未提供，不用加進網站。
+· content.js：bcm212-a3 附錄現在只保留第 1 節問卷網址（5 張 links 整卡）；
+  第 4 節那句「A1–A9 截圖保留於原始繳交文件」的 note 也一併刪去，
+  不留沒有對應內容的解釋文字。
+· verify-bcm212-a3.mjs 加守衛斷言：頁面不得出現 Transcripts / Recordings /
+  Screenshot of the Full Questionnaire / Not applicable / A1–A9。
+【驗證】專項 73/0；18 套 jsdom 全綠。
