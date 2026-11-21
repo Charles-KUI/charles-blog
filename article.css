@@ -424,6 +424,31 @@
     opacity: 0.94;
 }
 
+/* ·48 正文原图点击放大（block.zoom:true）：
+   只在指定的 figure 上生效，其余图片完全保持原样。
+   提示角标用纯 + 号，避免多一套双语文本节点挤进主文本队列。 */
+.inline-figure.is-zoomable { position: relative; }
+.inline-figure img[data-fig-zoom] { cursor: zoom-in; }
+.fig-zoom-hint {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark-frame);
+    color: var(--cream-white);
+    border: 2px solid var(--cream-white);
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.4);
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    line-height: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+
 /* ===== 环形流程图（type: 'diagram'） =====
    一个闭环流程画成 SVG 环：节点是奶油白「卡片」，粗黑边 + 硬阴影；
    环上箭头首尾相接表示循环；一枚方形光点沿环循环流动（animateMotion）。
@@ -2419,6 +2444,27 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
+/* ·48 正文原图的灯箱：数据截图本身是 2282×987 这类宽图，
+   沿用幻灯片的 78vw 会比正文里还小 —— 放到 94vw 才有放大意义。
+   再点图片 / 按「1:1 原尺寸」切到原始像素，舞台可滚动查看。
+   ⚠️ margin:auto 而不是 justify-content:center：溢出时居中会把左半切掉。 */
+.lightbox.is-figure .lb-stage {
+    overflow: auto;
+    justify-content: flex-start;
+}
+.lightbox.is-figure .lb-img {
+    max-width: min(94vw, 1800px);
+    max-height: 82vh;
+    margin: auto;
+}
+.lightbox.is-figure.is-native .lb-img {
+    max-width: none;
+    max-height: none;
+    flex: none;
+}
+.lightbox.is-figure .lb-bar { bottom: 1.5vh; position: fixed; }
+.lightbox.is-figure .lb-close { position: fixed; }
+
 /* 全屏里的箭头：左右贴边、垂直居中 */
 .lb-arrow {
     position: absolute;
@@ -2438,6 +2484,7 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     transition: transform 0.15s ease, background 0.15s ease;
 }
 
+.lb-arrow[hidden] { display: none; }
 .lb-arrow svg { width: 26px; height: 26px; }
 .lb-arrow:hover { background: #FFFFFF; }
 .lb-prev { left: 3vw; }
@@ -2496,6 +2543,36 @@ html[lang^="zh"] .mx-ylabel { transform: none; }
     border-left: 2px solid var(--dark-frame);
     font-weight: 700;
 }
+
+/* 「開啟原圖」：直接打开未改写的 PNG 原档，和灯箱里的 WebP 同尺寸。 */
+.lb-origin {
+    flex: 0 0 auto;
+    color: var(--dark-frame);
+    font-family: var(--font-round);
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-bottom: 2px solid var(--bg-teal);
+    padding-bottom: 1px;
+}
+.lb-origin:hover { border-bottom-color: var(--dark-frame); }
+.lb-origin[hidden] { display: none; }
+
+.lb-scale {
+    flex: 0 0 auto;
+    background: var(--bg-teal);
+    color: var(--dark-frame);
+    border: var(--border-medium);
+    box-shadow: 2px 2px 0 var(--dark-frame);
+    font-family: var(--font-round);
+    font-size: 0.76rem;
+    letter-spacing: 1px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+.lb-scale:hover { background: var(--cream-white); }
+.lb-scale:active { transform: translate(2px, 2px); box-shadow: none; }
+.lb-scale[hidden] { display: none; }
 
 .lb-open { overflow: hidden; }
 

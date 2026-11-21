@@ -104,6 +104,9 @@
     'gallery.next': ['Next slide', '下一頁'],
     'gallery.close': ['Close full screen', '關閉全螢幕'],
     'gallery.expand': ['click to view full screen', '點擊全螢幕閱讀'],
+    'gallery.original': ['open original image', '開啟原圖'],
+    'gallery.native': ['1:1 original size', '1:1 原尺寸'],
+    'gallery.fit': ['fit to screen', '適合視窗'],
   });
 
   /* ============ 双语取值工具 ============ */

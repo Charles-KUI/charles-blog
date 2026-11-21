@@ -1080,15 +1080,26 @@
     // 否则图来的一刻会把下方内容顶下去。只给单图用，多图各自比例不同。
     const arStyle = (block.ar && srcs.length === 1)
       ? ' style="--zine-ar:' + esc(block.ar) + '"' : '';
+    // ·48 原图放大：zoom:true 的正文图片可点击 / 回车打开全屏灯箱。
+    // 不包 <a>、不加 <p> —— 主文本队列按 p 计数，包 <a> 会被切语言时洗掉；
+    // 提示字串走 util.t('gallery.expand')，切语言时由 refreshFigureText 单独刷属性。
+    const zoomable = !!block.zoom;
+    const zoomLabel = zoomable ? esc(util.t('gallery.expand')) : '';
     const plates = srcs.map(function (src) {
-      return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '"' + arStyle + ' loading="lazy" decoding="async">';
+      const zoomAttrs = zoomable
+        ? ' data-fig-zoom data-origin="' + esc(root + src) + '" role="button" tabindex="0"'
+          + ' title="' + zoomLabel + '" aria-label="' + alt + ' — ' + zoomLabel + '"'
+        : '';
+      return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '"' + arStyle + zoomAttrs + ' loading="lazy" decoding="async">';
     }).join('');
     const cls = 'inline-figure'
       + (srcs.length > 1 ? ' inline-figure--plates' : '')
       + (block.wide ? ' inline-figure--wide' : '')
-      + (block.narrow ? ' inline-figure--narrow' : '');
+      + (block.narrow ? ' inline-figure--narrow' : '')
+      + (zoomable ? ' is-zoomable' : '');
     const capCls = block.captionStyle === 'note' ? ' class="is-note"' : '';
     return '<figure class="' + cls + '">' + plates
+      + (zoomable ? '<span class="fig-zoom-hint" aria-hidden="true">＋</span>' : '')
       + '<figcaption' + capCls + '>' + util.tr(block.caption) + '</figcaption></figure>';
   }
 
@@ -1431,6 +1442,8 @@
       + ' stroke-linejoin="round"/></svg></button>'
       + '  <div class="lb-bar">'
       + '    <span class="lb-caption" data-lb-caption></span>'
+      + '    <button type="button" class="lb-scale" data-lb-scale hidden></button>'
+      + '    <a class="lb-origin" data-lb-origin href="#" target="_blank" rel="noopener" hidden></a>'
       + '    <span class="lb-counter" data-lb-counter></span>'
       + '  </div>'
       + '</div>';
@@ -1452,6 +1465,18 @@
     dlg.querySelector('[data-lb-next]').addEventListener('click', function (e) {
       e.stopPropagation(); lbGo(1);
     });
+    dlg.querySelector('[data-lb-scale]').addEventListener('click', function (e) {
+      e.stopPropagation();
+      dlg.classList.toggle('is-native');
+      lbScaleLabel();
+    });
+    // 灯箱里再点一次图片本身，也能在「適合視窗 / 1:1 原尺寸」间切换
+    dlg.querySelector('.lb-img').addEventListener('click', function (e) {
+      if (!dlg.classList.contains('is-figure')) return;
+      e.stopPropagation();
+      dlg.classList.toggle('is-native');
+      lbScaleLabel();
+    });
     // 键盘：左右翻页（Esc 由 dialog 原生处理 → 触发 close）
     dlg.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowRight') { e.preventDefault(); lbGo(1); }
@@ -1461,16 +1486,55 @@
   }
 
   function openLightbox(block, index) {
-    const util = window.ZineUtil;
-    const dlg = ensureLightbox();
-
-    LB.items = Array.prototype.map.call(
+    const items = Array.prototype.map.call(
       block.querySelectorAll('.deck-slide'),
       function (slide) {
         const img = slide.querySelector('img');
-        return { src: img.getAttribute('src'), label: img.getAttribute('alt') || '' };
+        return { src: img.getAttribute('src'), label: img.getAttribute('alt') || '', origin: '' };
       });
+    openLightboxItems(items, index, false);
+  }
+
+  /**
+   * ·48 正文原图放大：从 figure 内的 img[data-fig-zoom] 组装灯箱条目。
+   * 说明条优先用图注（比 alt 短），原图链接取自 data-origin（未改写的 PNG 路径）。
+   */
+  function openFigureLightbox(figure, index) {
+    const cap = figure.querySelector('figcaption');
+    const capText = cap ? cap.textContent.trim() : '';
+    const imgs = figure.querySelectorAll('img[data-fig-zoom]');
+    const items = Array.prototype.map.call(imgs, function (img) {
+      return {
+        src: img.getAttribute('src'),
+        label: capText || img.getAttribute('alt') || '',
+        origin: img.getAttribute('data-origin') || '',
+      };
+    });
+    if (items.length) openLightboxItems(items, index, true);
+  }
+
+  function initFigureZoom() {
+    document.querySelectorAll('#articleRoot .inline-figure.is-zoomable').forEach(function (figure) {
+      const imgs = figure.querySelectorAll('img[data-fig-zoom]');
+      imgs.forEach(function (img, i) {
+        img.addEventListener('click', function () { openFigureLightbox(figure, i); });
+        img.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openFigureLightbox(figure, i);
+          }
+        });
+      });
+    });
+  }
+
+  function openLightboxItems(items, index, isFigure) {
+    const util = window.ZineUtil;
+    const dlg = ensureLightbox();
+
+    LB.items = items;
     LB.index = index;
+    dlg.classList.toggle('is-figure', !!isFigure);
 
     // 关闭按钮等文字随语言更新
     dlg.querySelector('[data-lb-close]').setAttribute('aria-label', util.t('gallery.close'));
@@ -1496,7 +1560,18 @@
     lbPaint();
   }
 
+  function lbScaleLabel() {
+    if (!LB.el) return;
+    const btn = LB.el.querySelector('[data-lb-scale]');
+    if (!btn) return;
+    const native = LB.el.classList.contains('is-native');
+    btn.textContent = window.ZineUtil.t(native ? 'gallery.fit' : 'gallery.native');
+    LB.img.style.cursor = LB.el.classList.contains('is-figure')
+      ? (native ? 'zoom-out' : 'zoom-in') : '';
+  }
+
   function lbPaint() {
+    const util = window.ZineUtil;
     const item = LB.items[LB.index];
     if (!item) return;
     LB.img.src = item.src;
@@ -1504,9 +1579,25 @@
     LB.caption.textContent = item.label;
     LB.counter.textContent = (LB.index + 1) + ' / ' + LB.items.length;
 
+    // 「開啟原圖」只在正文原图灯箱出现；简报幻灯片没有对应的原始文件。
+    const origin = LB.el.querySelector('[data-lb-origin]');
+    if (item.origin) {
+      origin.href = item.origin;
+      origin.textContent = util.t('gallery.original');
+      origin.hidden = false;
+    } else {
+      origin.removeAttribute('href');
+      origin.hidden = true;
+    }
+
     const many = LB.items.length > 1;
     LB.el.querySelector('[data-lb-prev]').hidden = !many;
     LB.el.querySelector('[data-lb-next]').hidden = !many;
+
+    const scaleBtn = LB.el.querySelector('[data-lb-scale]');
+    scaleBtn.hidden = !LB.el.classList.contains('is-figure');
+    LB.el.classList.remove('is-native');
+    lbScaleLabel();
   }
 
   /* ================================================================
@@ -1638,6 +1729,11 @@
       const alt = util.tr(data.alt || data.caption || '');
       fig.querySelectorAll('img').forEach(function (img) {
         img.setAttribute('alt', alt);
+        if (img.hasAttribute('data-fig-zoom')) {
+          const hint = util.t('gallery.expand');
+          img.setAttribute('title', hint);
+          img.setAttribute('aria-label', alt + ' — ' + hint);
+        }
       });
     });
   }
@@ -1923,5 +2019,8 @@
   }
 
   // 渲染后初始化画廊（render 在 DOMContentLoaded 时同步跑完，这里紧随其后）
-  document.addEventListener('DOMContentLoaded', initGalleries);
+  document.addEventListener('DOMContentLoaded', function () {
+    initGalleries();
+    initFigureZoom();
+  });
 })();

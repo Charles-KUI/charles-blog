@@ -2212,16 +2212,15 @@ const SUBJECTS = {
             },
           },
           {
-            /* docx Image 1 → Figure 1：小紅書後台（賺到第一塊美元）。
-               ·47 可讀性：原圖 2282×987 橫向證據圖塞進 660 框字極小。
-               按語義重排：數據卡片區左右兩半上下疊（卡片不被切）、
-               播放曲線保持完整不切、互動數據同樣拆疊 → 1141×1155，
-               標 wide 鋪滿版心，卡片字放大約 4 倍且曲線連貫。
+            /* docx Image 1 → Figure 1：小紅書後台原圖（賺到第一塊美元，2282×987）。
+               ·48 依 Master 指示直接用原圖，不裁切不重排；點圖可開全屏
+               燈箱看原尺寸（並附「開啟原圖」連結）。wide 鋪滿版心，
                ar 寫真實比例避免顯影時跳動。 */
             type: 'figure',
             src: 'assets/posts/bcm206-a3-fig1.png',
             wide: true,
-            ar: '1141 / 1155',
+            ar: '2282 / 987',
+            zoom: true,
             alt: {
               en: 'Xiaohongshu back-end key data for "Earning the First US Dollar" (1:47): 3,055 views, 7.5% click-through rate, 8.9% completion rate, 50.1% two-second drop-off rate, 15 new followers, 43 likes, 0 comments, 72 saves, 10 shares, 37 seconds average viewing time; the plays curve spikes at the start then flattens.',
               zh: '〈賺到第一塊美元〉（1:47）的小紅書後台核心數據：觀看 3,055、點擊率 7.5%、完播率 8.9%、兩秒跳出率 50.1%、新增粉絲 15、按讚 43、評論 0、收藏 72、分享 10、平均觀看 37 秒；播放曲線一開始衝高後趨於平緩。',
@@ -2247,11 +2246,12 @@ const SUBJECTS = {
             },
           },
           {
-            /* docx Image 2 → Figure 2：小紅書後台（逃命滑板）。語義重排同 Figure 1。 */
+            /* docx Image 2 → Figure 2：小紅書後台原圖（逃命滑板，2270×981）。 */
             type: 'figure',
             src: 'assets/posts/bcm206-a3-fig2.png',
             wide: true,
-            ar: '1135 / 1154',
+            ar: '2270 / 981',
+            zoom: true,
             alt: {
               en: 'Xiaohongshu back-end key data for "Escape Skateboard": 14,430 views, 14.9% click-through rate, 7.9% completion rate, 28.6% two-second drop-off rate, 7 new followers, 20 likes, 1 comment, 15 saves, 10 shares, 18.3 seconds average viewing time; the plays curve has several peaks across the two weeks.',
               zh: '〈逃命滑板〉的小紅書後台核心數據：觀看 14,430、點擊率 14.9%、完播率 7.9%、兩秒跳出率 28.6%、新增粉絲 7、按讚 20、評論 1、收藏 15、分享 10、平均觀看 18.3 秒；兩週內播放曲線出現數次高峰。',
@@ -2277,10 +2277,13 @@ const SUBJECTS = {
             },
           },
           {
-            /* docx Image 3 → Figure 3：三平台主頁橫幅（原圖 2169×420，wide 鋪滿）。 */
+            /* docx Image 3 → Figure 3：三平台主頁橫幅原圖（2169×420），
+               wide 鋪滿版心；同圖 1/2 可點開看原尺寸。 */
             type: 'figure',
             wide: true,
             src: 'assets/posts/bcm206-a3-fig3.png',
+            ar: '2169 / 420',
+            zoom: true,
             alt: {
               en: 'Side-by-side "Paper Magellan" creator profiles across Douyin, Xiaohongshu, and WeChat Video, each showing the same set of ten video thumbnails with Chinese titles about cross-border e-commerce and business logic.',
               zh: '「紙上麥哲倫」在抖音、小紅書與微信視頻號三個平台的創作者主頁並排，各自顯示同一組十支影片縮圖，標題圍繞跨境電商與商業邏輯。',

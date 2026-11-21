@@ -4237,3 +4237,28 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   _shot43 真機 1440 逐圖眼檢：卡片數字/標籤全可讀、曲線完整、
   底部互動數據可見、圖注完整，0 FAIL；390 窄屏無橫向溢出；
   _spread 530/0（fig1/2 轉 wide 後較上輪少 5 項 660 組檢查）。
+
+第四十八階段 · BCM206 A3 原圖還原與點擊放大（2026-11-21）
+════════════════════════════════════════════════════════════════════
+【Master 指示】「我就只要用原圖 放上去 然後可以點擊放大查看原圖」
+  → 撤回 ·47 的語義重排，還原 docx 原圖；同時讓正文圖片可以點開看原尺寸。
+
+【做法】
+· fig1/2 由 git 72d2169 還原 2282×987 / 2270×981 原圖，
+  PNG + WebP 都維持原始解析度；fig3 本來就是原圖不動。
+  ar 寫回真實比例（2282/987、2270/981、2169/420），wide 維持鋪滿版心。
+· figure 新增可選 `zoom:true`：图片带 data-fig-zoom / data-origin、
+  role=button、tabindex=0，右上角一枚純「＋」角標；點圖或 Enter／空白
+  開燈箱。不包 <a>、不加 <p>，主文本隊列位數不變；alt/title/aria-label
+  由 refreshFigureText() 單獨刷新，切語言不重建 DOM。
+· 燈箱復用同一個 <dialog>，figure 模式加 `is-figure`：上限 94vw、
+  控制條 fixed；另有「1:1 原尺寸」按鈕（再點圖本身亦可切換），
+  2282px 原圖可橫向捲動逐區看，旁邊「開啟原圖」直接開 PNG 原檔。
+· shared.js 補 gallery.original / gallery.native / gallery.fit 三組雙語。
+· 順手修真實 bug：.lb-arrow 的 display:flex 蓋掉 hidden 屬性，
+  單圖燈箱仍顯示左右箭頭 → 補 `.lb-arrow[hidden]{display:none}`。
+
+【驗證】verify-bcm206-a3 59/0（PNGIHDR 原圖尺寸、zoom 標記、
+  雙語鍵）；19 套 jsdom 全綠；_spread 530/0；_shot43 1440/390 0 FAIL；
+  新增 _zoom_b206a3.mjs 真機驗點圖、1:1 原尺寸、原圖連結、開關皆 0 FAIL；
+  1440/390 燈箱截圖眼檢：控制條不遮擋、1:1 模式小字清晰可讀。
