@@ -2212,9 +2212,14 @@ const SUBJECTS = {
             },
           },
           {
-            /* docx Image 1 → Figure 1：小紅書後台（賺到第一塊美元）。 */
+            /* docx Image 1 → Figure 1：小紅書後台（賺到第一塊美元）。
+               ·46 可讀性：原圖 2282×987 橫向證據圖塞進 660 框字極小，
+               拆成左右兩屏上下疊（1141×1994）並標 wide 鋪滿版心；
+               ar 寫真實比例避免顯影時跳動。 */
             type: 'figure',
             src: 'assets/posts/bcm206-a3-fig1.png',
+            wide: true,
+            ar: '1141 / 1994',
             alt: {
               en: 'Xiaohongshu back-end key data for "Earning the First US Dollar" (1:47): 3,055 views, 7.5% click-through rate, 8.9% completion rate, 50.1% two-second drop-off rate, 15 new followers, 43 likes, 0 comments, 72 saves, 10 shares, 37 seconds average viewing time; the plays curve spikes at the start then flattens.',
               zh: '〈賺到第一塊美元〉（1:47）的小紅書後台核心數據：觀看 3,055、點擊率 7.5%、完播率 8.9%、兩秒跳出率 50.1%、新增粉絲 15、按讚 43、評論 0、收藏 72、分享 10、平均觀看 37 秒；播放曲線一開始衝高後趨於平緩。',
@@ -2240,9 +2245,11 @@ const SUBJECTS = {
             },
           },
           {
-            /* docx Image 2 → Figure 2：小紅書後台（逃命滑板）。 */
+            /* docx Image 2 → Figure 2：小紅書後台（逃命滑板）。拆分同 Figure 1。 */
             type: 'figure',
             src: 'assets/posts/bcm206-a3-fig2.png',
+            wide: true,
+            ar: '1135 / 1982',
             alt: {
               en: 'Xiaohongshu back-end key data for "Escape Skateboard": 14,430 views, 14.9% click-through rate, 7.9% completion rate, 28.6% two-second drop-off rate, 7 new followers, 20 likes, 1 comment, 15 saves, 10 shares, 18.3 seconds average viewing time; the plays curve has several peaks across the two weeks.',
               zh: '〈逃命滑板〉的小紅書後台核心數據：觀看 14,430、點擊率 14.9%、完播率 7.9%、兩秒跳出率 28.6%、新增粉絲 7、按讚 20、評論 1、收藏 15、分享 10、平均觀看 18.3 秒；兩週內播放曲線出現數次高峰。',

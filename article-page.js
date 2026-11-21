@@ -1075,8 +1075,13 @@
   function renderFigure(block, root, util) {
     const srcs = (block.srcs && block.srcs.length) ? block.srcs : (block.src ? [block.src] : []);
     const alt = esc(util.tr(block.alt || block.caption || ''));
+    // 显影占位比例：默认走 CSS 的通用值；素材真实比例差别很大时
+    // （例如把宽屏截图拆成左右两屏上下叠放的竖长图）由 block.ar 写死，
+    // 否则图来的一刻会把下方内容顶下去。只给单图用，多图各自比例不同。
+    const arStyle = (block.ar && srcs.length === 1)
+      ? ' style="--zine-ar:' + esc(block.ar) + '"' : '';
     const plates = srcs.map(function (src) {
-      return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '" loading="lazy" decoding="async">';
+      return '<img src="' + util.imgSrc(root + src) + '" alt="' + alt + '"' + arStyle + ' loading="lazy" decoding="async">';
     }).join('');
     const cls = 'inline-figure'
       + (srcs.length > 1 ? ' inline-figure--plates' : '')
