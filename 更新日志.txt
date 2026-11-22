@@ -4262,3 +4262,25 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   雙語鍵）；19 套 jsdom 全綠；_spread 530/0；_shot43 1440/390 0 FAIL；
   新增 _zoom_b206a3.mjs 真機驗點圖、1:1 原尺寸、原圖連結、開關皆 0 FAIL；
   1440/390 燈箱截圖眼檢：控制條不遮擋、1:1 模式小字清晰可讀。
+
+
+第四十九階段 · BCM206 A3 內容更新至 v4（2026-11-22）
+════════════════════════════════════════════════════════════════════
+【Master 指示】提供了 FINAL-v4.docx，正文「小更新」。實際逐段比對
+  後為大改：9 段正文全部重寫 ＋ 新增 Castells (2010) 引用與第 5 條
+  參考文獻；三張截圖 md5 與現有一致，完全不用換圖。
+
+【做法】
+· 用 .workbuddy/_docx_dump.py（zipfile+ElementTree 零依賴）提全文，
+  英文逐字取自 v4（ast.literal_eval 還原），杜絕手抄誤差；
+  繁中 9 段重寫為台灣用語。正文與圖號引用位置不變。
+· Castells (2010) The Rise of the Network Society 按字母序插在
+  Bhandari 之後。該條無 URL，故 ref-link-row 仍 4 個（其餘四條）。
+· ⚠️ 踩坑：Python write_text 把 content.js 全檔 LF 轉成 CRLF
+  （2730 行），verify 的 \n 正則全失敗 → 用 write_bytes 還原 LF。
+  日後凡是 Python 改 content.js 必查換行。
+
+【驗證】專項 60/0（mustContain 換 9 段新首句 + Castells、ref 3→5、
+  ref-item 4→5）；19 套 jsdom 全綠；_spread 530/0；_shot43 / _zoom
+  0 FAIL；_shot_v4 真機眼檢英中首屏與文獻區：5 條文獻含 Castells、
+  繁中無簡體混入、排版無重疊。已 push d589faa，線上 md5 一致。
