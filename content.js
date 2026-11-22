@@ -2192,23 +2192,23 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'Over this semester, my Digital Artefact (DA), "Paper Magellan" (纸上麦哲伦), grew from an initial pitch into a 10-episode cross-platform video project. Across 16 days, I produced and uploaded short animated videos explaining cross-border B2B (business-to-business) e-commerce logic on Douyin, Xiaohongshu, and WeChat Video. My Assessment 2 report focused on early testing across the first four uploads. In this final reflection, I look back at the full production cycle. Instead of just listing what I uploaded, I examine the key decisions I made, the results that surprised me, and the challenges that changed how I think about sharing knowledge online.',
-              zh: '這個學期，我的數位作品（DA）「紙上麥哲倫」從最初的提案，成長為一個十集、跨平台的影片專案。在十六天裡，我製作並上傳了簡短的動畫影片，在抖音、小紅書與微信視頻號解釋跨境 B2B（企業對企業）電商的邏輯。我的第二次評量報告聚焦於前四支影片的早期測試。這份最終反思中，我回顧整個產製週期。我不只是條列上傳了什麼，而是檢視我做出的關鍵決策、讓我意外的結果，以及那些改變了我如何看待線上知識分享的挑戰。',
+              en: 'Over this semester, my Digital Artefact (DA), "Paper Magellan" (纸上麦哲伦), grew from an initial pitch into a 10-episode cross-platform video project. Across 16 days, I produced and uploaded short animated videos explaining cross-border B2B (business-to-business) e-commerce logic on Douyin, Xiaohongshu, and WeChat Video. While Assessment 2 covered early testing across the first four uploads, this final reflection evaluates the full production cycle, examining my key decisions, audience learning outcomes, and how network dynamics shaped the project.',
+              zh: '這個學期，我的數位作品（DA）「紙上麥哲倫」從最初的提案，成長為一個十集、跨平台的影片專案。在十六天裡，我製作並上傳了簡短的動畫影片，在抖音、小紅書與微信視頻號解釋跨境 B2B（企業對企業）電商的邏輯。第二次評量涵蓋前四支影片的早期測試，而這份最終反思則評估整個產製週期，檢視我的關鍵決策、觀眾的學習成果，以及網絡動態如何形塑了這個專案。',
             },
           },
           { type: 'h2', text: { en: '2. Pacing and Depth', zh: '2. 節奏與深度' } },
           {
             type: 'p',
             text: {
-              en: 'One of the biggest turning points in this project came from tutorial feedback. After watching my early videos, my tutor, Mr. Jackie Kwong, suggested that I speed up the pacing and shorten the videos to around one minute so the data might improve. I took that advice seriously and ran several rounds of testing, cutting my scripts down to around one minute and ten seconds. The results were mixed. Completion rates did go up on a few shorter videos, which showed that viewers were more willing to stay until the end. However, likes and saves dropped at the same time.',
-              zh: '這個專案最大的轉捩點之一，來自導修課的回饋。我的導師 Jackie Kwong 先生看完我早期的影片後，建議我加快節奏、把影片縮短到一分鐘左右，數據或許會改善。我認真採納了這個建議，進行了幾輪測試，把腳本壓到約一分十秒。結果好壞參半。幾支較短的影片完播率確實上升了，顯示觀眾更願意看到最後；但同時，按讚與收藏卻下降了。',
+              en: 'One of the biggest turning points came from tutorial feedback. After watching my early videos, my tutor, Mr. Jackie Kwong, suggested speeding up the pacing and shortening videos to around one minute to improve data performance. I ran several rounds of testing, cutting scripts down to roughly one minute and ten seconds. The results were mixed: completion rates improved on several shorter videos, showing viewers stayed until the end, yet likes and saves dropped at the same time.',
+              zh: '這個專案最大的轉捩點之一來自導修課的回饋。我的導師 Jackie Kwong 先生看完我早期的影片後，建議加快節奏、把影片縮短到一分鐘左右，以改善數據表現。我進行了幾輪測試，把腳本壓到約一分十秒。結果好壞參半：幾支較短的影片完播率提升了，顯示觀眾願意看到最後，但同時按讚與收藏卻下降了。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'Looking closely at why this happened, I realized that cutting too much time removed the details people actually needed to understand unfamiliar business terms. Viewers finished watching, but they did not get enough practical takeaway to save the video for later. In the attention economy, fast pacing helps catch attention, yet educational content still needs enough room to make sense. Mihailidis and Cohen (2013) point out that good content curation turns messy online information into clear learning material. My own data backed this up. My best-performing video overall was "Earning the First US Dollar," which ran for one minute and forty-seven seconds. Because it had enough time to walk through a full four-step process (finding demand on overseas forums, testing with a simple webpage, using dropshipping, and managing logistics risks), viewers saved it far more often than they liked it on Xiaohongshu, and it brought steady new followers (Figure 1). From this test, I learned that shorter is not always better. Creators have to find a realistic middle ground between tight pacing and complete explanations.',
-              zh: '仔細探究原因後，我體認到削掉太多時間，也一併刪去了觀眾理解陌生商業術語所需的細節。觀眾看完了影片，卻沒有足夠實用的收穫值得收藏。在注意力經濟裡，快節奏有助於抓住注意力，但教育性內容仍需足夠空間才能讓人理解。Mihailidis 與 Cohen（2013）指出，好的內容策展能把混亂的線上資訊轉化成清楚的學習素材。我自己的數據印證了這點。我整體表現最好的影片是〈賺到第一塊美元〉，長一分四十七秒。因為它有足夠時間完整走過四個步驟（在海外論壇找需求、用簡單網頁測試、採用代發貨、管理物流風險），在小紅書上被收藏的次數遠多於按讚，並帶來穩定的新粉絲（圖 1）。從這次測試我學到，越短不一定越好。創作者必須在緊湊節奏與完整說明之間，找到務實的中間點。',
+              en: 'Analyzing this split showed that cutting too much time stripped out the context beginners needed to grasp unfamiliar trade terms. Viewers finished watching, but without enough practical detail, they had little reason to save the video. In the attention economy, fast pacing earns clicks, yet educational content needs enough room to produce real learning outcomes. Mihailidis and Cohen (2013) argue that content curation turns scattered online information into structured learning resources. My best-performing video, "Earning the First US Dollar" (1:47), confirmed this. By walking through a complete four-step chain (finding demand on overseas forums, testing with a simple webpage, dropshipping, and logistics risk control), it earned far more saves than likes on Xiaohongshu and brought steady new followers (Figure 1). In a mostly silent feed, that high save-to-like ratio acted as a practical proxy for beginner learning, showing viewers treated the video as a reusable reference rather than passive entertainment. Shorter is not always better; creators must balance tight pacing with complete explanations.',
+              zh: '仔細分析這個落差後，我體認到削掉太多時間，也一併拿掉了新手理解陌生商業術語所需的脈絡。觀眾看完了影片，但缺乏足夠實用的細節，就沒有理由收藏。在注意力經濟裡，快節奏能換來點擊，但教育性內容仍需要足夠空間才能產生真正的學習成果。Mihailidis 與 Cohen（2013）主張，內容策展能把零散的線上資訊轉化為有結構的學習資源。我表現最好的影片〈賺到第一塊美元〉（1:47）印證了這點：它完整走過四個步驟（在海外論壇找需求、用簡單網頁測試、代發貨、物流風險控管），在小紅書上被收藏的次數遠多於按讚，並帶來穩定的新粉絲（圖 1）。在多半安靜的資訊流裡，這樣高的收藏按讚比，成了新手學習的一項務實替代指標，顯示觀眾把影片當成可重複查閱的參考，而非被動娛樂。越短不一定越好；創作者必須在緊湊節奏與完整說明之間取得平衡。',
             },
           },
           {
@@ -2234,15 +2234,15 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'Looking at the positives of the project, my strongest result was confirming that practical cross-border knowledge has real demand when it is explained simply. Many of my videos focused on how online networks changed global trade, moving away from slow offline middlemen and big upfront inventory toward small online tests. As Hänninen, Smedlund and Mitronen (2018) explain, digitalization turned retail into multi-sided platform networks where sellers respond directly to live user behavior. Breaking down these networked business ideas in plain language helped my Xiaohongshu account gain steady search traffic and solid save rates, showing that my DA genuinely lowered the learning curve for beginners.',
-              zh: '從專案的正面成果來看，我最有力的結果，是印證了實用的跨境知識只要用淺白方式說明，就有真實需求。我的許多影片聚焦於線上網絡如何改變全球貿易：從緩慢的線下中間商與大批量前置庫存，轉向小規模線上測試。正如 Hänninen、Smedlund 與 Mitronen（2018）所解釋，數位化把零售變成多邊平台網絡，賣家直接回應使用者的即時行為。用通俗語言拆解這些網絡化的商業概念，讓我的小紅書帳號獲得穩定的搜尋流量與不錯的收藏率，顯示我的 DA 確實降低了新手的學習門檻。',
+              en: 'On the positive side, the project confirmed real demand for plain-language cross-border breakdowns. Many episodes explained how online networks reshaped global trade, replacing slow offline middlemen and bulk upfront inventory with rapid online demand testing. Castells (2010) argues that in the network society, real-time information flows become the core driver of economic value, while Hänninen, Smedlund and Mitronen (2018) show how digitalization turns retail into multi-sided platform networks driven by live user signals. Translating these networked mechanics into clear visual stories helped my Xiaohongshu account gain steady search traffic and strong save rates, lowering the entry barrier for beginners.',
+              zh: '從正面來看，這個專案印證了淺白易懂的跨境知識拆解確實有真實需求。許多集數說明了線上網絡如何重塑全球貿易：以快速的線上需求測試，取代緩慢的線下中間商與大批量前置庫存。Castells（2010）主張，在網絡社會中，即時資訊流成為經濟價值的核心驅動力；Hänninen、Smedlund 與 Mitronen（2018）則指出，數位化如何把零售轉變為由使用者即時訊號驅動的多邊平台網絡。把這些網絡化的機制轉譯成清楚的視覺故事，讓我的小紅書帳號獲得穩定的搜尋流量與不錯的收藏率，降低了新手的進入門檻。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'On the negative side, chasing a viral trend did not work the way I hoped. To test faster hooks, I made "Escape Skateboard," opening with a four-second trending livestream clip to explain meme monetization. As shown in Figure 2, the meme opening worked well for initial reach on Xiaohongshu, bringing high impressions, a strong click-through rate, and a low two-second exit rate. Still, the interaction rate stayed weak and it brought very few new followers. Meanwhile, my overall completion rate on Douyin stayed low across the series, showing how quickly casual users swipe away in the first two seconds. This taught me a clear lesson about meme culture: a trending hook can buy quick exposure, but it rarely turns casual browsers into people who care about learning a specialized topic.',
-              zh: '從負面來看，追逐爆紅趨勢並沒有像我期待的那樣奏效。為了測試更快的鉤子，我製作了〈逃命滑板〉，以一段四秒的熱門直播片段開場，來解釋迷因變現。如圖 2 所示，迷因開場在小紅書的初期觸及表現不錯，帶來高曝光、強點擊率與低兩秒退出率。儘管如此，互動率仍然疲弱，新增粉絲也很少。與此同時，我整個系列在抖音的完播率始終偏低，顯示隨意滑過的觀眾在前兩秒就轉身離去是多麼快。這給了我關於迷因文化一個清楚的教訓：熱門鉤子能買到短暫曝光，但很少能把隨意瀏覽的人，變成真心想學某個專業主題的人。',
+              en: 'On the negative side, chasing a viral trend fell short. To test faster hooks, I made "Escape Skateboard," opening with a four-second trending livestream clip to explain meme monetization. As Figure 2 shows, the meme opening drove high impressions, a strong click-through rate, and a low two-second drop-off rate on Xiaohongshu, yet interaction remained weak and follower growth was minimal. Meanwhile, overall completion rates on Douyin stayed low, showing how fast casual users swipe away in the first two seconds. A meme hook can buy surface exposure, but it rarely turns casual browsers into motivated learners.',
+              zh: '從負面來看，追逐爆紅趨勢並未如預期奏效。為了測試更快的鉤子，我製作了〈逃命滑板〉，以一段四秒的熱門直播片段開場，來解釋迷因變現。如圖 2 所示，迷因開場在小紅書帶來高曝光、強點擊率與低兩秒跳出率，但互動仍然疲弱，粉絲成長也微乎其微。與此同時，抖音整體的完播率始終偏低，顯示隨意滑過的觀眾在前兩秒就轉身離去是多麼快。熱門鉤子能買到表面曝光，但很少能把隨意瀏覽的人變成有動機的學習者。',
             },
           },
           {
@@ -2265,15 +2265,15 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'Two main challenges also forced me to drop parts of my original Assessment 1 plan. First, I originally wanted to run a co-learning loop driven by viewer comments, public error-correction, and a follower discussion group. In reality, platform rules and user habits got in the way early. Bilibili required real-name verification that did not accept my Hong Kong ID, so I had to switch to WeChat Video (Figure 3). Even more importantly, across all 10 videos, the comment sections on Douyin and Xiaohongshu stayed almost completely silent. Without comments, the interactive community I planned never formed.',
-              zh: '兩項主要挑戰也迫使 也迫使我們放棄了原本第一次評量計畫中的部分內容。首先，我原想經營一個由觀眾留言、公開勘誤與粉絲討論群帶動的共學循環。現實中，平台規則與使用習慣很早就從中作梗。Bilibili 要求實名驗證，但不接受我的香港身分證，於是我不得不改用微信視頻號（圖 3）。更重要的是，在全部十支影片中，抖音與小紅書的留言區幾乎始終一片安靜。沒有留言，我設想的互動社群從未形成。',
+              en: 'Two structural challenges also forced me to revise my Assessment 1 plan. First, I originally aimed to build a co-learning loop through viewer comments, public error-correction, and a follower group. In reality, Bilibili’s real-name verification blocked my Hong Kong ID, forcing a switch to WeChat Video (Figure 3), and comment sections on Douyin and Xiaohongshu stayed mostly silent across all 10 episodes. The few neutral comments I did receive showed viewers recognizing and summarizing the core business logic in my videos, which was encouraging. At the same time, those reactions prompted an honest realization about audience learning outcomes: my content still leans toward curated theory rather than firsthand operational experience. As a student creator without my own store, that gap is unavoidable at this stage, and without deeper dialogue, I could only infer learning indirectly through saves and searches rather than verify whether viewers applied these ideas in practice.',
+              zh: '兩項結構性的挑戰也迫使我校正第一次評量的計畫。首先，我原想透過觀眾留言、公開勘誤與粉絲群組，建立一個共學循環。現實中，Bilibili 的實名驗證擋下了我的香港身分證，使我不得不改用微信視頻號（圖 3）；而抖音與小紅書的留言區，在全部十集中幾乎始終安靜。我收到的少數中性留言，顯示觀眾確實辨識並摘要了我影片中的核心商業邏輯，這點令人振奮。同時，這些回應也促使我坦誠面對觀眾學習成果的問題：我的內容仍偏向策展式的理論，而非第一手的實作經驗。身為沒有自己店鋪的學生創作者，這個落差在此階段無可避免；缺乏更深入的對話，我只能透過收藏與搜尋間接推斷學習，而無法驗證觀眾是否真的把這些想法付諸實踐。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'Second, posting the exact same video across platforms led to completely different outcomes. For example, "1-Star Reviews" was my top video on Douyin, where it reached mostly young male viewers in major Chinese cross-border trade provinces. On Xiaohongshu, that same video ranked last, because the platform routed my content to an older, slightly more female, and more international audience. Nieborg and Poell (2018) describe this as the platformization of cultural production, meaning creators always depend on platform systems that sort audiences in ways we cannot directly control. To adapt, I stopped waiting for comments or expecting one video to succeed everywhere. Following Bhandari and Bimo’s (2022) view of algorithmic feedback, I began checking silent metrics like two-second exit rates, completion rates, and save-to-like ratios on a fixed schedule to guide my next edits.',
-              zh: '其次，把完全相同的影片發到不同平台，導致了截然不同的結果。例如〈一星負評〉在抖音是我的冠軍影片，觸及的大多是中國主要跨境貿易省份的年輕男性觀眾；在小紅書上，同一支影片卻墊底，因為平台把我的內容分流給年齡較長、女性比例稍高、也較國際化的觀眾。Nieborg 與 Poell（2018）把這稱為文化生產的平台化：創作者始終依賴平台系統，而這些系統以我們無法直接控制的方式分類觀眾。為了調適，我不再等待留言，也不再期待一支影片到處都成功。依循 Bhandari 與 Bimo（2022）關於演算法回饋的觀點，我開始按固定時程查看兩秒退出率、完播率與收藏按讚比等無聲指標，用來引導下一次剪輯。',
+              en: 'Second, identical videos produced opposite outcomes across platforms. "1-Star Reviews" ranked first on Douyin, reaching mostly young male viewers in major Chinese cross-border trade provinces, yet ranked last on Xiaohongshu, where the audience skewed older, slightly more female, and more international. This reflects both Nieborg and Poell’s (2018) platformization of cultural production and the logic of algorithmic feudalism: independent creators operate like tenants on privately owned infrastructures, relying on opaque platform rules that sort audiences beyond our control. To adapt, I stopped waiting for comments or expecting one video to win everywhere. Following Bhandari and Bimo’s (2022) view of algorithmic feedback, I tracked silent signals—two-second exit rates, completion curves, and save-to-like ratios—on a fixed schedule to guide each edit.',
+              zh: '其次，完全相同的影片在不同平台產生了截然相反的結果。〈一星負評〉在抖音排名第一，觸及的大多是中國主要跨境貿易省份的年輕男性觀眾；在小紅書卻墊底，那裡的觀眾年齡稍長、女性比例略高，也更國際化。這同時反映 Nieborg 與 Poell（2018）所稱的文化生產平台化，以及演算法封建主義的邏輯：獨立創作者就像租用私人基礎設施的房客，依賴不透明的平台規則，而受眾如何被分流，我們無從掌控。為了調適，我不再等待留言，也不再期待一支影片到處都成功。依循 Bhandari 與 Bimo（2022）關於演算法回饋的觀點，我按固定時程追蹤兩秒退出率、完播曲線與收藏按讚比等無聲訊號，用來引導每一次剪輯。',
             },
           },
           {
@@ -2297,15 +2297,15 @@ const SUBJECTS = {
           {
             type: 'p',
             text: {
-              en: 'Overall, I feel this DA met its main goal of turning complicated cross-border business ideas into accessible public videos, even though early viewer drop-off and silent comment sections remained real weaknesses. Beyond the video metrics, running "Paper Magellan" changed how I understand the internet itself. Before the internet, cross-border trade depended on physical trade fairs, layers of middlemen, and months of guessing what overseas buyers wanted, while practical trade experience stayed inside small industry circles. With the internet, both distance and information barriers shrink. Small sellers can test real overseas demand in days, and a student creator like me can organize and share those business mechanics with thousands of strangers at almost no distribution cost.',
-              zh: '整體而言，我認為這個 DA 達成了主要目標：把複雜的跨境商業概念轉化為大眾看得懂的影片，儘管早期的觀眾流失與安靜的留言區仍是真實弱點。除了影片數據之外，經營「紙上麥哲倫」也改變了我對網路本身的理解。在網路出現之前，跨境貿易仰賴實體展會、層層中間商，以及長達數月猜測海外買家的需求，而實作貿易經驗則停留在小型產業圈內。有了網路，距離與資訊壁壘都縮小了。小賣家能在幾天內測試真實的海外需求，而我這樣的學生創作者，幾乎不需要通路成本，就能把這些商業機制整理並分享給成千上萬的陌生人。',
+              en: 'Overall, this DA achieved its goal of turning complex cross-border business logic into accessible public videos, while exposing honest limits in early retention, audience verification, and the unavoidable gap between curated theory and hands-on experience. Running "Paper Magellan" also reshaped how I see the internet through future network theory. Before the internet, cross-border trade relied on physical fairs, layers of middlemen, and months of guesswork, while operational know-how stayed inside closed circles. In today’s network society (Castells, 2010), geographic distance and information barriers shrink: small sellers test overseas demand in days, and a student creator can curate trade logic for thousands of strangers at near-zero distribution cost.',
+              zh: '整體而言，這個 DA 達成了目標：把複雜的跨境商業邏輯轉化為大眾看得懂的影片，同時也坦誠暴露了在初期留存、觀眾驗證，以及策展理論與實作經驗之間無可避免落差上的種種限制。經營「紙上麥哲倫」也透過未來網絡理論，重塑了我對網際網路的理解。在網路出現之前，跨境貿易仰賴實體展會、層層中間商與數月猜測，而實作知識則停留在封閉的圈子裡。在今日的網絡社會（Castells, 2010），地理距離與資訊壁壘都縮小了：小賣家能在幾天內測試海外需求，學生創作者幾乎不需要通路成本，就能為成千上萬的陌生人整理並分享商業邏輯。',
             },
           },
           {
             type: 'p',
             text: {
-              en: 'At the same time, this semester showed me that the internet is not just an open noticeboard where useful content automatically finds its audience. It is made up of separate platforms, algorithmic filters, and limited viewer attention. Putting good information online is only half the work; the other half is learning how each network distributes content and reading the quiet signals users leave behind through clicks, exits, saves, and searches. Working on this project taught me that succeeding in future networks means using the internet’s reach to make knowledge open, while staying flexible enough to adjust pacing, format, and strategy whenever the network signals that something is not working.',
-              zh: '與此同時，這個學期讓我明白，網路不只是開放的公告欄，好內容會自動找到觀眾。它是由一個個平台、演算法濾鏡與有限的觀眾注意力所組成。把好資訊放上網只是工作的一半；另一半是學習每個網絡如何分配內容，並解讀使用者透過點擊、退出、收藏與搜尋留下的無聲訊號。投入這個專案讓我學到，在未來的網絡中要成功，意味著運用網路的觸及力讓知識開放，同時保持足夠彈性，在網絡發出「某件事行不通」的訊號時，隨時調整節奏、形式與策略。',
+              en: 'Yet this semester showed that the internet is not a flat, neutral noticeboard. Its open, horizontal reach exists alongside centralized platforms, algorithmic gatekeepers, and scarce human attention. Publishing useful knowledge is only half the work; the other half is reading the quiet signals users leave behind through clicks, exits, saves, and searches, while staying honest about what those numbers can and cannot prove about real learning. Going forward, succeeding in future networks means pairing platform awareness with stronger feedback mechanisms that verify genuine audience learning, not just surface traffic.',
+              zh: '然而，這個學期讓我明白，網路並不是一塊平坦、中立的公告欄。它開放、橫向的觸及力，與中心化的平台、演算法守門人，以及稀缺的人類注意力並存。把有用的知識放上網只是工作的一半；另一半是解讀使用者透過點擊、退出、收藏與搜尋留下的無聲訊號，同時坦誠面對這些數字能與不能證明真實學習的界線。展望未來，要在未來的網絡中成功，意味著把平台意識與更強的回饋機制結合，去驗證觀眾真正學到了什麼，而不只是表面流量。',
             },
           },
           { type: 'h2', text: { en: '6. References', zh: '6. 參考文獻' } },
@@ -2319,6 +2319,17 @@ const SUBJECTS = {
             note: {
               en: 'Frames the algorithmic feedback I learned to read when the comment sections stayed silent.',
               zh: '提供我在留言區始終安靜時，學會解讀演算法回饋的理論框架。',
+            },
+          },
+          {
+            type: 'ref',
+            text: {
+              en: 'Castells, M. (2010) The Rise of the Network Society. 2nd edn. Chichester: Wiley-Blackwell.',
+              zh: 'Castells, M. (2010) The Rise of the Network Society. 2nd edn. Chichester: Wiley-Blackwell.',
+            },
+            note: {
+              en: 'Explains why real-time information flows, not physical distance, now drive cross-border value in the network society.',
+              zh: '解釋在網絡社會中，推動跨境價值的關鍵已非物理距離，而是即時資訊流。',
             },
           },
           {
