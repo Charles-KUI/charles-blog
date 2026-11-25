@@ -2720,6 +2720,475 @@ const SUBJECTS = {
           },
         ],
       },
+      {
+        id: 'bcm222-a3',
+        no: 'No.03',
+        studentId: '1723674',
+        title: {
+        en: 'Orientalism in Plain Sight',
+        zh: '藏在光天化日下的東方主義',
+        },
+        excerpt: {
+        en: 'Neo-Orientalism no longer looks like old prejudice — it looks like a yellow filter, a neon skyline, and a recommendation algorithm. A research report and visual essay on spotting the filter before it shapes how we see the world.',
+        zh: '新東方主義不再長得像舊式偏見——它長成黃色濾鏡、霓虹天際線與推薦演算法。這份研究報告與影像論文，要教你在濾鏡塑造我們看待世界的方式之前，先認出它。'
+        },
+        date: '2026-11-25',
+        tags: [
+        { en: 'BCM222 A3', zh: 'BCM222 A3' },
+        { en: 'Research Report', zh: '研究報告' },
+        { en: 'Visual Essay', zh: '影像論文' },
+        ],
+        /* 同 bcm222-a1/a2：文章頁不渲染開場主圖，image 僅供科目頁卡片縮圖，別刪。 */
+        noHero: true,
+        image: 'assets/posts/bcm222-a3-cover.png',
+        figLabel: {
+        en: 'FIG.03 — The tinted lens',
+        zh: 'FIG.03 — 有色的鏡片',
+        },
+        body: [
+      {
+          type: 'h2',
+          text: { en: 'Introduction', zh: '導論' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Open Netflix or any major Western streaming app today, and the home screen looks genuinely global. Korean thrillers sit next to Japanese dramas, and Indian crime series appear beside Spanish teen shows. On the surface, this variety suggests that old Western biases in film and television belong to the past. Yet having more non-Western faces on screen does not mean those cultures control how their stories are told.',
+          zh: '今天打開 Netflix 或任何主要的西方串流平台，首頁看起來真的非常國際。韓國驚悚片緊鄰日本戲劇，印度犯罪影集出現在西班牙青少年劇旁邊。表面上，這樣的多樣性似乎說明西方影視裡舊有的偏見已經成為過去。然而，螢幕上出現更多非西方面孔，並不代表那些文化就能掌握自己故事被訴說的方式。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'To see why, it helps to think of Orientalism as a cultural filter. Historically, Western writers, painters, and filmmakers used this filter to divide the world into two halves: a modern, rational West and a mysterious, backward East. That division made Western dominance feel natural and even necessary (Qaissi, 2026). Today, Orientalism rarely shows up as open, old-fashioned racism. Instead, it has adapted into Neo-Orientalism and blended into everyday pop culture as a polished visual style (Wahid, 2025). When stereotypes are wrapped in big budgets, dramatic lighting, and fast-paced plots, everyday viewers stop noticing them. Breaking this habit cannot stay locked inside academic journals. Ordinary audiences need simple, practical ways to spot the filter before it shapes how they see the real world.',
+          zh: '要理解為什麼，可以把東方主義想成一個文化濾鏡。歷史上，西方作家、畫家與電影人用這個濾鏡把世界分成兩半：一個現代、理性的西方，和一個神祕、落後的東方。那樣的劃分讓西方的主導地位顯得自然，甚至理所當然（Qaissi, 2026）。今天，東方主義很少以公開、老派的種族歧視出現；它已調適成新東方主義，並以打磨過的視覺風格混進日常流行文化（Wahid, 2025）。當刻板印象被包裹在大預算、戲劇性燈光與快節奏劇情裡，日常觀眾就不再察覺它們。要打破這個習慣，不能只待在學術期刊裡。一般觀眾需要簡單、實用的方法，在濾鏡影響他們看待真實世界的方式之前，先認出它。',
+          },
+        },
+      {
+          type: 'h2',
+          text: { en: 'How It Hides', zh: '它如何隱藏' },
+        },
+      {
+          type: 'h3',
+          text: { en: 'Filters & Spectacle', zh: '濾鏡與奇觀' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "One of the quietest ways streaming media keeps Orientalism alive is through color and scenery. Think of it as turning a living country into a tinted postcard. In Western action movies and dramas set in South Asia, the Middle East, or Latin America, filmmakers often apply a heavy yellow or dusty brown color grade. In Netflix's hit action film Extraction, the city of Dhaka in Bangladesh is bathed in a harsh yellow tint from start to finish. That visual choice is not neutral. It pushes viewers to connect non-Western cities with heat, dirt, poverty, and lawlessness before a single character even speaks (Ullmann, 2020).",
+          zh: '串流媒體讓東方主義繼續存活的一種最安靜的方式，是透過色彩與場景。可以把它想成把一個真實的國家變成加了色的明信片。在設定於南亞、中東或拉丁美洲的西方動作片和影集裡，電影人常套上濃重的黃色或塵土棕色的色調。在 Netflix 的熱門動作片《Extraction》中，孟加拉達卡這座城市從頭到尾都沐浴在刺眼的黃色色調裡。這不是中立的視覺選擇。它會在角色還沒開口之前，就讓觀眾把非西方城市聯想到炎熱、骯髒、貧窮與無法無天（Ullmann, 2020）。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "The same flattening happens when big-budget series treat Eastern cultures as decorative spectacle. In HBO's Westworld, segments set in Indian and Japanese themed parks strip those cultures of real history and daily life. Instead, they rely on a narrow checklist of familiar signs: tigers, elephants, traditional robes, and sudden rituals of violence (Torabi Aghdam, Esfandiary & Fahimifar, 2025). By freezing the East in timeless tradition or danger, these shows turn complex societies into safe playgrounds for Western eyes. Even when non-Western characters get plenty of screen time, the deeper story structure often keeps them in passive or secondary roles, while Western heroes remain the center of action and moral judgment (Torabi Aghdam, Esfandiary & Fahimifar, 2025).",
+          zh: '當大預算影集把東方文化當成裝飾性的奇觀時，同樣的扁平化也會發生。在 HBO 的《Westworld》裡，設定於印度與日本主題園區的段落剝掉了那些文化真實的歷史與日常生活，只依賴一份狹窄的熟悉符號清單：老虎、大象、傳統長袍，以及突然出現的暴力儀式（Torabi Aghdam, Esfandiary & Fahimifar, 2025）。透過把東方凍結在永恆的傳統或危險之中，這些影集把複雜的社會變成西方目光下安全的遊樂場。即使非西方角色有大量螢幕時間，更深層的敘事結構仍常把他們放在被動或次要的位置，而西方英雄則維持行動與道德判斷的中心（Torabi Aghdam, Esfandiary & Fahimifar, 2025）。',
+          },
+        },
+      {
+          type: 'h3',
+          text: { en: 'Neon Wallpaper', zh: '霓虹壁紙' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'If older Orientalism traps the East in the past, Techno-Orientalism traps it in a cold future. Both rely on the same Western habit of using Asia as a blank screen for Western fears and fantasies (Qaissi, 2026). In cyberpunk series and futuristic streaming hits like Altered Carbon, East Asian cities are turned into what we might call neon wallpaper. Rain-soaked streets, towering glowing signs, and crowded night markets become the default look of a high-tech dystopia.',
+          zh: '如果老派東方主義把東方困在過去，科技東方主義（Techno-Orientalism）則把它困在冰冷的未來。兩者都依賴同一種西方習慣：把亞洲當成西方恐懼與幻想的白紙（Qaissi, 2026）。在《Altered Carbon》這類賽博龐克影集與未來感串流熱門作品中，東亞城市被變成我們可以稱之為「霓虹壁紙」的東西。被雨打濕的街道、高聳發光的招牌與擁擠的夜市，成為高科技反烏托邦的預設外觀。',
+          },
+        },
+      {
+          type: 'figure',
+          src: 'assets/posts/bcm222-a3-fig1.png',
+          alt: {
+          en: 'Kabukicho red gate and colourful neon street signs at night in Shinjuku, Tokyo — a real neighbourhood often reused as futuristic backdrop.',
+          zh: '東京新宿歌舞伎町夜晚的紅色牌坊與繽紛霓虹招牌——真實社區常被借用為未來感背景。'
+          },
+          caption: {
+          en: "Photo by Basile Morin (2019), Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0), via Wikimedia Commons. Real neighborhoods like Tokyo's Kabukichō are vibrant, lived-in communities, yet Western sci-fi repeatedly borrows their visual surface as a cold futuristic backdrop.",
+          zh: '照片由 Basile Morin（2019）拍攝，創用 CC 姓名標示-相同方式分享 4.0 國際授權（CC BY-SA 4.0），經 Wikimedia Commons 取得。像東京歌舞伎町這樣的真實社區是充滿活力的生活場域，西方科幻作品卻一再借用它們的視覺表面，當成冰冷的未來背景。',
+          },
+          captionStyle: 'note',
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'The problem is not that neon cities look striking. The problem is how that visual style works on the viewer. As scholars of cyberpunk have shown, using a hyper-technological Asia as the standard setting for the future does not create fresh cultural understanding; it recycles old Orientalist clichés in futuristic clothing (Taillandier, 2018). Asian people in these worlds are often reduced to silent crowds, emotionless workers, or ruthless tech villains. Because the cyberpunk aesthetic looks stylish and exciting, general audiences rarely question it. They enjoy the visual vibe without realizing that real people have been erased to make room for cool scenery.',
+          zh: '問題不在於霓虹城市看起來很吸睛。問題在於這種視覺風格如何作用在觀眾身上。正如賽博龐克研究者所示，把高科技亞洲當成未來的標準場景，不會產生新的文化理解；它只是把舊的東方主義陳詞套上未來主義外衣回收再利用（Taillandier, 2018）。這些世界裡的亞洲人常被簡化為沉默的人群、沒有情感的勞工，或奸詐的科技反派。因為賽博龐克美學看起來時尚又刺激，一般觀眾很少去質疑它。他們享受視覺氛圍，卻沒意識到為了騰出空間給酷炫場景，真實的人已被抹去。',
+          },
+        },
+      {
+          type: 'h2',
+          text: { en: 'Power & Algorithms', zh: '權力與演算法' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Behind these visual tricks sits a simple structural issue: who holds the pen. Streaming platforms love to celebrate on-screen diversity, yet the creative power behind the camera has barely moved. A 2025 report from the USC Annenberg Inclusion Initiative found that in 2023 Netflix U.S. scripted films, 80.9% of writers and 83.3% of producers were white (Smith et al., 2025). When the people writing, funding, and approving stories mostly come from the same Western perspective, global content easily becomes an old script in new packaging.',
+          zh: '在這些視覺手法背後，是一個簡單的結構性問題：誰握著筆。串流平台喜歡慶祝螢幕上的多元，但鏡頭後的創作權力幾乎沒有移動。USC Annenberg 包容性倡議 2025 年的報告指出，2023 年 Netflix 美國自製劇情電影中，80.9% 的編劇與 83.3% 的製片是白人（Smith et al., 2025）。當寫故事、出資與審核故事的人大多來自同一個西方視角，全球內容很容易就變成換了包裝的老劇本。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'You can see this old script clearly in popular Netflix dramas such as Elite and Cuties. Both shows feature young Muslim women caught between conservative families and modern European peers. In Elite, Nadia\'s path to personal freedom is tied directly to removing her hijab, breaking with her family\'s values, and falling for a wealthy white classmate (El Idrissi, Bouzar & Ghourdou, 2025; Qaissi, 2026). Rather than showing Muslim women with their own complex agency, the storyline repeats a familiar "Western savior" formula where Eastern tradition means oppression and Westernization is the only route to freedom.',
+          zh: '在《Elite》與《Cuties》這類熱門 Netflix 影集中，可以清楚看到這個老劇本。兩部影集都描寫年輕穆斯林女性卡在保守家庭與現代歐洲同儕之間。在《Elite》裡，Nadia 追求個人自由的路徑直接與摘下頭巾、違背家庭價值、愛上富有白人同學連在一起（El Idrissi, Bouzar & Ghourdou, 2025; Qaissi, 2026）。故事沒有呈現穆斯林女性自身的複雜能動性，反而重複了熟悉的「西方拯救者」公式：東方傳統等於壓迫，而西方化是唯一的自由之路。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "Platform algorithms reinforce this narrowing effect. When viewers search for or watch content from one Asian country, Netflix's recommendation system often mixes Chinese, Japanese, and Korean titles together as if they were interchangeable, while heavily promoting documentaries that frame China as a geopolitical threat (Araujo & de Albuquerque, 2024). Even before a viewer presses play, the platform's sorting logic flattens distinct cultures into a single, easily marketed box.",
+          zh: '平台演算法強化了這種收窄效果。當觀眾搜尋或觀看某一個亞洲國家的內容時，Netflix 的推薦系統常把中國、日本與韓國作品混在一起，好像它們可以互換，同時大力推廣把中國框架成地緣政治威脅的紀錄片（Araujo & de Albuquerque, 2024）。甚至在觀眾按下播放之前，平台的排序邏輯就已經把不同的文化壓平，裝進一個容易行銷的盒子裡。',
+          },
+        },
+      {
+          type: 'h2',
+          text: { en: 'Audience Impact', zh: '觀眾影響' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'It is tempting to brush these patterns off as harmless entertainment. After all, most people know that action movies and sci-fi shows are fictional. Yet media does not work like a clear mirror that simply reflects the world as it is. It works like a mold. When audiences see the same colors, settings, and character types over and over again, those repeated images quietly shape how they picture real places and real people (Bhandari, 2025).',
+          zh: '把這些模式當成無害的娛樂很容易。畢竟大多數人都知道動作片和科幻影集是虛構的。然而，媒體並不像一面清楚反映世界的鏡子。它更像一個模具。當觀眾一遍又一遍看到同樣的顏色、場景與角色類型，那些重複的影像就會悄悄地塑造他們想像真實地點與真實人物的方式（Bhandari, 2025）。',
+          },
+        },
+      {
+          type: 'figure',
+          src: 'assets/posts/bcm222-a3-fig2.png',
+          alt: {
+          en: 'HatirJheel lake under a bright blue sky in Dhaka, Bangladesh — the real city contrasted with its yellow-filtered screen image.',
+          zh: '孟加拉達卡 HatirJheel 湖上的藍天——真實城市與螢幕上黃色濾鏡形象的對照。'
+          },
+          caption: {
+          en: 'Photo by Nasir Khan Saikat (2016), Creative Commons Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0), via Wikimedia Commons. Bright blue skies and green waterfronts in real Dhaka stand in sharp contrast to the dusty yellow filter used to frame the same city in Western action cinema.',
+          zh: '照片由 Nasir Khan Saikat（2016）拍攝，創用 CC 姓名標示-相同方式分享 2.0 通用授權（CC BY-SA 2.0），經 Wikimedia Commons 取得。真實達卡的藍天與綠色水岸，和西方動作電影用來框架同一座城市的塵土黃色調形成強烈對比。',
+          },
+          captionStyle: 'note',
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'For viewers who have never visited Dhaka, Tokyo, or Beijing, screen images often fill the entire gap of personal experience. Research on audience reactions shows that cultural distance strongly shapes how people read a film: viewers closer to a culture quickly notice what feels fake, while distant audiences are far more likely to take stereotypes at face value (Setyawan & Pasaribu, 2026). Over time, the gap between fiction and reality starts to blur.',
+          zh: '對從未去過達卡、東京或北京的觀眾而言，螢幕影像往往填滿了個人經驗的整個空白。觀眾反應研究顯示，文化距離會強烈影響人們解讀電影的方式：離該文化較近的觀眾很快會察覺哪裡不對勁，而距離遙遠的觀眾則更容易把刻板印象當真（Setyawan & Pasaribu, 2026）。隨著時間過去，虛構與現實之間的界線開始模糊。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "This spillover is already visible outside streaming apps. A study of 405 U.S. media articles published between 2002 and 2023 traced how China's social credit system was reported to the American public. Instead of reflecting how those policies actually work on the ground, Western press coverage borrowed straight from Techno-Orientalist sci-fi, painting China as a dystopian, all-seeing machine (von Blomberg & Liu, 2025). That imagined threat served two quiet purposes: it gave Western readers a target for their own fears about new technology, and it reassured them that Western institutions were superior. When entertainment trains audiences to see Asia as either backward or menacing, real-world news and social bias easily build on the exact same foundation.",
+          zh: '這種外溢效應已經在串流平台之外顯現。一項針對 2002 至 2023 年間 405 篇美國媒體報導的研究，追蹤中國社會信用體系如何被呈現給美國公眾。西方媒體並未反映這些政策在現場實際如何運作，而是直接借用科技東方主義科幻作品，把中國描繪成一個無所不見的反烏托邦機器（von Blomberg & Liu, 2025）。那個想像出來的威脅有兩個安靜的作用：它給西方讀者一個投射自身對新科技恐懼的靶子，也讓他們確信西方制度比較優越。當娛樂把觀眾訓練成以「落後」或「威脅」看待亞洲，真實世界的新聞與社會偏見就很容易建立在完全相同的基礎上。',
+          },
+        },
+      {
+          type: 'h2',
+          text: { en: 'Moving Forward', zh: '向前走' },
+        },
+      {
+          type: 'h3',
+          text: { en: 'Critical Lens', zh: '批判視角' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Because Neo-Orientalism hides inside enjoyable entertainment, telling people to quit streaming will not work. A better answer is Critical Media Literacy, which works like taking off a tinted filter and putting on clear glasses. It reminds viewers that lighting, casting, and plot are deliberate choices rather than neutral facts (Shank & Searcy, 2024; Qaissi, 2026).',
+          zh: '因為新東方主義藏在令人享受的娛樂裡，叫大家別再串流不會有用。更好的答案是批判性媒體識讀（Critical Media Literacy），它就像摘下有色的濾鏡、換上清晰的眼鏡。它提醒觀眾，燈光、選角與劇情都是刻意選擇，而不是中立的事實（Shank & Searcy, 2024; Qaissi, 2026）。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'You do not need academic jargon to use this on a Friday night couch. Just keep three quick questions in mind when you press play:',
+          zh: '你不需要學術術語才能在週五晚上窩在沙發上使用它。只要按下播放前記住三個快速問題：',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Who is telling this story? Are the writers and producers from that culture, or are outsiders speaking for them?',
+          zh: '誰在說這個故事？編劇與製片是否來自那個文化，還是由外人替他們發言？',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'What is the color telling me to feel? Is a non-Western city bathed in dusty yellow or cold neon while Western spaces look normal?',
+          zh: '顏色要我感覺什麼？非西方城市是否被黃塵色調或冰冷霓虹包圍，而西方空間看起來很正常？',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Who gets to be a full person? Do local characters have real agency, or are they only victims, villains, or scenery?',
+          zh: '誰能被當成完整的人？當地角色有真實的能動性，還是只被當成受害者、反派或背景？',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'These three habits turn passive watching into active viewing without spoiling a good show.',
+          zh: '這三個習慣能把被動觀看變成主動觀看，而不會破壞一部好劇。',
+          },
+        },
+      {
+          type: 'h3',
+          text: { en: 'Better Stories', zh: '更好的故事' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'Still, viewers cannot fix a structural problem alone. Streaming platforms need to hand budgets and creative control back to local storytellers instead of reshaping every culture for Western comfort.',
+          zh: '不過，觀眾無法獨自解決結構性的問題。串流平台必須把預算與創作控制權交回給當地的說書人，而不是為了迎合西方的舒適感去重新塑造每一種文化。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "Good examples already exist. On Netflix, The Makanai: Cooking for the Maiko House and Midnight Diner: Tokyo Stories skip exotic clichés for quiet kitchens and ordinary emotions, letting Japanese culture stay grounded without translating itself for foreign eyes (Kanesaka, 2024). In big-budget drama, FX's Shōgun (2024) relied on producer Hiroyuki Sanada and Japanese historical advisors to protect cultural accuracy from the inside out (Setyawan & Pasaribu, 2026). Both prove that global hits work best when local people are treated as human beings rather than postcards.",
+          zh: '好的例子已經存在。在 Netflix 上，《The Makanai: Cooking for the Maiko House》（舞伎家的料理人）與《Midnight Diner: Tokyo Stories》（深夜食堂：東京故事）跳過了奇異化的陳詞，改以安靜的廚房與尋常情緒取勝，讓日本文化不必為外國人自我翻譯也能保持在地質感（Kanesaka, 2024）。在大預算影集方面，FX 的《Shōgun》（2024）仰賴製作人真田廣之與日本歷史顧問，從內部守護文化準確性（Setyawan & Pasaribu, 2026）。兩者都證明，當當地人被當成人看待、而不是明信片時，全球熱門作品才會最好看。',
+          },
+        },
+      {
+          type: 'h3',
+          text: { en: 'Visual Reflection', zh: '視覺反思' },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'I built the visual essay around how an everyday streaming viewer watches a short video without voiceover. It opens with a clip from Altered Carbon and a direct question, "What does Asia look like on your screen?", to pull viewers into a familiar sci-fi look before introducing Orientalism.',
+          zh: '我的影像論文是圍繞著「日常串流觀眾如何觀看一支沒有旁白的短片」來建構的。它開場是《Altered Carbon》的一段片段，配上一個直接的問題：「在你的螢幕上，亞洲長什麼樣子？」先用觀眾熟悉的科幻外觀把人拉進來，再帶出東方主義。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: 'To keep the screen readable, I kept most frames to a single short sentence and used progressive fade-ins on denser slides, such as the industry statistics and comparison cards, so ideas appear in a clear reading order. For visual evidence, pairing a yellow-filtered still from Extraction against real Creative Commons photos of Dhaka lets the contrast speak for itself. All seven photographs and the background piano track carry Creative Commons licenses, while the trailer clips are used under fair dealing for critique.',
+          zh: '為了讓畫面好讀，我讓大多數畫面只放一句短句，並在較擁擠的幻燈片（例如產業數據與比較卡片）上使用漸進淡入，讓想法依照清楚的閱讀順序出現。在視覺證據上，把《Extraction》裡加黃濾鏡的劇照與真實的創用 CC 達卡照片並置，讓對比自己說話。全部七張照片與背景鋼琴曲都採用創用 CC 授權，而預告片片段則依合理使用（fair dealing）用於評論。',
+          },
+        },
+      {
+          type: 'embed',
+          provider: 'youtube',
+          id: 'Y3CGVuX2vRU',
+          title: {
+          en: 'The visual essay — Orientalism in Plain Sight',
+          zh: '影像論文——《藏在光天化日下的東方主義》'
+          },
+          caption: {
+          en: 'A short, voiceover-free essay: what Asia looks like on screen, how the yellow filter and neon wallpaper work, and three questions viewers can ask before they press play.',
+          zh: '一支沒有旁白的短片：亞洲在螢幕上看起來是什麼樣子、黃色濾鏡與霓虹壁紙如何作用，以及觀眾按下播放前可以問的三個問題。'
+          },
+          captionStyle: 'note',
+        },
+      {
+          type: 'h2',
+          text: { en: 'References', zh: '參考文獻' },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Araujo, M. and de Albuquerque, A. (2024) 'Algorithmic orientalism? Netflix's representation of China in Brazil', Global Media and China, 9(4), pp. 508–520.",
+          zh: "Araujo, M. and de Albuquerque, A. (2024) 'Algorithmic orientalism? Netflix's representation of China in Brazil', Global Media and China, 9(4), pp. 508–520.",
+          },
+          url: 'https://doi.org/10.1177/20594364241254626',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Bhandari, D. (2025) 'Constructing reality: A critical study of media representation and social perception', International Journal for Research in Applied Science and Engineering Technology, 13(11).",
+          zh: "Bhandari, D. (2025) 'Constructing reality: A critical study of media representation and social perception', International Journal for Research in Applied Science and Engineering Technology, 13(11).",
+          },
+          url: 'https://doi.org/10.22214/ijraset.2025.75688',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "El Idrissi, K., Bouzar, A. and Ghourdou, T. (2025) 'Unveiling Orientalist and Feminist Orientalist Stereotypes in Western Cinema's Portrayal of Muslim Women', American Journal of Arts and Human Science.",
+          zh: "El Idrissi, K., Bouzar, A. and Ghourdou, T. (2025) 'Unveiling Orientalist and Feminist Orientalist Stereotypes in Western Cinema's Portrayal of Muslim Women', American Journal of Arts and Human Science.",
+          },
+          url: 'https://journals.e-palli.com/home/index.php/ajahs/article/view/4499',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Kanesaka, K. (2024) 'Netflix Originals: Performing the Private Lives of Marginalized Communities for a Global Audience', Global Storytelling: Journal of Digital and Moving Images.",
+          zh: "Kanesaka, K. (2024) 'Netflix Originals: Performing the Private Lives of Marginalized Communities for a Global Audience', Global Storytelling: Journal of Digital and Moving Images.",
+          },
+          url: 'https://journals.publishing.umich.edu/gs/article/id/5911/',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Qaissi, A. (2026) 'Understanding Orientalism Today', Public Humanities, 2, e205.",
+          zh: "Qaissi, A. (2026) 'Understanding Orientalism Today', Public Humanities, 2, e205.",
+          },
+          url: 'https://www.cambridge.org/core/journals/public-humanities/article/understanding-orientalism-today/8A72058B701708AA2F72BB85F1862866',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Setyawan, K. H. and Pasaribu, R. E. (2026) 'Constructing Geisha Representation: Textual Analysis of Memoirs of a Geisha on Social Media X', International Review of Humanities Studies, 11(2), pp. 467–477.",
+          zh: "Setyawan, K. H. and Pasaribu, R. E. (2026) 'Constructing Geisha Representation: Textual Analysis of Memoirs of a Geisha on Social Media X', International Review of Humanities Studies, 11(2), pp. 467–477.",
+          },
+          url: 'https://doi.org/10.7454/irhs.v11i2.1481',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Shank, K. and Searcy, L. (2024) 'Critical Media Literacy: Taking Steps to Understand and Implement (in First-Year Composition Courses)', Teaching/Writing: The Journal of Writing Teacher Education, 12(1), Article 4.",
+          zh: "Shank, K. and Searcy, L. (2024) 'Critical Media Literacy: Taking Steps to Understand and Implement (in First-Year Composition Courses)', Teaching/Writing: The Journal of Writing Teacher Education, 12(1), Article 4.",
+          },
+          url: 'https://scholarworks.wmich.edu/wte/vol12/iss1/4/',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: 'Smith, S. L., Pieper, K., Neff, K. and Wheeler, S. (2025) Inclusion in Netflix original U.S. scripted films & series: Executive summary. USC Annenberg Inclusion Initiative.',
+          zh: 'Smith, S. L., Pieper, K., Neff, K. and Wheeler, S. (2025) Inclusion in Netflix original U.S. scripted films & series: Executive summary. USC Annenberg Inclusion Initiative.',
+          },
+          url: 'https://assets.uscannenberg.org/docs/aii-2025-netflix-executive-summary.pdf',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Taillandier, D. (2018) 'New Spaces for Old Motifs? The Virtual Worlds of Japanese Cyberpunk', Arts, 7(4), p. 60.",
+          zh: "Taillandier, D. (2018) 'New Spaces for Old Motifs? The Virtual Worlds of Japanese Cyberpunk', Arts, 7(4), p. 60.",
+          },
+          url: 'https://pdfs.semanticscholar.org/8dce/7b4a4a6777624c32c2185a0b1603afeaf14b.pdf',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: 'Torabi Aghdam, M., Esfandiary, S. and Fahimifar, A. A. (2025) "\'Othering\' in Westworld and Squid Game; A Comparative Analysis", The International Journal of Humanities, 32(4), pp. 74–102.',
+          zh: 'Torabi Aghdam, M., Esfandiary, S. and Fahimifar, A. A. (2025) "\'Othering\' in Westworld and Squid Game; A Comparative Analysis", The International Journal of Humanities, 32(4), pp. 74–102.',
+          },
+          url: 'https://eijh.modares.ac.ir/article_28381.html',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Ullmann, J. (2020) 'Yellow Filter: A Cinematic Technique or Pushing Stereotypes?', Media Diversity Institute.",
+          zh: "Ullmann, J. (2020) 'Yellow Filter: A Cinematic Technique or Pushing Stereotypes?', Media Diversity Institute.",
+          },
+          url: 'https://www.jeremyullmann.com/film-tv-culture/yellow-filter-a-cinematic-technique-or-pushing-stereotypes',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: 'von Blomberg, M. and Liu, C. (2025) \'Techno-orientalism in the US media: the case of "China\'s social credit system"\', Information, Communication & Society.',
+          zh: 'von Blomberg, M. and Liu, C. (2025) \'Techno-orientalism in the US media: the case of "China\'s social credit system"\', Information, Communication & Society.',
+          },
+          url: 'https://doi.org/10.1080/1369118X.2025.2565335',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: "Wahid, M. A. (2025) 'From Orientalism to neo-Orientalism: medial representations of Islam and the Muslim world', Textual Practice, 39(2), pp. 162–181.",
+          zh: "Wahid, M. A. (2025) 'From Orientalism to neo-Orientalism: medial representations of Islam and the Muslim world', Textual Practice, 39(2), pp. 162–181.",
+          },
+          url: 'https://www.tandfonline.com/doi/full/10.1080/0950236X.2023.2288112',
+        },
+      {
+          type: 'h2',
+          text: { en: 'Image References', zh: '圖片來源' },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[used in report & video] Morin, B 2019, Kabukicho red gate and colorful neon street signs at night, Shinjuku, Tokyo, Japan photograph, 6 June via Wikimedia Commons, Creative Commons Attribution-ShareAlike 4.0 International license',
+          zh: '[used in report & video] Morin, B 2019, Kabukicho red gate and colorful neon street signs at night, Shinjuku, Tokyo, Japan photograph, 6 June via Wikimedia Commons, Creative Commons Attribution-ShareAlike 4.0 International license',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:Kabukicho_red_gate_and_colorful_neon_street_signs_at_night,_Shinjuku,_Tokyo,_Japan.jpg',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[used in report & video] Saikat, N K 2016, HatirJheel lake under blue sky, Dhaka, Bangladesh photograph, 20 June via Flickr and Wikimedia Commons, Creative Commons Attribution-ShareAlike 2.0 Generic license',
+          zh: '[used in report & video] Saikat, N K 2016, HatirJheel lake under blue sky, Dhaka, Bangladesh photograph, 20 June via Flickr and Wikimedia Commons, Creative Commons Attribution-ShareAlike 2.0 Generic license',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:-beforerain_-cloudy_-blue_-sky_-HatirJheel_-lake_-water_-dhaka_-bangladesh_(27222947114).jpg',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Aimaimyi 2009, Akihabara photograph, Creative Commons Attribution-ShareAlike 3.0 Unported license, via Wikimedia Commons',
+          zh: '[video only] Aimaimyi 2009, Akihabara photograph, Creative Commons Attribution-ShareAlike 3.0 Unported license, via Wikimedia Commons',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:Akihabara_-02.jpg',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Gladis, C 2006, Kamogawa Maiko 01 photograph, 1 April via Wikimedia Commons, Creative Commons Attribution 2.0 Generic license',
+          zh: '[video only] Gladis, C 2006, Kamogawa Maiko 01 photograph, 1 April via Wikimedia Commons, Creative Commons Attribution 2.0 Generic license',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:Kamogawa_Maiko_01.jpg',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Mak 2007, Street Hawker in Banani Dhaka photograph, 28 January via Wikimedia Commons, Creative Commons Attribution-ShareAlike 3.0 Unported license',
+          zh: '[video only] Mak 2007, Street Hawker in Banani Dhaka photograph, 28 January via Wikimedia Commons, Creative Commons Attribution-ShareAlike 3.0 Unported license',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:Street_Hawker_in_Banani_Dhaka.JPG',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Prodromou, E 2020, A flat-screen television photograph, 5 June via Wikimedia Commons, Creative Commons Attribution-ShareAlike 4.0 International license',
+          zh: '[video only] Prodromou, E 2020, A flat-screen television photograph, 5 June via Wikimedia Commons, Creative Commons Attribution-ShareAlike 4.0 International license',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:A_flat-screen_television.jpg',
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Syced 2023, Shibuya scramble crossing during Halloween 2023 photograph, 31 October via Wikimedia Commons, Creative Commons CC0 1.0 Universal Public Domain Dedication',
+          zh: '[video only] Syced 2023, Shibuya scramble crossing during Halloween 2023 photograph, 31 October via Wikimedia Commons, Creative Commons CC0 1.0 Universal Public Domain Dedication',
+          },
+          url: 'https://commons.wikimedia.org/wiki/File:Shibuya_scramble_crossing_during_Halloween_2023,_actually_less_crowded_than_usual,_high_police_presence_2.jpg',
+        },
+      {
+          type: 'h2',
+          text: { en: 'Film Trailers (Fair Dealing) & Music (Visual Essay Video Only)', zh: '預告片（合理使用）與音樂（僅影像論文）' },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Altered Carbon 2018, official trailer, Netflix.',
+          zh: '[video only] Altered Carbon 2018, official trailer, Netflix.',
+          },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Extraction 2020, official trailer, Netflix.',
+          zh: '[video only] Extraction 2020, official trailer, Netflix.',
+          },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] Shōgun 2024, official trailer, FX.',
+          zh: '[video only] Shōgun 2024, official trailer, FX.',
+          },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] The Makanai: Cooking for the Maiko House 2023, official trailer, Netflix.',
+          zh: '[video only] The Makanai: Cooking for the Maiko House 2023, official trailer, Netflix.',
+          },
+        },
+      {
+          type: 'ref',
+          text: {
+          en: '[video only] MacLeod, K n.d., Meditation Impromptu 01, audio track, incompetech.com, Creative Commons Attribution 3.0 Unported license.',
+          zh: '[video only] MacLeod, K n.d., Meditation Impromptu 01, audio track, incompetech.com, Creative Commons Attribution 3.0 Unported license.',
+          },
+        },
+        ],
+      },
     ],
   },
 };

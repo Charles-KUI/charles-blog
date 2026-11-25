@@ -4284,3 +4284,42 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   ref-item 4→5）；19 套 jsdom 全綠；_spread 530/0；_shot43 / _zoom
   0 FAIL；_shot_v4 真機眼檢英中首屏與文獻區：5 條文獻含 Castells、
   繁中無簡體混入、排版無重疊。已 push d589faa，線上 md5 一致。
+
+
+第五十階段 · BCM222 A3 研究報告上線（2026-11-25）
+════════════════════════════════════════════════════════════════════
+【Master 指示】提供 BCM222_A3_Research_Report_Final (1).docx，要求
+  更新上線；隨後補上 YouTube iframe（影片 id Y3CGVuX2vRU）。
+  另先詢問「準備填入的文章連結」，已回報 id=bcm222-a3 與影片連結，
+  Master 回「繼續」後才推送。
+
+【做法】
+· _docx_dump.py 提全文 68 段，英文逐字取自 dump（ast.literal_eval），
+  22 段正文 + 2 條 CC 圖注逐字核對通過；繁中重寫為台灣用語，
+  8 個 h2 / 5 個 h3 全翻（末兩個「圖片來源」「預告片…」見下方修復）。
+· 區塊 63 個：p22 / h2×8 / h3×5 / figure×2 / embed×1 / ref×25。
+  25 條來源 = 14 學術文獻 + 7 圖片來源 + 5 片單音樂；20 條 URL
+  移到 .ref-link-row，5 條片單無 URL 不渲染空連結。
+· 兩張 docx 原圖（335×298 / 365×273）為 CC 授權照片，直接提取
+  為 fig1/fig2 PNG + WebP，不縮放不重繪。
+· 封面走「媒體拼貼」款：米白紙底 + 傾斜電影格 + 黃濾鏡城市剪影 +
+  撕邊紙 + 膠帶；同科相鄰不重複（a1 CRT 拼貼 / a2 青底相框），
+  禁眼睛/人臉/假字。
+· noHero:true 沿用 a1/a2，image 僅供科目頁卡片縮圖。
+· ⟳ 通用修復：article-page.js 語言切換佇列對每條 ref 固定 push 2
+  （書目+註解），但「有 URL 無註解」的 ref-link-row 內含 <a>，
+  DOM 遍歷不消耗格位 → 本篇 25 條無註解文獻讓佇列多 25 格，
+  其後兩個 h2 錯位漏翻。改為「ref-cite 恆 1 格；ref-note 有才 1 格；
+  ref-link-row 不占位」。bcm212-a3 同屬無註解情況，一併受惠。
+
+【測試基準同步】
+· LIVE_SUBJECTS bcm222 加 a3（domtest / verify-hidden）；
+  bcm222-a1/a2 索引卡片數 2→3；verify-bcm241-a3 舊 id 断言
+  由「bcm222-a3 必 404」改為「該 id 現在是 A3 研究報告、不再有
+  Blog Post 2」；bcm222-a2 切片終點改用下一筆 id，避免把 a3
+  的 63 個區塊算進 a2；_spread IDS 加 bcm222-a3。
+
+【驗證】專項 verify-bcm222-a3 64/0（逐字 22/22 + 圖注 + 25 文獻
+  + iframe + 雙語切換不重建 DOM + 素材 + 科目頁 3 卡）；
+  20 套 jsdom 全綠；_spread 590/0；_shot_b222a3 真機 1440/390
+  全 PASS，眼檢圖區與文獻區無裁切/重疊。

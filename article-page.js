@@ -1626,7 +1626,15 @@
         if (b.type === 'figure' || b.type === 'video') texts.push(b.caption);
         else if (b.type === 'gallery') texts.push(null); // 画廊文字单独刷新
         else if (b.type === 'diagram') texts.push(null); // 环形图文字单独刷新
-        else if (b.type === 'ref') texts.push(null, null); // 文献引用 + 注解，节点数固定为 2
+        // 文献：只有不含子元素的 <p> 会进入上面的 nodes 队列并消耗一格。
+        // .ref-cite 恒占 1 格；.ref-note 有注解才占 1 格；
+        // .ref-link-row 内含 <a>（有子元素）根本不会被遍历到，不能占位。
+        // 旧版无条件 push 2 会让「有链接但无注解」的文献多占一格，
+        // 使其后所有标题/段落错位漏翻（·50 bcm222-a3 25 条无注解文献暴露）。
+        else if (b.type === 'ref') {
+          texts.push(null);
+          if (b.note) texts.push(null);
+        }
         // 表格：单元格不是 <p>/<figcaption>，整块（含图注）都单独刷新；
         // 这里只占住 figcaption 那一个节点位，不然后面的文字会整体错位。
         else if (b.type === 'table') texts.push(null);
