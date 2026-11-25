@@ -4323,3 +4323,27 @@ Master 交 `BCM 241 Assignment 2 (2nd blog post) Cover Sheet (2).docx`，
   + iframe + 雙語切換不重建 DOM + 素材 + 科目頁 3 卡）；
   20 套 jsdom 全綠；_spread 590/0；_shot_b222a3 真機 1440/390
   全 PASS，眼檢圖區與文獻區無裁切/重疊。
+
+
+================================================================
+[2026-11-25 ·51] BCM222 A3 v2 小更新（視覺反思重寫）
+【來源】
+· C:/Users/Charles/Downloads/BCM222_A3_Research_Report_Final (2).docx
+· 與 (1).docx 逐行比對：僅「Visual Reflection」2 段改寫為 3 段；
+  三道批判性提問的 docx 項目符號 [a] 改為編號 [ListNumber]（文字未變，
+  站內本就統一渲染成段落，故不改數據）；其餘正文、圖注、文獻、
+  圖片 md5 全部一致。
+
+【改動】
+· content.js bcm222-a3：Visual Reflection 英文 3 段按 v2 逐字替換，
+  繁中依台灣用語重寫（創用 CC / 合理使用 / 色彩分級 / 鏡頭）。
+  區塊數 63→64，段落 22→23；影片、封面、兩張圖均未動。
+· 基準 .workbuddy/_b222a3_dump.txt 更新為 v2 全文；
+  verify-bcm222-a3 與 _verify_b222a3_content 的 pIdx 補第 41 行，
+  dump 正則相容 [ListNumber]，區塊/段落/渲染數 63→64、22→23。
+
+【驗證】
+· 逐字 23/23，圖注逐字 OK，繁中無簡體殘留（片/洲/媒為繁簡同形）。
+· 專項 verify-bcm222-a3 64/0；20 套 jsdom 全綠；_spread 590/0；
+  _shot_b222a3 真機 1440/390 ALL PASS；新增 en/zh 視覺反思截圖眼檢
+  三段完整、無重疊溢出。

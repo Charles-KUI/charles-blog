@@ -2955,15 +2955,22 @@ const SUBJECTS = {
       {
           type: 'p',
           text: {
-          en: 'I built the visual essay around how an everyday streaming viewer watches a short video without voiceover. It opens with a clip from Altered Carbon and a direct question, "What does Asia look like on your screen?", to pull viewers into a familiar sci-fi look before introducing Orientalism.',
-          zh: '我的影像論文是圍繞著「日常串流觀眾如何觀看一支沒有旁白的短片」來建構的。它開場是《Altered Carbon》的一段片段，配上一個直接的問題：「在你的螢幕上，亞洲長什麼樣子？」先用觀眾熟悉的科幻外觀把人拉進來，再帶出東方主義。',
+          en: "Turning a written research report into a short silent video required a clear shift in how I balanced text and visuals. In the written report, two static photographs support a detailed academic argument. In a visual essay without voiceover, however, long paragraphs would quickly overwhelm the screen. I therefore stripped the text down to one short sentence on most slides and expanded the visual material to seven Creative Commons photographs, film stills, and two short trailer clips so images and visual contrast could carry the core message.",
+          zh: '把一份書面研究報告改成一支沒有旁白的短片，需要我在文字與影像的比重上做出清楚的轉換。在書面報告裡，兩張靜態照片足以支撐詳細的學術論述；但在沒有旁白的影像論文裡，長段落很快就會讓畫面超載。於是我把大多數投影片的文字精簡成一句短句，並把視覺材料擴充到七張創用 CC 照片、影劇劇照與兩段預告片片段，讓影像與視覺對比能夠承載核心訊息。',
           },
         },
       {
           type: 'p',
           text: {
-          en: 'To keep the screen readable, I kept most frames to a single short sentence and used progressive fade-ins on denser slides, such as the industry statistics and comparison cards, so ideas appear in a clear reading order. For visual evidence, pairing a yellow-filtered still from Extraction against real Creative Commons photos of Dhaka lets the contrast speak for itself. All seven photographs and the background piano track carry Creative Commons licenses, while the trailer clips are used under fair dealing for critique.',
-          zh: '為了讓畫面好讀，我讓大多數畫面只放一句短句，並在較擁擠的幻燈片（例如產業數據與比較卡片）上使用漸進淡入，讓想法依照清楚的閱讀順序出現。在視覺證據上，把《Extraction》裡加黃濾鏡的劇照與真實的創用 CC 達卡照片並置，讓對比自己說話。全部七張照片與背景鋼琴曲都採用創用 CC 授權，而預告片片段則依合理使用（fair dealing）用於評論。',
+          en: "When certain ideas still required more on-screen information, such as the USC Annenberg statistics, the storytelling-versus-algorithm cards, the Dhaka comparison, and the three critical-viewing questions, I managed the reading load through pacing rather than smaller fonts. Instead of displaying every element at once, those slides use gentle progressive fade-ins and longer hold times to guide the viewer's eye in a natural reading order. I also separated the closing film clip from still images and chose a subtitle-free excerpt so competing text would not pull attention away from the caption.",
+          zh: '當某些想法仍需要在畫面上呈現更多資訊時，例如 USC Annenberg 的統計數據、「說故事對比演算法」卡片、達卡對比，以及三個批判性觀看問題，我選擇用節奏來管理閱讀負擔，而不是把字體縮小。那些投影片不是一次把所有元素攤開，而是用溫和的漸進淡入與較長的停留時間，引導觀眾的眼睛依照自然的閱讀順序移動。我也把結尾的電影片段從靜態影像中分開，並選擇沒有字幕的片段，避免互相競爭的文字把注意力從圖說上拉走。',
+          },
+        },
+      {
+          type: 'p',
+          text: {
+          en: "Most importantly, I hope viewers finish the video without feeling lectured or told to quit streaming. My goal is to leave them with a simple viewing habit: noticing when color grades or backdrops flatten real places into clichés, and asking who is actually holding the lens next time they press play.",
+          zh: '最重要的是，我希望觀眾看完影片時，不會覺得被說教，或被要求不要再串流。我的目標是留給他們一個簡單的觀看習慣：注意到何時色彩分級或背景把真實的地方壓平成刻板印象，並在下次按下播放前問問，鏡頭究竟握在誰手裡。',
           },
         },
       {
